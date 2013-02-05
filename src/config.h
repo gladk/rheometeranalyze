@@ -12,6 +12,9 @@ class configopt {
                               // be divided in radial- and Z-direction 
     Eigen::Vector3d _g;       // Gravity direction
 
+    int _nAt;                 // Number of atom string
+    int _nDat;                // Begin of data string
+
   public:
     configopt(const std::string &);
     Eigen::Vector3d get_c(){return _c;};
@@ -22,6 +25,8 @@ class configopt {
     int SecRadial(){return _SecRadial;};
     int SecZ(){return _SecZ;};
     Eigen::Vector3d get_g(){return _g;};
+    int nAt(){return _nAt;};
+    int nDat(){return _nDat;};
 };
 
 #endif

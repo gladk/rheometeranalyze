@@ -16,12 +16,14 @@ using namespace std;
 int main(int ac, char* av[])
 {
   string configFileName;
+  string particlesFileName;
   try {
 
     po::options_description desc("Allowed options");
     desc.add_options()
         ("help", "produce help message")
         ("config,c", po::value<string>(), "configuration file")
+        ("particle,p", po::value<string>(), "particle dump file")
     ;
     
     po::positional_options_description p;
@@ -42,6 +44,14 @@ int main(int ac, char* av[])
               << vm["config"].as<string>() << "\n";
     }
     configFileName = vm["config"].as<string>();
+
+    if (vm.count("particle"))
+    {
+        cout << "particle dump-file is: " 
+              << vm["particle"].as<string>() << "\n";
+    }
+    particlesFileName = vm["particle"].as<string>();
+
   }
   catch(exception& e) {
       cerr << "error: " << e.what() << "\n";

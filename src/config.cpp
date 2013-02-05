@@ -20,5 +20,9 @@ configopt::configopt(const std::string &filename) {
   
   _g = Eigen::Vector3d(pt.get<double>("Rheometer.gX"), pt.get<double>("Rheometer.gY"), pt.get<double>("Rheometer.gZ"));
   _g.normalize();
+
+  _nAt = pt.get<int>("Particle.nAt");
+  _nDat = pt.get<int>("Particle.nDat");
 };
+
 
