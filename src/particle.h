@@ -2,7 +2,10 @@
 #define PARTICLECLASS
 
 #include <string>
+#include <iostream>
+#include <vector>
 #include <Eigen/Dense>
+#include <boost/shared_ptr.hpp>
 
 class particle {
   private:
@@ -11,8 +14,9 @@ class particle {
     double _rad;                  // Particle radius
 
   public:
-    particle(int, int, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
-    int id() {return _id;};
+    particle(unsigned long long, int, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
+    particle();
+    unsigned long long id() {return _id;};
     int type() {return _type;};
     double rad() {return _rad;};
     Eigen::Vector3d c() {return _c;}
@@ -20,4 +24,11 @@ class particle {
     Eigen::Vector3d o() {return _o;}
 };
 
+class particleRow {
+  private: 
+    std::vector <boost::shared_ptr<particle> > _allPart;
+  public:
+    particleRow(long long);
+    void addP(boost::shared_ptr<particle> );
+};
 #endif

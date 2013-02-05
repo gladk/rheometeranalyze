@@ -8,6 +8,7 @@
 #include <Eigen/Dense>
 #include "config.h"
 #include "particle.h"
+#include "rheometer.h"
 
 
 namespace po = boost::program_options;
@@ -62,6 +63,7 @@ int main(int ac, char* av[])
   }
   
   boost::shared_ptr<configopt> configParams (new configopt(configFileName));
+  boost::shared_ptr<rheometer> curRheom (new rheometer(configParams, particlesFileName));
 
   return 0;
 }
