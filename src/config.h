@@ -14,6 +14,11 @@ class configopt {
 
     int _nAt;                 // Number of atom string
     int _nDat;                // Begin of data string
+    int _cId;                 // Column of Id
+    int _cT;                  // Column of type
+    int _cC;                  // Column of center
+    int _cV;                  // Column of linear velocity
+    int _cO;                  // Column of angular velocity
 
   public:
     configopt(const std::string &);
@@ -27,6 +32,11 @@ class configopt {
     Eigen::Vector3d get_g(){return _g;};
     int nAt(){return _nAt;};
     int nDat(){return _nDat;};
+    int cId(){return _cId;};
+    int cT(){return _cT;};
+    int cC(){return _cC;};
+    int cV(){return _cV;};
+    int cO(){return _cO;};
 };
 
 #endif

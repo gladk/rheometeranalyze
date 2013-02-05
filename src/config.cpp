@@ -23,6 +23,12 @@ configopt::configopt(const std::string &filename) {
 
   _nAt = pt.get<int>("Particle.nAt");
   _nDat = pt.get<int>("Particle.nDat");
+
+  _cId = pt.get<int>("Particle.cId");
+  _cT = pt.get<int>("Particle.cT");
+  _cC = pt.get<int>("Particle.cC");
+  _cV = pt.get<int>("Particle.cV");
+  _cO = pt.get<int>("Particle.cO");
 };
 
 

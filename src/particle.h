@@ -7,12 +7,13 @@
 class particle {
   private:
     Eigen::Vector3d _c, _v, _o;   // Center of mass, linear velocity, angular velocity of the particle
-    int _id;                      // Particle id
+    int _id, _type;               // Particle id, type
     double _rad;                  // Particle radius
 
   public:
-    particle(int, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
+    particle(int, int, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
     int id() {return _id;};
+    int type() {return _type;};
     double rad() {return _rad;};
     Eigen::Vector3d c() {return _c;}
     Eigen::Vector3d v() {return _v;}
