@@ -8,21 +8,8 @@
 #include <Eigen/Dense>
 #include "config.h"
 
-using namespace std;
-
-
-
-// A helper function to simplify the main part.
-template<class T>
-ostream& operator<<(ostream& os, const vector<T>& v)
-{
-    copy(v.begin(), v.end(), ostream_iterator<T>(os, " ")); 
-    return os;
-}
-
 
 namespace po = boost::program_options;
-namespace eig= Eigen;
 using namespace std;
 
 int main(int ac, char* av[])
