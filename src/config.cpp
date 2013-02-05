@@ -17,5 +17,8 @@ configopt::configopt(const std::string &filename) {
 
   _SecRadial = pt.get<int>("Rheometer.SecRadial");
   _SecZ = pt.get<int>("Rheometer.SecZ");
+  
+  _g = Eigen::Vector3d(pt.get<double>("Rheometer.gX"), pt.get<double>("Rheometer.gY"), pt.get<double>("Rheometer.gZ"));
+  _g.normalize();
 };
 
