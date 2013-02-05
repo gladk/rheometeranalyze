@@ -13,6 +13,7 @@ configopt::configopt(const std::string &filename) {
 
   _Din = pt.get<double>("Rheometer.Din");
   _Dout = pt.get<double>("Rheometer.Dout");
+  _H = pt.get<double>("Rheometer.H");
 
   _SecRadial = pt.get<int>("Rheometer.SecRadial");
   _SecZ = pt.get<int>("Rheometer.SecZ");
