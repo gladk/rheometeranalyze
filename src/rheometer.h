@@ -14,6 +14,7 @@ class rheometer {
   private:
     boost::shared_ptr<configopt> _cfg;
     string _particlesFileName;
+    int _particleNum;
   public:
     rheometer(boost::shared_ptr<configopt>, string);
     void loadParticles();

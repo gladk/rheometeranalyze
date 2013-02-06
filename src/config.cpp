@@ -30,6 +30,7 @@ configopt::configopt(const std::string &filename) {
   _cC = pt.get<int>("Particle.cC"); _maxColumnCheck(_cC, 2);
   _cV = pt.get<int>("Particle.cV"); _maxColumnCheck(_cV, 2);
   _cO = pt.get<int>("Particle.cO"); _maxColumnCheck(_cO, 2);
+  _cR = pt.get<double>("Particle.cR"); _maxColumnCheck(_cR, 0);
 };
 
 void configopt::_maxColumnCheck(int col, int addN) {

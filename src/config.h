@@ -19,7 +19,8 @@ class configopt {
     int _cC;                  // Column of center
     int _cV;                  // Column of linear velocity
     int _cO;                  // Column of angular velocity
-    int _maxC;           // Maximal column number
+    int _cR;                  // Column of radius
+    int _maxC;                // Maximal column number
     void _maxColumnCheck(int, int);    // Check whether the new column is maximal
 
   public:
@@ -39,6 +40,7 @@ class configopt {
     int cC(){return _cC;};
     int cV(){return _cV;};
     int cO(){return _cO;};
+    int cR(){return _cR;};
     int maxC(){return _maxC;};
 };
 
