@@ -9,6 +9,7 @@
 #include "config.h"
 #include "particle.h"
 #include "band.h"
+#include "export.h"
 
 using namespace std;
 class rheometer {

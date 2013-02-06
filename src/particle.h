@@ -25,6 +25,7 @@ class particle {
     Eigen::Vector3d v() {return _v;}
     Eigen::Vector3d o() {return _o;}
     void set_dist(double dist) {_dist=dist;};
+    double dist() { return _dist;};
 };
 
 class particleRow {

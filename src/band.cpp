@@ -39,7 +39,6 @@ void bandRow::fillBands (){
       Eigen::Vector3d OPV1 = Z.cross(OPV);        //Vector for projection
       double dist = OP.dot(OPV1);
       partTemp->set_dist(dist);
-
     }
   }
 }
