@@ -13,6 +13,8 @@ class particle {
     int _id, _type;               // Particle id, type
     double _rad;                  // Particle radius
 
+    double _dist;                 // Distance from axis
+
   public:
     particle(unsigned long long, int, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
     particle();
@@ -22,6 +24,7 @@ class particle {
     Eigen::Vector3d c() {return _c;}
     Eigen::Vector3d v() {return _v;}
     Eigen::Vector3d o() {return _o;}
+    void set_dist(double dist) {_dist=dist;};
 };
 
 class particleRow {
@@ -33,5 +36,8 @@ class particleRow {
     particleRow(long long);
     void addP(boost::shared_ptr<particle> );
     long long elementsNum();
+    long long arraySize() {return _allPart.size();};
+    bool particleReal(long long);
+    boost::shared_ptr<particle> getP(long long);
 };
 #endif

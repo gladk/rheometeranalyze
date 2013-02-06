@@ -42,6 +42,8 @@ class configopt {
     int cO(){return _cO;};
     int cR(){return _cR;};
     int maxC(){return _maxC;};
+    double dDr(){return (_Dout - _Din)/_SecRadial;};
+    double dDz(){return _H/_SecZ;};
 };
 
 #endif

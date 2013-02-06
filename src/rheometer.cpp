@@ -71,10 +71,16 @@ void rheometer::loadParticles() {
     curLine++;
   };
   boost::shared_ptr<particleRow> particleTMP ( new particleRow(maxId+1));
-  particleAll = particleTMP;
+  _particleAll = particleTMP;
   
   for(std::vector<boost::shared_ptr<particle> >::iterator it = tmpPartVector.begin(); it != tmpPartVector.end(); ++it) {
-    particleAll->addP(*it);
+    _particleAll->addP(*it);
   }
-  std::cerr<<particleAll->elementsNum()<<" particles added"<<std::endl;
+  std::cerr<<_particleAll->elementsNum()<<" particles added"<<std::endl;
+  
+  //Create bands
+  boost::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll));
+  boost::shared_ptr <bandRow> _bandRow = bandRowTMP;
+  
+
 };

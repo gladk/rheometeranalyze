@@ -42,4 +42,17 @@ void particleRow::addP(boost::shared_ptr<particle> part ) {
 
 long long particleRow::elementsNum() {
   return _realPartNum;
+};
+
+bool particleRow::particleReal(long long id) {
+  if (_allPart[id] == _tmpP) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+boost::shared_ptr<particle> particleRow::getP(long long id) {
+  return _allPart[id];
 }
+
