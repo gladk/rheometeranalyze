@@ -27,8 +27,11 @@ class particle {
 class particleRow {
   private: 
     std::vector <boost::shared_ptr<particle> > _allPart;
+    boost::shared_ptr<particle> _tmpP;
+    long long _realPartNum;
   public:
     particleRow(long long);
     void addP(boost::shared_ptr<particle> );
+    long long elementsNum();
 };
 #endif

@@ -15,15 +15,18 @@ void rheometer::loadParticles() {
   
   std::string   line;
   int curLine = 1;
+  long long maxId = -1;
+  std::vector <boost::shared_ptr<particle> > tmpPartVector;
+
   while(std::getline(_file, line)) {
     std::stringstream linestream(line);
     std::string data;
     
     int valInt;
     double valD;
-
     double pR;
-    int pId, pT;
+    int pT;
+    long long pId;
     Eigen::Vector3d pC, pV, pO;
     if (curLine>=_cfg->nDat()) {
       for (int i=1; i<=_cfg->maxC(); i++) {
@@ -57,11 +60,21 @@ void rheometer::loadParticles() {
           linestream >> valD;
         }
       }
+      maxId = max(pId, maxId);
+      boost::shared_ptr<particle> tmpParticle ( new particle (pId, pT, pR, pC,pV, pO));
+      tmpPartVector.push_back(tmpParticle);
+
     } else if (curLine == _cfg->nAt()) {
       linestream >> valInt;
       _particleNum = valInt;
     }
     curLine++;
+  };
+  boost::shared_ptr<particleRow> particleTMP ( new particleRow(maxId+1));
+  particleAll = particleTMP;
+  
+  for(std::vector<boost::shared_ptr<particle> >::iterator it = tmpPartVector.begin(); it != tmpPartVector.end(); ++it) {
+    particleAll->addP(*it);
   }
-
+  std::cerr<<particleAll->elementsNum()<<" particles added"<<std::endl;
 };

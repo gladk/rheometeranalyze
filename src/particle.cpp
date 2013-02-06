@@ -22,14 +22,24 @@ particle::particle() {
 };
 
 particleRow::particleRow(long long partN ) {
-  boost::shared_ptr<particle> a (new particle());
-  _allPart.assign( partN, a ); 
+   _tmpP = boost::shared_ptr <particle> (new particle());
+  _realPartNum = 0;
+  _allPart.assign( partN, _tmpP ); 
 };
 
 void particleRow::addP(boost::shared_ptr<particle> part ) {
   if (_allPart.size()<=part->id()) {
-    _allPart.resize(part->id()+1);
+    _allPart.resize(part->id()+1, _tmpP);
   };
-
- _allPart[part->id()] = part;
+  if (_allPart[part->id()] == _tmpP) {
+    _allPart[part->id()] = part;
+    _realPartNum ++;
+  } else {
+    std::cerr<<"The particles have equal IDs. Aborting."<<std::endl;
+    exit (EXIT_FAILURE);
+  }
 };
+
+long long particleRow::elementsNum() {
+  return _realPartNum;
+}
