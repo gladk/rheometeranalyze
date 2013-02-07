@@ -66,7 +66,7 @@ void bandRow::fillBands (){
       partTemp->set_dist(dist);
       double height = OP.dot(Z);
       partTemp->set_height(height);
-      partTemp->set_dr(OPV1);
+      partTemp->set_dr(-OPV1);
       partTemp->set_dz(Z);
       partTemp->set_df(OPV);
       

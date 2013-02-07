@@ -21,6 +21,7 @@ class particle {
     int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
     
     bool _disable;                // Disable particle, if it is out of region
+    
 
   public:
     particle(unsigned long long, int, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
