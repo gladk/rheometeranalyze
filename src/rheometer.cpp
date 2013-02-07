@@ -10,6 +10,11 @@ rheometer::rheometer(boost::shared_ptr<configopt> cfg, string particlesFileName,
   loadParticles();
   loadForces();
   
+  //Create bands
+  boost::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
+  boost::shared_ptr <bandRow> _bandRow = bandRowTMP;
+  
+  
   boost::shared_ptr <exportclass> exp (new exportclass(_cfg, _particleAll));
   exp->exportVTK();
 };
@@ -83,11 +88,6 @@ void rheometer::loadParticles() {
     _particleAll->addP(*it);
   }
   std::cerr<<_particleAll->elementsNum()<<" particles added"<<std::endl;
-  
-  //Create bands
-  boost::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll));
-  boost::shared_ptr <bandRow> _bandRow = bandRowTMP;
-  
 };
 
 void rheometer::loadForces() {

@@ -10,6 +10,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _dZmin = dZmin;
   _dZmax = dZmax;
   _partNumb = 0;
+  _forceNum = 0;
 };
 
 void band::addParticle(boost::shared_ptr<particle> tmpPart) {
@@ -18,9 +19,10 @@ void band::addParticle(boost::shared_ptr<particle> tmpPart) {
 };
 
 
-bandRow::bandRow (boost::shared_ptr<configopt> cfg, boost::shared_ptr<particleRow> pRow){
+bandRow::bandRow (boost::shared_ptr<configopt> cfg, boost::shared_ptr<particleRow> pRow, boost::shared_ptr<forceRow> fRow){
   _cfg =  cfg;
   _pRow = pRow;
+  _fRow = fRow;
   int i = 0;
   for (int dz = 0; dz < _cfg->SecZ(); dz++) {
     for (int dr = 0; dr < _cfg->SecRadial(); dr++) {
@@ -51,6 +53,8 @@ void bandRow::fillBands (){
     }
   }
   
+  //Put particles into band
+  
   long long particleRemoved = 0;
   //Put particles
   for (int z = 0; z<_pRow->arraySize(); z++) {
@@ -71,15 +75,9 @@ void bandRow::fillBands (){
       partTemp->set_df(OPV);
       
       //Define band
-      int bR = -1;
-      if ((dist>=_cfg->Din()/2.0) and (dist<=_cfg->Dout()/2.0)) {
-        bR = floor((dist - _cfg->Din()/2.0)/_cfg->dDr());
-      }
+      int bR = getBandR(dist);
+      int bZ = getBandZ(height);
       
-      int bZ = -1;
-      if ((height>=0) and (height<=_cfg->H())) {
-        bZ = floor((height)/_cfg->dDz());
-      }
       
       
       if (bR>=0 and bZ>=0) {
@@ -93,4 +91,21 @@ void bandRow::fillBands (){
     }
   }
   std::cerr<<particleRemoved<<" particles removed"<<std::endl;
-}
+};
+
+
+int bandRow::getBandR(double dist) {
+  if ((dist>=_cfg->Din()/2.0) and (dist<=_cfg->Dout()/2.0)) {
+    return floor((dist - _cfg->Din()/2.0)/_cfg->dDr());
+  } else {
+    return -1;
+  }
+};
+
+int bandRow::getBandZ(double height) {
+  if ((height>=0) and (height<=_cfg->H())) {
+    return floor((height)/_cfg->dDz());
+  } else {
+    return -1;
+  }
+};
