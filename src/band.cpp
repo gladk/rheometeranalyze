@@ -44,6 +44,12 @@ void bandRow::fillBands (){
       partTemp->set_dz(Z);
       partTemp->set_df(OPV);
       
+      //Define band
+      int bR = 0;
+      if ((dist>=_cfg->Din()/2.0) and (dist<=_cfg->Dout()/2.0)) {
+        bR = floor((dist - _cfg->Din()/2.0)/_cfg->dDr())+1;
+      }
+      partTemp->set_band(bR, 0, 0);
     }
   }
 }

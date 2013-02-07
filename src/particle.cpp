@@ -8,7 +8,10 @@ particle::particle(unsigned long long id, int type, double rad, Eigen::Vector3d 
   _c = c;
   _v = v;
   _o = o;
-  
+  _dr = Eigen::Vector3d::Zero();
+  _dz = Eigen::Vector3d::Zero();
+  _df = Eigen::Vector3d::Zero();
+  _bandR = -1; _bandZ=-1; _bandN=-1;
 };
 
 particle::particle() {
@@ -18,7 +21,10 @@ particle::particle() {
   _c = Eigen::Vector3d::Zero();
   _v = Eigen::Vector3d::Zero();
   _o = Eigen::Vector3d::Zero();
-
+  _dr = Eigen::Vector3d::Zero();
+  _dz = Eigen::Vector3d::Zero();
+  _df = Eigen::Vector3d::Zero();
+  _bandR = -1; _bandZ=-1; _bandN=-1;
 };
 
 particleRow::particleRow(long long partN ) {

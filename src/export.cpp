@@ -45,6 +45,9 @@ void exportclass::exportVTK() {
   vectorDf->SetNumberOfComponents(3);
   vectorDf->SetName("vector_df");
   
+  vtkSmartPointer<vtkIntArray> bandR = vtkSmartPointer<vtkIntArray>::New();
+  bandR->SetNumberOfComponents(1);
+  bandR->SetName("bandR");
   
   
   for (int z = 0; z<_particleAll->arraySize(); z++) {
@@ -72,7 +75,7 @@ void exportclass::exportVTK() {
       double df[3] = {partTemp->df()[0], partTemp->df()[1], partTemp->df()[2]};
       vectorDf->InsertNextTupleValue(df);
       
-      
+      bandR->InsertNextValue(partTemp->bandR());
       
       spheresCells->InsertNextCell(1,pid);
     }
@@ -89,6 +92,7 @@ void exportclass::exportVTK() {
   spheresUg->GetPointData()->AddArray(vectorDr);
   spheresUg->GetPointData()->AddArray(vectorDz);
   spheresUg->GetPointData()->AddArray(vectorDf);
+  spheresUg->GetPointData()->AddArray(bandR);
   
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   writer->SetDataModeToAscii();
