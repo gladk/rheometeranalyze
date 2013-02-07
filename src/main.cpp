@@ -18,13 +18,15 @@ int main(int ac, char* av[])
 {
   string configFileName;
   string particlesFileName;
+  string forcesFileName;
   try {
 
     po::options_description desc("Allowed options");
     desc.add_options()
         ("help", "produce help message")
         ("config,c", po::value<string>(), "configuration file")
-        ("particle,p", po::value<string>(), "particle dump file")
+        ("particle,p", po::value<string>(), "particles dump file")
+        ("force,f", po::value<string>(), "forces dump file")
     ;
     
     po::positional_options_description p;
@@ -48,10 +50,18 @@ int main(int ac, char* av[])
 
     if (vm.count("particle"))
     {
-        cout << "particle dump-file is: " 
+        cout << "particles dump-file is: " 
               << vm["particle"].as<string>() << "\n";
     }
+    
     particlesFileName = vm["particle"].as<string>();
+    
+    if (vm.count("force"))
+    {
+        cout << "forces dump-file is: " 
+              << vm["force"].as<string>() << "\n";
+    }
+    forcesFileName = vm["force"].as<string>();
 
   }
   catch(exception& e) {
@@ -63,7 +73,7 @@ int main(int ac, char* av[])
   }
   
   boost::shared_ptr<configopt> configParams (new configopt(configFileName));
-  boost::shared_ptr<rheometer> curRheom (new rheometer(configParams, particlesFileName));
+  boost::shared_ptr<rheometer> curRheom (new rheometer(configParams, particlesFileName, forcesFileName));
   
   return 0;
 }

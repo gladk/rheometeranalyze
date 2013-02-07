@@ -22,7 +22,18 @@ class configopt {
     int _cR;                  // Column of radius
     int _maxC;                // Maximal column number
     void _maxColumnCheck(int, int);    // Check whether the new column is maximal
-
+    void _maxColumnCheckForce(int, int);    // Check whether the new column is maximal for Forces
+    
+    //Force
+    int _fAt;                 // Number of forces string
+    int _fDat;                // Begin of force string
+    int _cPos1;               // Column of Pos1
+    int _cPos2;               // Column of Pos2
+    int _cPos1ID;             // Column of particle 1 id
+    int _cPos2ID;             // Column of particle 2 id
+    int _cForc;               // Column of force value
+    int _maxCF;               // Maximal column number for forces
+    
   public:
     configopt(const std::string &);
     Eigen::Vector3d get_c(){return _c;};
@@ -42,8 +53,19 @@ class configopt {
     int cO(){return _cO;};
     int cR(){return _cR;};
     int maxC(){return _maxC;};
+    int maxCF(){return _maxCF;};
     double dDr(){return (_Dout - _Din)/_SecRadial/2.0;};
     double dDz(){return _H/_SecZ;};
+    
+    //force
+    int fAt(){return _fAt;};
+    int fDat(){return _fDat;};
+    int cPos1(){return _cPos1;};
+    int cPos2(){return _cPos2;};
+    int cPos1ID(){return _cPos1ID;};
+    int cPos2ID(){return _cPos2ID;};
+    int cForc(){return _cForc;};
+    
 };
 
 #endif

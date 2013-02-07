@@ -45,7 +45,7 @@ void particleRow::addP(boost::shared_ptr<particle> part ) {
     _allPart[part->id()] = part;
     _realPartNum ++;
   } else {
-    std::cerr<<"The particles have equal IDs. Aborting."<<std::endl;
+    std::cerr<<"The particles have equal IDs. "<<part->id()<<" Aborting."<<std::endl;
     exit (EXIT_FAILURE);
   }
 };

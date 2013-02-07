@@ -10,7 +10,7 @@
 class particle {
   private:
     Eigen::Vector3d _c, _v, _o;   // Center of mass, linear velocity, angular velocity of the particle
-    int _id, _type;               // Particle id, type
+    unsigned long long _id; int _type;     // Particle id, type
     double _rad;                  // Particle radius
 
     double _dist;                 // Distance from axis

@@ -7,6 +7,7 @@ configopt::configopt(const std::string &filename) {
   boost::property_tree::ptree pt;
   boost::property_tree::ini_parser::read_ini(filename, pt);
   _maxC = -1;
+  _maxCF = -1;
   
   _c = Eigen::Vector3d(pt.get<double>("Rheometer.cX"), pt.get<double>("Rheometer.cY"), pt.get<double>("Rheometer.cZ"));
   _o = Eigen::Vector3d(pt.get<double>("Rheometer.oX"), pt.get<double>("Rheometer.oY"), pt.get<double>("Rheometer.oZ"));
@@ -31,10 +32,27 @@ configopt::configopt(const std::string &filename) {
   _cV = pt.get<int>("Particle.cV"); _maxColumnCheck(_cV, 2);
   _cO = pt.get<int>("Particle.cO"); _maxColumnCheck(_cO, 2);
   _cR = pt.get<double>("Particle.cR"); _maxColumnCheck(_cR, 0);
+  
+  
+  //Force
+  _fAt = pt.get<int>("Force.nFt");
+  _fDat = pt.get<int>("Force.nDat");
+  _cPos1 = pt.get<int>("Force.cPos1"); _maxColumnCheckForce(_cPos1, 2);
+  _cPos2 = pt.get<int>("Force.cPos2"); _maxColumnCheckForce(_cPos2, 2);
+  _cPos1ID = pt.get<int>("Force.cPos1ID"); _maxColumnCheckForce(_cPos1ID, 0);
+  _cPos2ID = pt.get<int>("Force.cPos2ID"); _maxColumnCheckForce(_cPos2ID, 0);
+  _cForc = pt.get<int>("Force.cForc"); _maxColumnCheckForce(_cForc, 2);
+  
 };
 
 void configopt::_maxColumnCheck(int col, int addN) {
   if (col+addN > _maxC) {
     _maxC = col+addN;
+  }
+};
+
+void configopt::_maxColumnCheckForce(int col, int addN) {
+  if (col+addN > _maxCF) {
+    _maxCF = col+addN;
   }
 };
