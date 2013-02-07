@@ -29,6 +29,12 @@ force::force() {
   _disable = false;
 };
 
+double force::Tau() {
+  double SigmaR = _val.dot(_df);
+  double SigmaZ = _val.dot(_dz);
+  return sqrt(SigmaR*SigmaR + SigmaZ*SigmaZ);
+};
+
 forceRow::forceRow() {
   std::vector <boost::shared_ptr<force> > _allForce;
   _realForceNum = 0;

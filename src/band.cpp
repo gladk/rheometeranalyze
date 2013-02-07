@@ -39,6 +39,7 @@ bandRow::bandRow (boost::shared_ptr<configopt> cfg, boost::shared_ptr<particleRo
     }
   }
   fillBands();
+  calculateValues();
 };
     
 void bandRow::fillBands (){
@@ -151,3 +152,19 @@ int bandRow::getBandZ(double height) {
     return -1;
   }
 };
+
+void bandRow::calculateValues () {
+  for(unsigned int i=0; i<_bandAll.size(); i++) {
+    _bandAll[i]->calculateValues();
+  }
+};
+
+
+void band::calculateValues () {
+  double Tau = 0.0;
+  for(unsigned long long f=0; f<_allForces.size(); f++) {
+    Tau += _allForces[f]->Tau();
+  }
+  
+};
+

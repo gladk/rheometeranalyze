@@ -12,16 +12,17 @@
 
 class band {
   private:
-    int _id, _idZ, _idR;           // Band ids, particle number
-    double _dZmin, _dZmax, _dRmin, _dRmax;   // Band minimal and maximal sizes
-    long long _partNumb, _forceNumb;                     // Number of particles
+    int _id, _idZ, _idR;                                  // Band ids, particle number
+    double _dZmin, _dZmax, _dRmin, _dRmax;                // Band minimal and maximal sizes
+    long long _partNumb, _forceNumb;                      // Number of particles
     std::vector <boost::shared_ptr<particle> > _allPart;  // Vector of particles;
-    std::vector <boost::shared_ptr<force> > _allForces;  // Vector of forces;
+    std::vector <boost::shared_ptr<force> > _allForces;   // Vector of forces;
 
   public:
     band(int, int, int, double, double, double, double);
     void addParticle(boost::shared_ptr<particle>);
     void addForce(boost::shared_ptr<force>);
+    void calculateValues();
 };
 
 class bandRow {
@@ -35,6 +36,7 @@ class bandRow {
     void fillBands();
     int getBandR(double);
     int getBandZ(double);
+    void calculateValues();
 };
 
 #endif

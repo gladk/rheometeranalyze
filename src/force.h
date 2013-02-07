@@ -50,6 +50,7 @@ class force {
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }
+    double Tau();
 };
 
 class forceRow {
