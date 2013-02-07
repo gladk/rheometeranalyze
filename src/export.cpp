@@ -6,6 +6,8 @@ exportclass::exportclass(boost::shared_ptr<configopt> cfg, boost::shared_ptr <pa
 };
 
 void exportclass::exportVTK() {
+  
+  //Export Particles
   vtkSmartPointer<vtkPoints>  spheresPos = vtkSmartPointer<vtkPoints>::New();
   vtkSmartPointer<vtkCellArray> spheresCells = vtkSmartPointer<vtkCellArray>::New();
 

@@ -126,7 +126,7 @@ void bandRow::fillBands (){
       forceTemp->set_band(bR, bZ, bN);
       _bandAll[bN]->addForce(forceTemp);
     } else {
-      _fRow->disable(z);    //Disable and remove particle, if they are out of bands
+      _fRow->disable(z);    //Disable and remove forces, if they are out of bands
       forceRemoved ++;
     }
   }

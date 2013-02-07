@@ -65,6 +65,5 @@ class forceRow {
     bool forceReal(unsigned long long);
     boost::shared_ptr<force> getF(unsigned long long);
     void disable(unsigned long long);
-    //void enable(unsigned long long);
 };
 #endif
