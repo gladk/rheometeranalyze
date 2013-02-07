@@ -87,7 +87,7 @@ void bandRow::fillBands (){
         partTemp->set_band(bR, bZ, bN);
         _bandAll[bN]->addParticle(partTemp);
       } else {
-        _pRow->disable(z);    //Disable particle, if it is out of bands
+        _pRow->disable(z);    //Disable and remove particle, if they are out of bands
         particleRemoved ++;
       }
     }
