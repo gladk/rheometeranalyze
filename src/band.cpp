@@ -37,19 +37,39 @@ void bandRow::fillBands (){
       Eigen::Vector3d OPV = Z.cross(OP);          //Vector, temporal
       OPV.normalize();
       Eigen::Vector3d OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
+      
       OPV1.normalize();
       double dist = OP.dot(-OPV1);
       partTemp->set_dist(dist);
+      double height = OP.dot(Z);
+      partTemp->set_height(height);
       partTemp->set_dr(OPV1);
       partTemp->set_dz(Z);
       partTemp->set_df(OPV);
       
       //Define band
-      int bR = 0;
+      int bR = -1;
       if ((dist>=_cfg->Din()/2.0) and (dist<=_cfg->Dout()/2.0)) {
-        bR = floor((dist - _cfg->Din()/2.0)/_cfg->dDr())+1;
+        bR = floor((dist - _cfg->Din()/2.0)/_cfg->dDr());
       }
-      partTemp->set_band(bR, 0, 0);
+      
+      int bZ = -1;
+      if ((height>=0) and (height<=_cfg->H())) {
+        bZ = floor((height)/_cfg->dDz());
+      }
+      
+      
+      if (bR>=0 and bZ>=0) {
+        int bN = bZ*(_cfg->SecRadial()) + bR;
+        if (bN>37) {
+          std::cerr<<bR<<"   "<<bZ<<"   "<<bN<<std::endl;
+        }
+        partTemp->set_band(bR, bZ, bN);
+      } else {
+        _pRow->disable(z);    //Disable particle, if it is out of bands
+      }
+      
+      
     }
   }
 }

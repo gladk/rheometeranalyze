@@ -14,10 +14,13 @@ class particle {
     double _rad;                  // Particle radius
 
     double _dist;                 // Distance from axis
+    double _height;               // Height on Z-axis
     Eigen::Vector3d _dr;          // Dr-vector
     Eigen::Vector3d _dz;          // Dz-vector
     Eigen::Vector3d _df;          // Df-vector
     int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
+    
+    bool _disable;                // Disable particle, if it is out of region
 
   public:
     particle(unsigned long long, int, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
@@ -35,11 +38,16 @@ class particle {
     Eigen::Vector3d dz() {return _dz;}
     Eigen::Vector3d df() {return _df;}
     void set_dist(double dist) {_dist=dist;};
+    void set_height(double height) {_height=height;};
     double dist() { return _dist;};
+    double height() { return _height;};
     void set_dr(Eigen::Vector3d dr) {_dr=dr;};
     void set_dz(Eigen::Vector3d dz) {_dz=dz;};
     void set_df(Eigen::Vector3d df) {_df=df;};
     void set_band(int bR, int bZ, int bN) {_bandR=bR; _bandZ=bZ; _bandN=bN;};
+    void disable() {_disable=true;};
+    void enable() {_disable=false;};
+    bool disabled() { return _disable; }
 };
 
 class particleRow {
@@ -54,5 +62,7 @@ class particleRow {
     long long arraySize() {return _allPart.size();};
     bool particleReal(long long);
     boost::shared_ptr<particle> getP(long long);
+    void disable(long long);
+    void enable(long long);
 };
 #endif

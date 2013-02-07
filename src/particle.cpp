@@ -12,6 +12,8 @@ particle::particle(unsigned long long id, int type, double rad, Eigen::Vector3d 
   _dz = Eigen::Vector3d::Zero();
   _df = Eigen::Vector3d::Zero();
   _bandR = -1; _bandZ=-1; _bandN=-1;
+  _dist = -1; _height = -1;
+  _disable = false;
 };
 
 particle::particle() {
@@ -25,6 +27,8 @@ particle::particle() {
   _dz = Eigen::Vector3d::Zero();
   _df = Eigen::Vector3d::Zero();
   _bandR = -1; _bandZ=-1; _bandN=-1;
+  _dist = -1; _height = -1;
+  _disable = false;
 };
 
 particleRow::particleRow(long long partN ) {
@@ -51,12 +55,19 @@ long long particleRow::elementsNum() {
 };
 
 bool particleRow::particleReal(long long id) {
-  if (_allPart[id] == _tmpP) {
+  if (_allPart[id] == _tmpP or _allPart[id]->disabled()) {
     return false;
   } else {
     return true;
   }
 };
+
+void particleRow::disable(long long id) {
+  if (not(_allPart[id]->disabled())) {
+    _allPart[id]->disable();
+    _realPartNum--;
+  }
+}
 
 boost::shared_ptr<particle> particleRow::getP(long long id) {
   return _allPart[id];

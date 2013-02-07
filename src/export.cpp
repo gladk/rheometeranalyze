@@ -16,6 +16,10 @@ void exportclass::exportVTK() {
   vtkSmartPointer<vtkDoubleArray> dist = vtkSmartPointer<vtkDoubleArray>::New();
   dist->SetNumberOfComponents(1);
   dist->SetName("dist");
+
+  vtkSmartPointer<vtkDoubleArray> height = vtkSmartPointer<vtkDoubleArray>::New();
+  height->SetNumberOfComponents(1);
+  height->SetName("height");
   
   vtkSmartPointer<vtkIntArray> spheresId = vtkSmartPointer<vtkIntArray>::New();
   spheresId->SetNumberOfComponents(1);
@@ -49,6 +53,14 @@ void exportclass::exportVTK() {
   bandR->SetNumberOfComponents(1);
   bandR->SetName("bandR");
   
+  vtkSmartPointer<vtkIntArray> bandZ = vtkSmartPointer<vtkIntArray>::New();
+  bandZ->SetNumberOfComponents(1);
+  bandZ->SetName("bandZ");
+  
+  vtkSmartPointer<vtkIntArray> bandN = vtkSmartPointer<vtkIntArray>::New();
+  bandN->SetNumberOfComponents(1);
+  bandN->SetName("bandN");
+  
   
   for (int z = 0; z<_particleAll->arraySize(); z++) {
     if (_particleAll->particleReal(z)) {
@@ -57,6 +69,7 @@ void exportclass::exportVTK() {
       pid[0] = spheresPos->InsertNextPoint(partTemp->c()[0], partTemp->c()[1], partTemp->c()[2]);
       radii->InsertNextValue(partTemp->rad());
       dist->InsertNextValue(partTemp->dist());
+      height->InsertNextValue(partTemp->height());
       spheresId->InsertNextValue(partTemp->id());
       spheresType->InsertNextValue(partTemp->type());
       
@@ -76,6 +89,8 @@ void exportclass::exportVTK() {
       vectorDf->InsertNextTupleValue(df);
       
       bandR->InsertNextValue(partTemp->bandR());
+      bandZ->InsertNextValue(partTemp->bandZ());
+      bandN->InsertNextValue(partTemp->bandN());
       
       spheresCells->InsertNextCell(1,pid);
     }
@@ -85,6 +100,7 @@ void exportclass::exportVTK() {
   spheresUg->SetCells(VTK_VERTEX, spheresCells);
   spheresUg->GetPointData()->AddArray(radii);
   spheresUg->GetPointData()->AddArray(dist);
+  spheresUg->GetPointData()->AddArray(height);
   spheresUg->GetPointData()->AddArray(spheresId);
   spheresUg->GetPointData()->AddArray(spheresType);
   spheresUg->GetPointData()->AddArray(spheresVelL);
@@ -93,6 +109,8 @@ void exportclass::exportVTK() {
   spheresUg->GetPointData()->AddArray(vectorDz);
   spheresUg->GetPointData()->AddArray(vectorDf);
   spheresUg->GetPointData()->AddArray(bandR);
+  spheresUg->GetPointData()->AddArray(bandZ);
+  spheresUg->GetPointData()->AddArray(bandN);
   
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   writer->SetDataModeToAscii();
