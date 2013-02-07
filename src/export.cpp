@@ -20,6 +20,18 @@ void exportclass::exportVTK() {
   vtkSmartPointer<vtkIntArray> spheresId = vtkSmartPointer<vtkIntArray>::New();
   spheresId->SetNumberOfComponents(1);
   spheresId->SetName("id");
+
+  vtkSmartPointer<vtkIntArray> spheresType = vtkSmartPointer<vtkIntArray>::New();
+  spheresType->SetNumberOfComponents(1);
+  spheresType->SetName("type");
+  
+  vtkSmartPointer<vtkDoubleArray> spheresVelL = vtkSmartPointer<vtkDoubleArray>::New();
+  spheresVelL->SetNumberOfComponents(3);
+  spheresVelL->SetName("velocity_lin");
+
+  vtkSmartPointer<vtkDoubleArray> spheresVelA = vtkSmartPointer<vtkDoubleArray>::New();
+  spheresVelA->SetNumberOfComponents(3);
+  spheresVelA->SetName("velocity_ang");
   
   for (int z = 0; z<_particleAll->arraySize(); z++) {
     if (_particleAll->particleReal(z)) {
@@ -29,6 +41,13 @@ void exportclass::exportVTK() {
       radii->InsertNextValue(partTemp->rad());
       dist->InsertNextValue(partTemp->dist());
       spheresId->InsertNextValue(partTemp->id());
+      spheresType->InsertNextValue(partTemp->type());
+      
+      double vv[3] = {partTemp->v()[0], partTemp->v()[1], partTemp->v()[2]};
+      spheresVelL->InsertNextTupleValue(vv);
+      
+      double aa[3] = {partTemp->o()[0], partTemp->o()[1], partTemp->o()[2]};
+      spheresVelA->InsertNextTupleValue(aa);
       
       spheresCells->InsertNextCell(1,pid);
     }
@@ -39,11 +58,14 @@ void exportclass::exportVTK() {
   spheresUg->GetPointData()->AddArray(radii);
   spheresUg->GetPointData()->AddArray(dist);
   spheresUg->GetPointData()->AddArray(spheresId);
+  spheresUg->GetPointData()->AddArray(spheresType);
+  spheresUg->GetPointData()->AddArray(spheresVelL);
+  spheresUg->GetPointData()->AddArray(spheresVelA);
   
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   writer->SetDataModeToAscii();
   writer->SetInput(spheresUg);
-  writer->SetFileName("a.vtk");
+  writer->SetFileName("a.vtu");
   writer->Write();
   
 };
