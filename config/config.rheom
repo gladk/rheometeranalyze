@@ -1,0 +1,51 @@
+[Rheometer]
+;coordinates of center
+cX = 0.0
+cY = 0.0
+cZ = 0.0
+
+;coordinates of origin
+oX = 0.0
+oY = 0.0
+oZ = 1.0
+
+;internal and outer diameters and height of the rheometer
+Din = 0.05
+Dout = 0.09
+H = 0.025
+
+;number of sections, in which the rheometer will be divided in radial- and Z-direction 
+SecRadial = 5
+SecZ = 7
+
+;gravity direction
+gX = 0.0
+gY = 0.0
+gZ = -1.0
+
+
+[Particle]
+;number of atoms string
+nAt = 4
+
+;begin of data string
+nDat = 10
+
+;column of Id
+cId = 1
+
+;column of type 
+cT = 2
+
+;column of Center
+cC = 4
+
+;column of linear velocity 
+cV = 10
+
+;column of angular velocity 
+cO = 16
+
+;column of radius
+cR = 19
+
