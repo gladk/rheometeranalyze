@@ -10,12 +10,19 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _dZmin = dZmin;
   _dZmax = dZmax;
   _partNumb = 0;
-  _forceNum = 0;
+  _forceNumb = 0;
+  std::vector <boost::shared_ptr<particle> > _allPart;
+  std::vector <boost::shared_ptr<force> > _allForces;
 };
 
 void band::addParticle(boost::shared_ptr<particle> tmpPart) {
   _allPart.push_back(tmpPart);
   _partNumb ++;
+};
+
+void band::addForce(boost::shared_ptr<force> tmpForc) {
+  _allForces.push_back(tmpForc);
+  _forceNumb ++;
 };
 
 
@@ -78,8 +85,6 @@ void bandRow::fillBands (){
       int bR = getBandR(dist);
       int bZ = getBandZ(height);
       
-      
-      
       if (bR>=0 and bZ>=0) {
         int bN = bZ*(_cfg->SecRadial()) + bR;
         partTemp->set_band(bR, bZ, bN);
@@ -91,6 +96,43 @@ void bandRow::fillBands (){
     }
   }
   std::cerr<<particleRemoved<<" particles removed"<<std::endl;
+ 
+ 
+ //Put forces into band
+  
+  long long forceRemoved = 0;
+  //Put forces
+  for (int z = 0; z<_fRow->arraySize(); z++) {
+    boost::shared_ptr<force> forceTemp = _fRow->getF(z);
+    Eigen::Vector3d OP = forceTemp->cP() - O;   //Vector from center to point
+    Eigen::Vector3d OPV = Z.cross(OP);          //Vector, temporal
+    OPV.normalize();
+    Eigen::Vector3d OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
+    
+    OPV1.normalize();
+    double dist = OP.dot(-OPV1);
+    forceTemp->set_dist(dist);
+    double height = OP.dot(Z);
+    forceTemp->set_height(height);
+    forceTemp->set_dr(-OPV1);
+    forceTemp->set_dz(Z);
+    forceTemp->set_df(OPV);
+    //Define band
+    int bR = getBandR(dist);
+    int bZ = getBandZ(height);
+    
+    if (bR>=0 and bZ>=0) {
+      int bN = bZ*(_cfg->SecRadial()) + bR;
+      forceTemp->set_band(bR, bZ, bN);
+      _bandAll[bN]->addForce(forceTemp);
+    } else {
+      _fRow->disable(z);    //Disable and remove particle, if they are out of bands
+      forceRemoved ++;
+    }
+  }
+  
+  std::cerr<<particleRemoved<<" forces removed"<<std::endl;
+  
 };
 
 

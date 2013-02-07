@@ -43,13 +43,8 @@ long long forceRow::elementsNum() {
   return _realForceNum;
 };
 
-/*
-bool forceRow::forceReal(unsigned long long id) {
-  if (_allForce[id] == _tmpF or _allForce[id]->disabled()) {
-    return false;
-  } else {
-    return true;
-  }
+boost::shared_ptr<force> forceRow::getF(unsigned long long id) {
+  return _allForce[id];
 };
 
 void forceRow::disable(unsigned long long id) {
@@ -57,9 +52,12 @@ void forceRow::disable(unsigned long long id) {
     _allForce[id]->disable();
     _realForceNum--;
   }
-}
+};
 
-boost::shared_ptr<force> forceRow::getF(unsigned long long id) {
-  return _allForce[id];
-}
-*/
+bool forceRow::forceReal(unsigned long long id) {
+  if (_allForce[id]->disabled()) {
+    return false;
+  } else {
+    return true;
+  }
+};
