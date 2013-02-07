@@ -33,6 +33,20 @@ void exportclass::exportVTK() {
   spheresVelA->SetNumberOfComponents(3);
   spheresVelA->SetName("velocity_ang");
   
+  vtkSmartPointer<vtkDoubleArray> vectorDr = vtkSmartPointer<vtkDoubleArray>::New();
+  vectorDr->SetNumberOfComponents(3);
+  vectorDr->SetName("vector_dr");
+  
+  vtkSmartPointer<vtkDoubleArray> vectorDz = vtkSmartPointer<vtkDoubleArray>::New();
+  vectorDz->SetNumberOfComponents(3);
+  vectorDz->SetName("vector_dz");
+  
+  vtkSmartPointer<vtkDoubleArray> vectorDf = vtkSmartPointer<vtkDoubleArray>::New();
+  vectorDf->SetNumberOfComponents(3);
+  vectorDf->SetName("vector_df");
+  
+  
+  
   for (int z = 0; z<_particleAll->arraySize(); z++) {
     if (_particleAll->particleReal(z)) {
       boost::shared_ptr<particle> partTemp = _particleAll->getP(z);
@@ -49,6 +63,17 @@ void exportclass::exportVTK() {
       double aa[3] = {partTemp->o()[0], partTemp->o()[1], partTemp->o()[2]};
       spheresVelA->InsertNextTupleValue(aa);
       
+      double dr[3] = {partTemp->dr()[0], partTemp->dr()[1], partTemp->dr()[2]};
+      vectorDr->InsertNextTupleValue(dr);
+      
+      double dz[3] = {partTemp->dz()[0], partTemp->dz()[1], partTemp->dz()[2]};
+      vectorDz->InsertNextTupleValue(dz);
+      
+      double df[3] = {partTemp->df()[0], partTemp->df()[1], partTemp->df()[2]};
+      vectorDf->InsertNextTupleValue(df);
+      
+      
+      
       spheresCells->InsertNextCell(1,pid);
     }
   }
@@ -61,6 +86,9 @@ void exportclass::exportVTK() {
   spheresUg->GetPointData()->AddArray(spheresType);
   spheresUg->GetPointData()->AddArray(spheresVelL);
   spheresUg->GetPointData()->AddArray(spheresVelA);
+  spheresUg->GetPointData()->AddArray(vectorDr);
+  spheresUg->GetPointData()->AddArray(vectorDz);
+  spheresUg->GetPointData()->AddArray(vectorDf);
   
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   writer->SetDataModeToAscii();

@@ -34,11 +34,16 @@ void bandRow::fillBands (){
     if (_pRow->particleReal(z)) {
       boost::shared_ptr<particle> partTemp = _pRow->getP(z);
       Eigen::Vector3d OP = partTemp->c() - O;     //Vector from center to point
-      Eigen::Vector3d OPV = OP.cross(Z);          //Vector, temporal
+      Eigen::Vector3d OPV = Z.cross(OP);          //Vector, temporal
       OPV.normalize();
-      Eigen::Vector3d OPV1 = Z.cross(OPV);        //Vector for projection
-      double dist = OP.dot(OPV1);
+      Eigen::Vector3d OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
+      OPV1.normalize();
+      double dist = OP.dot(-OPV1);
       partTemp->set_dist(dist);
+      partTemp->set_dr(OPV1);
+      partTemp->set_dz(Z);
+      partTemp->set_df(OPV);
+      
     }
   }
 }

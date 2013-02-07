@@ -14,6 +14,9 @@ class particle {
     double _rad;                  // Particle radius
 
     double _dist;                 // Distance from axis
+    Eigen::Vector3d _dr;          // Dr-vector
+    Eigen::Vector3d _dz;          // Dz-vector
+    Eigen::Vector3d _df;          // Df-vector
 
   public:
     particle(unsigned long long, int, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
@@ -24,8 +27,14 @@ class particle {
     Eigen::Vector3d c() {return _c;}
     Eigen::Vector3d v() {return _v;}
     Eigen::Vector3d o() {return _o;}
+    Eigen::Vector3d dr() {return _dr;}
+    Eigen::Vector3d dz() {return _dz;}
+    Eigen::Vector3d df() {return _df;}
     void set_dist(double dist) {_dist=dist;};
     double dist() { return _dist;};
+    void set_dr(Eigen::Vector3d dr) {_dr=dr;};
+    void set_dz(Eigen::Vector3d dz) {_dz=dz;};
+    void set_df(Eigen::Vector3d df) {_df=df;};
 };
 
 class particleRow {
