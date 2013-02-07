@@ -13,9 +13,12 @@ class band {
   private:
     int _id, _idZ, _idR, _partNum;           // Band ids, particle number
     double _dZmin, _dZmax, _dRmin, _dRmax;   // Band minimal and maximal sizes
+    long long _partNumb;                     // Number of particles
+    std::vector <boost::shared_ptr<particle> > _allPart;  // Vector of particles;
 
   public:
     band(int, int, int, double, double, double, double);
+    void addParticle(boost::shared_ptr<particle>);
 };
 
 class bandRow {

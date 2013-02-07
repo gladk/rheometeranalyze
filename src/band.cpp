@@ -9,6 +9,12 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _dRmax = dRmax;
   _dZmin = dZmin;
   _dZmax = dZmax;
+  _partNumb = 0;
+};
+
+void band::addParticle(boost::shared_ptr<particle> tmpPart) {
+  _allPart.push_back(tmpPart);
+  _partNumb ++;
 };
 
 
@@ -25,11 +31,28 @@ bandRow::bandRow (boost::shared_ptr<configopt> cfg, boost::shared_ptr<particleRo
   }
   fillBands();
 };
-  
+    
 void bandRow::fillBands (){
   //Fill bands with particles
   Eigen::Vector3d O = _cfg->get_c();
   Eigen::Vector3d Z = _cfg->get_o();
+  
+  //Prepare band-vector
+  int i=0;
+  for (int z=0; z<_cfg->SecZ(); z++){
+    for (int r=0; r<_cfg->SecRadial(); r++){
+      double dRmin = _cfg->Din()/2.0 + _cfg->dDr()*r;
+      double dRmax = _cfg->Din()/2.0 + _cfg->dDr()*(r+1);
+      double dZmin = _cfg->dDz()*z;
+      double dZmax = _cfg->dDz()*(z+1);
+      boost::shared_ptr<band> tmpBand (new band(i, z, r, dRmin, dRmax, dZmin, dZmax));
+      _bandAll.push_back(tmpBand);
+      i++;
+    }
+  }
+  
+  long long particleRemoved = 0;
+  //Put particles
   for (int z = 0; z<_pRow->arraySize(); z++) {
     if (_pRow->particleReal(z)) {
       boost::shared_ptr<particle> partTemp = _pRow->getP(z);
@@ -61,15 +84,13 @@ void bandRow::fillBands (){
       
       if (bR>=0 and bZ>=0) {
         int bN = bZ*(_cfg->SecRadial()) + bR;
-        if (bN>37) {
-          std::cerr<<bR<<"   "<<bZ<<"   "<<bN<<std::endl;
-        }
         partTemp->set_band(bR, bZ, bN);
+        _bandAll[bN]->addParticle(partTemp);
       } else {
         _pRow->disable(z);    //Disable particle, if it is out of bands
+        particleRemoved ++;
       }
-      
-      
     }
   }
+  std::cerr<<particleRemoved<<" particles removed"<<std::endl;
 }
