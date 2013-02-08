@@ -36,7 +36,7 @@ double force::Tau() {
 };
 
 double force::Press() {
-  double SigmaP = _val.dot(_dg);
+  double SigmaP = sqrt(_val.dot(_dg)*_val.dot(_dg));
   return SigmaP;
 };
 
