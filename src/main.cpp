@@ -8,6 +8,7 @@
 #include <Eigen/Dense>
 #include "config.h"
 #include "particle.h"
+#include "band.h"
 #include "rheometer.h"
 
 

@@ -1,6 +1,8 @@
 #ifndef BANDCLASS
 #define BANDCLASS
 
+#define _USE_MATH_DEFINES
+
 #include <string>
 #include <iostream>
 #include <vector>
@@ -17,12 +19,19 @@ class band {
     long long _partNumb, _forceNumb;                      // Number of particles
     std::vector <boost::shared_ptr<particle> > _allPart;  // Vector of particles;
     std::vector <boost::shared_ptr<force> > _allForces;   // Vector of forces;
+    
+    double _tau, _tauavg, _vol;                           // Results, Tau, Vol
+    double _p, _pavg;                                     // Results, Press
+    double _vavg;                                         // Results, angular velocity of particles
 
   public:
     band(int, int, int, double, double, double, double);
     void addParticle(boost::shared_ptr<particle>);
     void addForce(boost::shared_ptr<force>);
     void calculateValues();
+    double TauAVG() {return _tauavg;};
+    double PressAVG() {return _pavg;};
+    double vol() {return _vol;};
 };
 
 class bandRow {

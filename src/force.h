@@ -17,10 +17,12 @@ class force {
     Eigen::Vector3d _dr;          // Dr-vector
     Eigen::Vector3d _dz;          // Dz-vector
     Eigen::Vector3d _df;          // Df-vector
+    Eigen::Vector3d _dg;          // Gravity-vector
     int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
     Eigen::Vector3d _cP;          // Contact Point
     
     bool _disable;                // Disable force, if it is out of region
+    
     
     
 
@@ -38,6 +40,7 @@ class force {
     Eigen::Vector3d dr() {return _dr;}
     Eigen::Vector3d dz() {return _dz;}
     Eigen::Vector3d df() {return _df;}
+    Eigen::Vector3d dg() {return _dg;}
     Eigen::Vector3d cP() {return _cP;}
     void set_dist(double dist) {_dist=dist;};
     void set_height(double height) {_height=height;};
@@ -46,11 +49,13 @@ class force {
     void set_dr(Eigen::Vector3d dr) {_dr=dr;};
     void set_dz(Eigen::Vector3d dz) {_dz=dz;};
     void set_df(Eigen::Vector3d df) {_df=df;};
+    void set_dg(Eigen::Vector3d dg) {_dg=dg;};
     void set_band(int bR, int bZ, int bN) {_bandR=bR; _bandZ=bZ; _bandN=bN;};
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }
     double Tau();
+    double Press();
 };
 
 class forceRow {

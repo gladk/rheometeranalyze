@@ -21,7 +21,6 @@ class particle {
     int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
     
     bool _disable;                // Disable particle, if it is out of region
-    
 
   public:
     particle(unsigned long long, int, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
@@ -29,6 +28,7 @@ class particle {
     unsigned long long id() {return _id;};
     int type() {return _type;};
     double rad() {return _rad;};
+    double realAngular() { return _v.dot(_df)/_dist;}
     int bandR() {return _bandR;};
     int bandZ() {return _bandZ;};
     int bandN() {return _bandN;};

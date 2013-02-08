@@ -28,6 +28,7 @@
 
 #include "config.h"
 #include "particle.h"
+#include "force.h"
 #include "band.h"
 
 
@@ -37,6 +38,7 @@ class exportclass {
   private:
     boost::shared_ptr <configopt> _cfg;
     boost::shared_ptr <particleRow> _particleAll;
+    
     ofstream fileVTK;
     const char * _fileName;
     

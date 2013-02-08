@@ -11,6 +11,10 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _dZmax = dZmax;
   _partNumb = 0;
   _forceNumb = 0;
+  _tau = 0.0; _tauavg = 0.0;
+  _p = 0.0; _pavg = 0.0; 
+  _vavg = 0.0;
+  _vol = M_PI/4.0*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin);
   std::vector <boost::shared_ptr<particle> > _allPart;
   std::vector <boost::shared_ptr<force> > _allForces;
 };
@@ -118,6 +122,7 @@ void bandRow::fillBands (){
     forceTemp->set_dr(-OPV1);
     forceTemp->set_dz(Z);
     forceTemp->set_df(OPV);
+    forceTemp->set_dg(_cfg->get_g());
     //Define band
     int bR = getBandR(dist);
     int bZ = getBandZ(height);
@@ -161,10 +166,23 @@ void bandRow::calculateValues () {
 
 
 void band::calculateValues () {
-  double Tau = 0.0;
+  _tau = 0.0;
+  _p = 0.0;
   for(unsigned long long f=0; f<_allForces.size(); f++) {
-    Tau += _allForces[f]->Tau();
+    _tau += _allForces[f]->Tau();
+    _p += _allForces[f]->Press();
   }
+  _tauavg = _tau/_vol;
+  _pavg = _p/_vol;
   
+  unsigned long long i = 0;
+  double angVelTmp = 0.0;
+  for(unsigned long long p=0; p<_allPart.size(); p++) {
+    if (not(_allPart[p]->disabled())) {
+      angVelTmp += _allPart[p]->realAngular();
+      i++;
+    }
+  }
+  _vavg = angVelTmp / i;
 };
 

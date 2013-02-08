@@ -35,6 +35,11 @@ double force::Tau() {
   return sqrt(SigmaR*SigmaR + SigmaZ*SigmaZ);
 };
 
+double force::Press() {
+  double SigmaP = _val.dot(_dg);
+  return SigmaP;
+};
+
 forceRow::forceRow() {
   std::vector <boost::shared_ptr<force> > _allForce;
   _realForceNum = 0;
