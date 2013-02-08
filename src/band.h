@@ -32,6 +32,10 @@ class band {
     double TauAVG() {return _tauavg;};
     double PressAVG() {return _pavg;};
     double vol() {return _vol;};
+    long long partNumb () {return _partNumb;};
+    long long forceNumb () {return _forceNumb;};
+    boost::shared_ptr<particle> getPart (long long id) { return _allPart[id];}
+    boost::shared_ptr<force> getForc (long long id) { return _allForces[id];}
 };
 
 class bandRow {
@@ -46,6 +50,8 @@ class bandRow {
     int getBandR(double);
     int getBandZ(double);
     void calculateValues();
+    boost::shared_ptr<band> getBand(unsigned int id) {return _bandAll[id];}
+    unsigned int size() {return _bandAll.size();}
 };
 
 #endif

@@ -37,13 +37,12 @@ using namespace std;
 class exportclass {
   private:
     boost::shared_ptr <configopt> _cfg;
-    boost::shared_ptr <particleRow> _particleAll;
-    
+    boost::shared_ptr <bandRow> _bandRow;
     ofstream fileVTK;
     const char * _fileName;
     
   public:
-    exportclass(boost::shared_ptr<configopt>, boost::shared_ptr <particleRow>);
+    exportclass(boost::shared_ptr<configopt>, boost::shared_ptr <bandRow>);
     void exportVTK();
 };
 

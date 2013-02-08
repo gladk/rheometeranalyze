@@ -15,7 +15,7 @@ rheometer::rheometer(boost::shared_ptr<configopt> cfg, string particlesFileName,
   boost::shared_ptr <bandRow> _bandRow = bandRowTMP;
   
   
-  boost::shared_ptr <exportclass> exp (new exportclass(_cfg, _particleAll));
+  boost::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
   exp->exportVTK();
 };
 
