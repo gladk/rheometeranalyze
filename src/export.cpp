@@ -63,6 +63,18 @@ void exportclass::exportVTK() {
   bandN->SetNumberOfComponents(1);
   bandN->SetName("bandN");
   
+  vtkSmartPointer<vtkIntArray> bandTau = vtkSmartPointer<vtkIntArray>::New();
+  bandTau->SetNumberOfComponents(1);
+  bandTau->SetName("bandTau");
+  
+  vtkSmartPointer<vtkIntArray> bandPress = vtkSmartPointer<vtkIntArray>::New();
+  bandPress->SetNumberOfComponents(1);
+  bandPress->SetName("bandPress");
+  
+  vtkSmartPointer<vtkIntArray> bandOmega = vtkSmartPointer<vtkIntArray>::New();
+  bandOmega->SetNumberOfComponents(1);
+  bandOmega->SetName("bandOmega");
+  
   vtkSmartPointer<vtkUnstructuredGrid> spheresUg = vtkSmartPointer<vtkUnstructuredGrid>::New();
   
   for(unsigned int b=0; b<_bandRow->size(); b++) {
@@ -97,6 +109,9 @@ void exportclass::exportVTK() {
         bandR->InsertNextValue(bandTMP->idR());
         bandZ->InsertNextValue(bandTMP->idZ());
         bandN->InsertNextValue(bandTMP->id());
+        bandTau->InsertNextValue(bandTMP->tau());
+        bandPress->InsertNextValue(bandTMP->press());
+        bandOmega->InsertNextValue(bandTMP->omega());
         
         spheresCells->InsertNextCell(1,pid);
       }
@@ -118,6 +133,9 @@ void exportclass::exportVTK() {
     spheresUg->GetPointData()->AddArray(bandR);
     spheresUg->GetPointData()->AddArray(bandZ);
     spheresUg->GetPointData()->AddArray(bandN);
+    spheresUg->GetPointData()->AddArray(bandTau);
+    spheresUg->GetPointData()->AddArray(bandPress);
+    spheresUg->GetPointData()->AddArray(bandOmega);
     
   }
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();

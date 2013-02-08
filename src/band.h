@@ -39,6 +39,9 @@ class band {
     int id() {return _id;}
     int idZ() {return _idZ;}
     int idR() {return _idR;}
+    double tau() {return _tauavg;}
+    double press() {return _pavg;}
+    double omega() {return _vavg;}
 };
 
 class bandRow {
