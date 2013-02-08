@@ -94,9 +94,9 @@ void exportclass::exportVTK() {
         double df[3] = {partTemp->df()[0], partTemp->df()[1], partTemp->df()[2]};
         vectorDf->InsertNextTupleValue(df);
         
-        bandR->InsertNextValue(partTemp->bandR());
-        bandZ->InsertNextValue(partTemp->bandZ());
-        bandN->InsertNextValue(partTemp->bandN());
+        bandR->InsertNextValue(bandTMP->idR());
+        bandZ->InsertNextValue(bandTMP->idZ());
+        bandN->InsertNextValue(bandTMP->id());
         
         spheresCells->InsertNextCell(1,pid);
       }

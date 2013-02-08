@@ -11,7 +11,6 @@ particle::particle(unsigned long long id, int type, double rad, Eigen::Vector3d 
   _dr = Eigen::Vector3d::Zero();
   _dz = Eigen::Vector3d::Zero();
   _df = Eigen::Vector3d::Zero();
-  _bandR = -1; _bandZ=-1; _bandN=-1;
   _dist = -1; _height = -1;
   _disable = false;
 };
@@ -26,7 +25,6 @@ particle::particle() {
   _dr = Eigen::Vector3d::Zero();
   _dz = Eigen::Vector3d::Zero();
   _df = Eigen::Vector3d::Zero();
-  _bandR = -1; _bandZ=-1; _bandN=-1;
   _dist = -1; _height = -1;
   _disable = false;
 };

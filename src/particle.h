@@ -18,7 +18,6 @@ class particle {
     Eigen::Vector3d _dr;          // Dr-vector
     Eigen::Vector3d _dz;          // Dz-vector
     Eigen::Vector3d _df;          // Df-vector
-    int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
     
     bool _disable;                // Disable particle, if it is out of region
 
@@ -29,9 +28,6 @@ class particle {
     int type() {return _type;};
     double rad() {return _rad;};
     double realAngular() { return _v.dot(_df)/_dist;}
-    int bandR() {return _bandR;};
-    int bandZ() {return _bandZ;};
-    int bandN() {return _bandN;};
     Eigen::Vector3d c() {return _c;}
     Eigen::Vector3d v() {return _v;}
     Eigen::Vector3d o() {return _o;}
@@ -45,7 +41,6 @@ class particle {
     void set_dr(Eigen::Vector3d dr) {_dr=dr;};
     void set_dz(Eigen::Vector3d dz) {_dz=dz;};
     void set_df(Eigen::Vector3d df) {_df=df;};
-    void set_band(int bR, int bZ, int bN) {_bandR=bR; _bandZ=bZ; _bandN=bN;};
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }

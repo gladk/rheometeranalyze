@@ -92,7 +92,6 @@ void bandRow::fillBands (){
       
       if (bR>=0 and bZ>=0) {
         int bN = bZ*(_cfg->SecRadial()) + bR;
-        partTemp->set_band(bR, bZ, bN);
         _bandAll[bN]->addParticle(partTemp);
       } else {
         _pRow->disable(z);    //Disable and remove particle, if they are out of bands
