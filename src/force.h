@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <Eigen/Dense>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 class force {
   private:
@@ -66,16 +66,16 @@ class force {
 
 class forceRow {
   private: 
-    std::vector <boost::shared_ptr<force> > _allForce;
-    boost::shared_ptr<force> _tmpF;
+    std::vector <std::shared_ptr<force> > _allForce;
+    std::shared_ptr<force> _tmpF;
     long long _realForceNum;
   public:
     forceRow();
-    void addF(boost::shared_ptr<force> );
+    void addF(std::shared_ptr<force> );
     long long arraySize() {return _allForce.size();};
     long long elementsNum();
     bool forceReal(unsigned long long);
-    boost::shared_ptr<force> getF(unsigned long long);
+    std::shared_ptr<force> getF(unsigned long long);
     void disable(unsigned long long);
 };
 #endif

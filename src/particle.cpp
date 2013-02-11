@@ -50,12 +50,12 @@ double particle::realAngular() {
 };
 
 particleRow::particleRow(long long partN ) {
-   _tmpP = boost::shared_ptr <particle> (new particle());
+   _tmpP = std::shared_ptr <particle> (new particle());
   _realPartNum = 0;
   _allPart.assign( partN, _tmpP ); 
 };
 
-void particleRow::addP(boost::shared_ptr<particle> part ) {
+void particleRow::addP(std::shared_ptr<particle> part ) {
   if (_allPart.size()<=part->id()) {
     _allPart.resize(part->id()+1, _tmpP);
   };
@@ -87,7 +87,7 @@ void particleRow::disable(long long id) {
   }
 }
 
-boost::shared_ptr<particle> particleRow::getP(long long id) {
+std::shared_ptr<particle> particleRow::getP(long long id) {
   return _allPart[id];
 }
 

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <Eigen/Dense>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 
 #include <vtkCellArray.h>
@@ -36,13 +36,13 @@
 using namespace std;
 class exportclass {
   private:
-    boost::shared_ptr <configopt> _cfg;
-    boost::shared_ptr <bandRow> _bandRow;
+    std::shared_ptr <configopt> _cfg;
+    std::shared_ptr <bandRow> _bandRow;
     ofstream fileVTK;
     const char * _fileName;
     
   public:
-    exportclass(boost::shared_ptr<configopt>, boost::shared_ptr <bandRow>);
+    exportclass(std::shared_ptr<configopt>, std::shared_ptr <bandRow>);
     void exportVTK();
 };
 

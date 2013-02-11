@@ -1,5 +1,4 @@
 #include <boost/program_options.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <iostream>
 #include <algorithm>
@@ -73,8 +72,8 @@ int main(int ac, char* av[])
       cerr << "Exception of unknown type!\n";
   }
   
-  boost::shared_ptr<configopt> configParams (new configopt(configFileName));
-  boost::shared_ptr<rheometer> curRheom (new rheometer(configParams, particlesFileName, forcesFileName));
+  std::shared_ptr<configopt> configParams (new configopt(configFileName));
+  std::shared_ptr<rheometer> curRheom (new rheometer(configParams, particlesFileName, forcesFileName));
   
   return 0;
 }

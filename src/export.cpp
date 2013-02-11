@@ -1,6 +1,6 @@
 #include "export.h"
 
-exportclass::exportclass(boost::shared_ptr<configopt> cfg, boost::shared_ptr <bandRow> bandAll) {
+exportclass::exportclass(std::shared_ptr<configopt> cfg, std::shared_ptr <bandRow> bandAll) {
   _cfg = cfg;
   _bandRow = bandAll;
 };
@@ -96,10 +96,10 @@ void exportclass::exportVTK() {
   vtkSmartPointer<vtkUnstructuredGrid> spheresUg = vtkSmartPointer<vtkUnstructuredGrid>::New();
   
   for(unsigned int b=0; b<_bandRow->size(); b++) {
-    boost::shared_ptr<band> bandTMP = _bandRow->getBand(b);
+    std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
     
     for (int z = 0; z<bandTMP->partNumb(); z++) {
-      boost::shared_ptr<particle> partTemp = bandTMP->getPart(z);
+      std::shared_ptr<particle> partTemp = bandTMP->getPart(z);
       if (not(partTemp->disabled())) {
         vtkIdType pid[1];
         pid[0] = spheresPos->InsertNextPoint(partTemp->c()[0], partTemp->c()[1], partTemp->c()[2]);

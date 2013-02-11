@@ -1,6 +1,6 @@
 #include "rheometer.h"
 
-rheometer::rheometer(boost::shared_ptr<configopt> cfg, string particlesFileName, string forcesFileName) {
+rheometer::rheometer(std::shared_ptr<configopt> cfg, string particlesFileName, string forcesFileName) {
   _cfg = cfg;
   _particlesFileName = particlesFileName;
   _forcesFileName = forcesFileName;
@@ -11,11 +11,11 @@ rheometer::rheometer(boost::shared_ptr<configopt> cfg, string particlesFileName,
   loadForces();
   
   //Create bands
-  boost::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
-  boost::shared_ptr <bandRow> _bandRow = bandRowTMP;
+  std::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
+  std::shared_ptr <bandRow> _bandRow = bandRowTMP;
   
   
-  boost::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
+  std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
   exp->exportVTK();
 };
 
@@ -26,7 +26,7 @@ void rheometer::loadParticles() {
   std::string   line;
   int curLine = 1;
   unsigned long long maxId = 0;
-  std::vector <boost::shared_ptr<particle> > tmpPartVector;
+  std::vector <std::shared_ptr<particle> > tmpPartVector;
 
   while(std::getline(_file, line)) {
     std::stringstream linestream(line);
@@ -71,7 +71,7 @@ void rheometer::loadParticles() {
         }
       }
       maxId = max(pId, maxId);
-      boost::shared_ptr<particle> tmpParticle ( new particle (pId, pT, pR, pC,pV, pO));
+      std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, pR, pC,pV, pO));
       tmpPartVector.push_back(tmpParticle);
 
     } else if (curLine == _cfg->nAt()) {
@@ -81,10 +81,10 @@ void rheometer::loadParticles() {
     }
     curLine++;
   };
-  boost::shared_ptr<particleRow> particleTMP ( new particleRow(maxId+1));
+  std::shared_ptr<particleRow> particleTMP ( new particleRow(maxId+1));
   _particleAll = particleTMP;
   
-  for(std::vector<boost::shared_ptr<particle> >::iterator it = tmpPartVector.begin(); it != tmpPartVector.end(); ++it) {
+  for(std::vector<std::shared_ptr<particle> >::iterator it = tmpPartVector.begin(); it != tmpPartVector.end(); ++it) {
     _particleAll->addP(*it);
   }
   std::cerr<<_particleAll->elementsNum()<<" particles added"<<std::endl;
@@ -97,12 +97,12 @@ void rheometer::loadForces() {
   std::string   line;
   int curLine = 1;
   
-  //std::vector <boost::shared_ptr<particle> > tmpPartVector;
+  //std::vector <std::shared_ptr<particle> > tmpPartVector;
   
   int valInt;
   double valD;
   
-  boost::shared_ptr<forceRow> forceTMP ( new forceRow());
+  std::shared_ptr<forceRow> forceTMP ( new forceRow());
   _forceRow = forceTMP;
   
   
@@ -144,7 +144,7 @@ void rheometer::loadForces() {
       };
       
       
-      boost::shared_ptr<force> tmpForce ( new force (pid1, pid2, pos1, pos2, val));
+      std::shared_ptr<force> tmpForce ( new force (pid1, pid2, pos1, pos2, val));
       _forceRow->addF(tmpForce);
 
     } else if (curLine == _cfg->fAt()) {

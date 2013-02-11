@@ -57,11 +57,11 @@ void force::calculateStressTensor() {
 };
 
 forceRow::forceRow() {
-  std::vector <boost::shared_ptr<force> > _allForce;
+  std::vector <std::shared_ptr<force> > _allForce;
   _realForceNum = 0;
 };
 
-void forceRow::addF(boost::shared_ptr<force> forc ) {
+void forceRow::addF(std::shared_ptr<force> forc ) {
   _allForce.push_back(forc);
   _realForceNum ++;
 };
@@ -70,7 +70,7 @@ long long forceRow::elementsNum() {
   return _realForceNum;
 };
 
-boost::shared_ptr<force> forceRow::getF(unsigned long long id) {
+std::shared_ptr<force> forceRow::getF(unsigned long long id) {
   return _allForce[id];
 };
 

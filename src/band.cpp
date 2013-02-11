@@ -16,29 +16,29 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _vavg = 0.0;
   _vol = M_PI/4.0*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin);
   _volPart = 0.0;
-  std::vector <boost::shared_ptr<particle> > _allPart;
-  std::vector <boost::shared_ptr<force> > _allForces;
+  std::vector <std::shared_ptr<particle> > _allPart;
+  std::vector <std::shared_ptr<force> > _allForces;
 };
 
-void band::addParticle(boost::shared_ptr<particle> tmpPart) {
+void band::addParticle(std::shared_ptr<particle> tmpPart) {
   _allPart.push_back(tmpPart);
   _partNumb ++;
 };
 
-void band::addForce(boost::shared_ptr<force> tmpForc) {
+void band::addForce(std::shared_ptr<force> tmpForc) {
   _allForces.push_back(tmpForc);
   _forceNumb ++;
 };
 
 
-bandRow::bandRow (boost::shared_ptr<configopt> cfg, boost::shared_ptr<particleRow> pRow, boost::shared_ptr<forceRow> fRow){
+bandRow::bandRow (std::shared_ptr<configopt> cfg, std::shared_ptr<particleRow> pRow, std::shared_ptr<forceRow> fRow){
   _cfg =  cfg;
   _pRow = pRow;
   _fRow = fRow;
   int i = 0;
   for (int dz = 0; dz < _cfg->SecZ(); dz++) {
     for (int dr = 0; dr < _cfg->SecRadial(); dr++) {
-      boost::shared_ptr<band> tmpBand (new band(i, dz, dr, _cfg->Din()/2.0+dr*_cfg->dDr(), _cfg->Din()/2.0+(dr+1)*_cfg->dDr(), _cfg->dDz()*dz, _cfg->dDz()*(dz+1)));
+      std::shared_ptr<band> tmpBand (new band(i, dz, dr, _cfg->Din()/2.0+dr*_cfg->dDr(), _cfg->Din()/2.0+(dr+1)*_cfg->dDr(), _cfg->dDz()*dz, _cfg->dDz()*(dz+1)));
       _bandAll.push_back(tmpBand);
       i++;
     }
@@ -60,7 +60,7 @@ void bandRow::fillBands (){
       double dRmax = _cfg->Din()/2.0 + _cfg->dDr()*(r+1);
       double dZmin = _cfg->dDz()*z;
       double dZmax = _cfg->dDz()*(z+1);
-      boost::shared_ptr<band> tmpBand (new band(i, z, r, dRmin, dRmax, dZmin, dZmax));
+      std::shared_ptr<band> tmpBand (new band(i, z, r, dRmin, dRmax, dZmin, dZmax));
       _bandAll.push_back(tmpBand);
       i++;
     }
@@ -72,7 +72,7 @@ void bandRow::fillBands (){
   //Put particles
   for (int z = 0; z<_pRow->arraySize(); z++) {
     if (_pRow->particleReal(z)) {
-      boost::shared_ptr<particle> partTemp = _pRow->getP(z);
+      std::shared_ptr<particle> partTemp = _pRow->getP(z);
       Eigen::Vector3f OP = partTemp->c() - O;     //Vector from center to point
       Eigen::Vector3f OPV = Z.cross(OP);          //Vector, temporal
       OPV.normalize();
@@ -106,7 +106,7 @@ void bandRow::fillBands (){
   long long forceRemoved = 0;
   //Put forces
   for (int z = 0; z<_fRow->arraySize(); z++) {
-    boost::shared_ptr<force> forceTemp = _fRow->getF(z);
+    std::shared_ptr<force> forceTemp = _fRow->getF(z);
     Eigen::Vector3f OP = forceTemp->cP() - O;   //Vector from center to point
     Eigen::Vector3f OPV = Z.cross(OP);          //Vector, temporal
     OPV.normalize();

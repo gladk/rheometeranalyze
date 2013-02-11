@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <Eigen/Dense>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 class particle {
   private:
@@ -54,16 +54,16 @@ class particle {
 
 class particleRow {
   private: 
-    std::vector <boost::shared_ptr<particle> > _allPart;
-    boost::shared_ptr<particle> _tmpP;
+    std::vector <std::shared_ptr<particle> > _allPart;
+    std::shared_ptr<particle> _tmpP;
     long long _realPartNum;
   public:
     particleRow(long long);
-    void addP(boost::shared_ptr<particle> );
+    void addP(std::shared_ptr<particle> );
     long long elementsNum();
     long long arraySize() {return _allPart.size();};
     bool particleReal(long long);
-    boost::shared_ptr<particle> getP(long long);
+    std::shared_ptr<particle> getP(long long);
     void disable(long long);
     void enable(long long);
 };
