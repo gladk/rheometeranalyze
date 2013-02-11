@@ -6,13 +6,13 @@ force::force(unsigned long long pid1, unsigned long long pid2, Eigen::Vector3f p
   _pos1 = pos1;
   _pos2 = pos2;
   _val = val;
-  _dr = Eigen::Vector3f::Zero();
-  _dz = Eigen::Vector3f::Zero();
-  _df = Eigen::Vector3f::Zero();
   _bandR = -1; _bandZ=-1; _bandN=-1;
   _dist = -1; _height = -1;
   _disable = false;
+  _calculateStressTensor = false;
   _cP = (pos1-pos2)/2.0 + pos1;
+  _axisMatrix = _axisMatrix.Zero();
+  _StressTensor = _StressTensor.Zero();
 };
 
 force::force() {
@@ -20,24 +20,40 @@ force::force() {
   _pos1 = Eigen::Vector3f::Zero();
   _pos2 = Eigen::Vector3f::Zero();
   _val = Eigen::Vector3f::Zero();
-  _dr = Eigen::Vector3f::Zero();
-  _dz = Eigen::Vector3f::Zero();
-  _df = Eigen::Vector3f::Zero();
   _cP = Eigen::Vector3f::Zero();
   _bandR = -1; _bandZ=-1; _bandN=-1;
   _dist = -1; _height = -1;
   _disable = false;
+  _calculateStressTensor = false;
+  _axisMatrix = _axisMatrix.Zero();
+  _StressTensor = _StressTensor.Zero();
 };
 
 double force::Tau() {
-  double SigmaR = _val.dot(_df);
-  double SigmaZ = _val.dot(_dz);
+  if (not(_calculateStressTensor)) {calculateStressTensor();};
+  double SigmaR = _val.dot(_axisMatrix.row(2));
+  double SigmaZ = _val.dot(_axisMatrix.row(1));
   return sqrt(SigmaR*SigmaR + SigmaZ*SigmaZ);
 };
 
 double force::Press() {
+  if (not(_calculateStressTensor)) {calculateStressTensor();};
   double SigmaP = sqrt(_val.dot(_dg)*_val.dot(_dg));
   return SigmaP;
+};
+
+void force::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
+  _axisMatrix = _axisMatrix.Zero();
+  dr.normalize(); dz.normalize(); df.normalize();
+  _axisMatrix << dr, dz, df;
+  _axisMatrix.transposeInPlace();
+};
+
+void force::calculateStressTensor() {
+  Eigen::Matrix3f forceMatrix; forceMatrix << _val, _val, _val;
+  forceMatrix.transposeInPlace();
+  _StressTensor = _axisMatrix.cwiseProduct(forceMatrix);
+  _calculateStressTensor  =  true;
 };
 
 forceRow::forceRow() {

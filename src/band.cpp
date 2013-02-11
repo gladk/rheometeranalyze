@@ -116,9 +116,7 @@ void bandRow::fillBands (){
     forceTemp->set_dist(dist);
     double height = OP.dot(Z);
     forceTemp->set_height(height);
-    forceTemp->set_dr(-OPV1);
-    forceTemp->set_dz(Z);
-    forceTemp->set_df(OPV);
+    forceTemp->set_axis(-OPV1, Z, OPV);          //dr, dz, df
     forceTemp->set_dg(_cfg->get_g());
     //Define band
     int bR = getBandR(dist);
