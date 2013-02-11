@@ -48,8 +48,8 @@ bandRow::bandRow (boost::shared_ptr<configopt> cfg, boost::shared_ptr<particleRo
     
 void bandRow::fillBands (){
   //Fill bands with particles
-  Eigen::Vector3d O = _cfg->get_c();
-  Eigen::Vector3d Z = _cfg->get_o();
+  Eigen::Vector3f O = _cfg->get_c();
+  Eigen::Vector3f Z = _cfg->get_o();
   
   //Prepare band-vector
   int i=0;
@@ -72,10 +72,10 @@ void bandRow::fillBands (){
   for (int z = 0; z<_pRow->arraySize(); z++) {
     if (_pRow->particleReal(z)) {
       boost::shared_ptr<particle> partTemp = _pRow->getP(z);
-      Eigen::Vector3d OP = partTemp->c() - O;     //Vector from center to point
-      Eigen::Vector3d OPV = Z.cross(OP);          //Vector, temporal
+      Eigen::Vector3f OP = partTemp->c() - O;     //Vector from center to point
+      Eigen::Vector3f OPV = Z.cross(OP);          //Vector, temporal
       OPV.normalize();
-      Eigen::Vector3d OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
+      Eigen::Vector3f OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
       
       OPV1.normalize();
       double dist = OP.dot(-OPV1);
@@ -108,10 +108,10 @@ void bandRow::fillBands (){
   //Put forces
   for (int z = 0; z<_fRow->arraySize(); z++) {
     boost::shared_ptr<force> forceTemp = _fRow->getF(z);
-    Eigen::Vector3d OP = forceTemp->cP() - O;   //Vector from center to point
-    Eigen::Vector3d OPV = Z.cross(OP);          //Vector, temporal
+    Eigen::Vector3f OP = forceTemp->cP() - O;   //Vector from center to point
+    Eigen::Vector3f OPV = Z.cross(OP);          //Vector, temporal
     OPV.normalize();
-    Eigen::Vector3d OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
+    Eigen::Vector3f OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
     
     OPV1.normalize();
     double dist = OP.dot(-OPV1);

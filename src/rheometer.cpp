@@ -37,7 +37,7 @@ void rheometer::loadParticles() {
     double pR;
     int pT;
     unsigned long long pId;
-    Eigen::Vector3d pC, pV, pO;
+    Eigen::Vector3f pC, pV, pO;
     if (curLine>=_cfg->nDat()) {
       for (int i=1; i<=_cfg->maxC(); i++) {
         if (i==_cfg->cId()) {
@@ -112,7 +112,7 @@ void rheometer::loadForces() {
     std::string data;
     
     unsigned long long pid1, pid2;
-    Eigen::Vector3d pos1, pos2, val;
+    Eigen::Vector3f pos1, pos2, val;
   
     if (curLine>=_cfg->fDat()) {
       for (int i=1; i<=_cfg->maxCF(); i++) {
