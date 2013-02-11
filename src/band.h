@@ -20,7 +20,7 @@ class band {
     std::vector <boost::shared_ptr<particle> > _allPart;  // Vector of particles;
     std::vector <boost::shared_ptr<force> > _allForces;   // Vector of forces;
     
-    double _tau, _tauavg, _vol;                           // Results, Tau, Vol
+    double _tau, _tauavg, _vol, _volPart;                 // Results, Tau, Vol, Vol of particles
     double _p, _pavg;                                     // Results, Press
     double _vavg;                                         // Results, angular velocity of particles
 

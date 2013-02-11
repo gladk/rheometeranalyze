@@ -15,6 +15,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _p = 0.0; _pavg = 0.0; 
   _vavg = 0.0;
   _vol = M_PI/4.0*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin);
+  _volPart = 0.0;
   std::vector <boost::shared_ptr<particle> > _allPart;
   std::vector <boost::shared_ptr<force> > _allForces;
 };
@@ -163,21 +164,26 @@ void bandRow::calculateValues () {
 void band::calculateValues () {
   _tau = 0.0;
   _p = 0.0;
+  _volPart = 0.0;
   for(unsigned long long f=0; f<_allForces.size(); f++) {
     _tau += _allForces[f]->Tau();
     _p += _allForces[f]->Press();
   }
-  _tauavg = _tau/_vol;
-  _pavg = _p/_vol;
   
   unsigned long long i = 0;
   double angVelTmp = 0.0;
   for(unsigned long long p=0; p<_allPart.size(); p++) {
     if (not(_allPart[p]->disabled())) {
       angVelTmp += _allPart[p]->realAngular();
+      _volPart  += _allPart[p]->vol();
       i++;
     }
   }
+  
   _vavg = angVelTmp / i;
+  
+  _tauavg = _tau/_volPart;
+  _pavg = _p/_volPart;
+  
 };
 
