@@ -15,11 +15,16 @@ class particle {
 
     double _dist;                 // Distance from axis
     double _height;               // Height on Z-axis
-    Eigen::Vector3f _dr;          // Dr-vector
-    Eigen::Vector3f _dz;          // Dz-vector
-    Eigen::Vector3f _df;          // Df-vector
-    
+    Eigen::Matrix3f _axisMatrix;  // [drX, drY, drZ]
+                                  // [dzX, dzY, dzZ]
+                                  // [dfX, dfY, dfZ]
+
+    Eigen::Matrix3f _velMatrix;   // [drX, drY, drZ]
+                                  // [dzX, dzY, dzZ]
+                                  // [dfX, dfY, dfZ]
+                                  
     bool _disable;                // Disable particle, if it is out of region
+    bool _calculateVel;           // Whether the velocity matrix was calculated
 
   public:
     particle(unsigned long long, int, double, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
@@ -27,20 +32,20 @@ class particle {
     unsigned long long id() {return _id;};
     int type() {return _type;};
     double rad() {return _rad;};
-    double realAngular() { return _v.dot(_df)/_dist;}
+    double realAngular();    //_v.dot(df)
     Eigen::Vector3f c() {return _c;}
     Eigen::Vector3f v() {return _v;}
     Eigen::Vector3f o() {return _o;}
-    Eigen::Vector3f dr() {return _dr;}
-    Eigen::Vector3f dz() {return _dz;}
-    Eigen::Vector3f df() {return _df;}
+    Eigen::Vector3f dr() {return _axisMatrix.row(0);}
+    Eigen::Vector3f dz() {return _axisMatrix.row(1);}
+    Eigen::Vector3f df() {return _axisMatrix.row(2);}
     void set_dist(double dist) {_dist=dist;};
+    void calculateVel();
     void set_height(double height) {_height=height;};
     double dist() { return _dist;};
     double height() { return _height;};
-    void set_dr(Eigen::Vector3f dr) {_dr=dr;};
-    void set_dz(Eigen::Vector3f dz) {_dz=dz;};
-    void set_df(Eigen::Vector3f df) {_df=df;};
+    void set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df);
+    
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }

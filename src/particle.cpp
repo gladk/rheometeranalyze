@@ -8,11 +8,11 @@ particle::particle(unsigned long long id, int type, double rad, Eigen::Vector3f 
   _c = c;
   _v = v;
   _o = o;
-  _dr = Eigen::Vector3f::Zero();
-  _dz = Eigen::Vector3f::Zero();
-  _df = Eigen::Vector3f::Zero();
   _dist = -1; _height = -1;
   _disable = false;
+  _axisMatrix = _axisMatrix.Zero();
+  _velMatrix = _velMatrix.Zero();
+  _calculateVel = false;
 };
 
 particle::particle() {
@@ -22,11 +22,31 @@ particle::particle() {
   _c = Eigen::Vector3f::Zero();
   _v = Eigen::Vector3f::Zero();
   _o = Eigen::Vector3f::Zero();
-  _dr = Eigen::Vector3f::Zero();
-  _dz = Eigen::Vector3f::Zero();
-  _df = Eigen::Vector3f::Zero();
   _dist = -1; _height = -1;
   _disable = false;
+  _axisMatrix = _axisMatrix.Zero();
+  _velMatrix = _velMatrix.Zero();
+  _calculateVel = false;
+};
+
+void particle::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
+  _axisMatrix = _axisMatrix.Zero();
+  dr.normalize(); dz.normalize(); df.normalize();
+  _axisMatrix << dr, dz, df;
+  _axisMatrix.transposeInPlace();
+  if (not(_calculateVel)) { calculateVel();}
+};
+
+void particle::calculateVel() {
+  Eigen::Matrix3f velTempMatrix; velTempMatrix << _v, _v, _v;
+  velTempMatrix.transposeInPlace();
+  _velMatrix = _axisMatrix.cwiseProduct(velTempMatrix);
+  _calculateVel = true;
+};
+
+double particle::realAngular() {
+  if (not(_calculateVel)) { calculateVel();};
+  return _v.dot(_axisMatrix.row(2))/_dist;
 };
 
 particleRow::particleRow(long long partN ) {
