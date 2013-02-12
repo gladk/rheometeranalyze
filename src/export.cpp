@@ -65,15 +65,15 @@ void exportclass::exportVTK() {
   
   vtkSmartPointer<vtkDoubleArray> bandTau = vtkSmartPointer<vtkDoubleArray>::New();
   bandTau->SetNumberOfComponents(1);
-  bandTau->SetName("bandTau");
+  bandTau->SetName("bandGlobTau");
   
   vtkSmartPointer<vtkDoubleArray> bandPress = vtkSmartPointer<vtkDoubleArray>::New();
   bandPress->SetNumberOfComponents(1);
-  bandPress->SetName("bandPress");
+  bandPress->SetName("bandGlobPress");
   
   vtkSmartPointer<vtkDoubleArray> bandLocalPress = vtkSmartPointer<vtkDoubleArray>::New();
   bandLocalPress->SetNumberOfComponents(1);
-  bandLocalPress->SetName("bandLocalPress");
+  bandLocalPress->SetName("bandLocPress");
   
   vtkSmartPointer<vtkDoubleArray> bandOmega = vtkSmartPointer<vtkDoubleArray>::New();
   bandOmega->SetNumberOfComponents(1);

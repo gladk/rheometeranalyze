@@ -184,8 +184,8 @@ void band::calculateValues () {
   
   _vavg = angVelTmp / i;
   
-  //_tauavg = _tau/_volPart;
-  //_pavg = _p/_volPart;
+  _tauavg = _tau/_volPart;
+  _pavg = _p/_volPart;
   
   //std::cerr<<i<<std::endl;
   _localStressTensorAVG = _localStressTensorAVG/_volPart;
