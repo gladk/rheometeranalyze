@@ -25,6 +25,7 @@ class band {
     double _tau, _tauavg, _tauLocalAvg, _vol, _volPart;   // Results, Tau, Vol, Vol of particles
     double _p, _pavg, _pLocalAvg;                         // Results, Press
     double _vavg;                                         // Results, angular velocity of particles
+    double _volFraction;                                  // Volume fraction
 
   public:
     band(int, int, int, double, double, double, double);
@@ -34,6 +35,7 @@ class band {
     double TauAVG() {return _tauavg;};
     double PressAVG() {return _pavg;};
     double vol() {return _vol;};
+    double volFraction() {return _volFraction;};
     long long partNumb () {return _partNumb;};
     long long forceNumb () {return _forceNumb;};
     std::shared_ptr<particle> getPart (long long id) { return _allPart[id];}

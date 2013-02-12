@@ -14,8 +14,9 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _tau = 0.0; _tauavg = 0.0; _tauLocalAvg = 0.0;
   _p = 0.0; _pavg = 0.0; _pLocalAvg = 0.0;
   _vavg = 0.0;
-  _vol = M_PI/4.0*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin);
+  _vol = M_PI*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin);
   _volPart = 0.0;
+  _volFraction = 0.0;
   std::vector <std::shared_ptr<particle> > _allPart;
   std::vector <std::shared_ptr<force> > _allForces;
   _localStressTensorAVG = _localStressTensorAVG.Zero();
@@ -166,6 +167,7 @@ void band::calculateValues () {
   _tau = 0.0;
   _p = 0.0;
   _volPart = 0.0;
+  _volFraction  = 0.0;
   for(unsigned long long f=0; f<_allForces.size(); f++) {
     _tau += _allForces[f]->Tau();
     _p += _allForces[f]->Press();
@@ -183,6 +185,10 @@ void band::calculateValues () {
   }
   
   _vavg = angVelTmp / i;
+  
+  _volFraction  = _volPart/_vol;
+  
+  //std::cerr<<i<<"   "<<_volPart<<"   "<<_vol<<"   "<<_volFraction<<"   "<<_dRmin<<"   "<<_dRmax<<std::endl;
   
   _tauavg = _tau/_volPart;
   _pavg = _p/_volPart;
