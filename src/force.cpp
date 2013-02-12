@@ -61,7 +61,7 @@ void force::calculateStressTensor() {
   forceMatrix.transposeInPlace();
   _StressTensor = _axisMatrix.cwiseProduct(forceMatrix);
   
-  Eigen::Vector3f lpc; lpc = (_pos1-_cP); lpc.normalize();
+  Eigen::Vector3f lpc; lpc = (_cP - _pos1); //lpc.normalize();    !!WHY should it not be normalized???
   _localStressTensor = _val*lpc.transpose();
   
   _calculateStressTensor  =  true;
