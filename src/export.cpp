@@ -71,6 +71,10 @@ void exportclass::exportVTK() {
   bandPress->SetNumberOfComponents(1);
   bandPress->SetName("bandPress");
   
+  vtkSmartPointer<vtkDoubleArray> bandLocalPress = vtkSmartPointer<vtkDoubleArray>::New();
+  bandLocalPress->SetNumberOfComponents(1);
+  bandLocalPress->SetName("bandLocalPress");
+  
   vtkSmartPointer<vtkDoubleArray> bandOmega = vtkSmartPointer<vtkDoubleArray>::New();
   bandOmega->SetNumberOfComponents(1);
   bandOmega->SetName("bandOmega");
@@ -129,6 +133,7 @@ void exportclass::exportVTK() {
         bandN->InsertNextValue(bandTMP->id());
         bandTau->InsertNextValue(bandTMP->tau());
         bandPress->InsertNextValue(bandTMP->press());
+        bandLocalPress->InsertNextValue(bandTMP->localPress());
         bandOmega->InsertNextValue(bandTMP->omega());
         bandPartNum->InsertNextValue(bandTMP->partNumb());
         bandPartNumAVG->InsertNextValue(bandTMP->partNumb()/bandTMP->vol());
@@ -157,6 +162,7 @@ void exportclass::exportVTK() {
     spheresUg->GetPointData()->AddArray(bandN);
     spheresUg->GetPointData()->AddArray(bandTau);
     spheresUg->GetPointData()->AddArray(bandPress);
+    spheresUg->GetPointData()->AddArray(bandLocalPress);
     spheresUg->GetPointData()->AddArray(bandOmega);
     spheresUg->GetPointData()->AddArray(bandPartNum);
     spheresUg->GetPointData()->AddArray(bandPartNumAVG);

@@ -11,8 +11,8 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _dZmax = dZmax;
   _partNumb = 0;
   _forceNumb = 0;
-  _tau = 0.0; _tauavg = 0.0;
-  _p = 0.0; _pavg = 0.0; 
+  _tau = 0.0; _tauavg = 0.0; _tauLocalAvg = 0.0;
+  _p = 0.0; _pavg = 0.0; _pLocalAvg = 0.0;
   _vavg = 0.0;
   _vol = M_PI/4.0*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin);
   _volPart = 0.0;
@@ -184,11 +184,13 @@ void band::calculateValues () {
   
   _vavg = angVelTmp / i;
   
-  _tauavg = _tau/_volPart;
-  _pavg = _p/_volPart;
+  //_tauavg = _tau/_volPart;
+  //_pavg = _p/_volPart;
   
   //std::cerr<<i<<std::endl;
   _localStressTensorAVG = _localStressTensorAVG/_volPart;
+  _pLocalAvg = _localStressTensorAVG.trace()/3.0;
+  
   //std::cerr<<_localStressTensorAVG<<std::endl<<std::endl;
 };
 

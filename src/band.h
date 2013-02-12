@@ -17,13 +17,13 @@ class band {
     int _id, _idZ, _idR;                                  // Band ids
     double _dZmin, _dZmax, _dRmin, _dRmax;                // Band minimal and maximal sizes
     long long _partNumb, _forceNumb;                      // Number of particles
-    std::vector <std::shared_ptr<particle> > _allPart;  // Vector of particles;
-    std::vector <std::shared_ptr<force> > _allForces;   // Vector of forces;
+    std::vector <std::shared_ptr<particle> > _allPart;    // Vector of particles;
+    std::vector <std::shared_ptr<force> > _allForces;     // Vector of forces;
     
     Eigen::Matrix3f _localStressTensorAVG;
     
-    double _tau, _tauavg, _vol, _volPart;                 // Results, Tau, Vol, Vol of particles
-    double _p, _pavg;                                     // Results, Press
+    double _tau, _tauavg, _tauLocalAvg, _vol, _volPart;   // Results, Tau, Vol, Vol of particles
+    double _p, _pavg, _pLocalAvg;                         // Results, Press
     double _vavg;                                         // Results, angular velocity of particles
 
   public:
@@ -43,6 +43,7 @@ class band {
     int idR() {return _idR;}
     double tau() {return _tauavg;}
     double press() {return _pavg;}
+    double localPress() {return _pLocalAvg;}
     double omega() {return _vavg;}
 };
 
