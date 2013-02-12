@@ -26,6 +26,7 @@ class band {
     double _p, _pavg, _pLocalAvg;                         // Results, Press
     double _vavg;                                         // Results, angular velocity of particles
     double _volFraction;                                  // Volume fraction
+    double _contactNumAVG;                                // Contact number per particle, AVG
 
   public:
     band(int, int, int, double, double, double, double);
@@ -36,6 +37,7 @@ class band {
     double PressAVG() {return _pavg;};
     double vol() {return _vol;};
     double volFraction() {return _volFraction;};
+    double contactNumAVG() {return _contactNumAVG;};
     long long partNumb () {return _partNumb;};
     long long forceNumb () {return _forceNumb;};
     std::shared_ptr<particle> getPart (long long id) { return _allPart[id];}
