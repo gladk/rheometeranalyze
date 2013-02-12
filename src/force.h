@@ -23,6 +23,8 @@ class force {
                                   // [dzX, dzY, dzZ]
                                   // [dfX, dfY, dfZ]
     
+    Eigen::Matrix3f _localStressTensor;
+    
     Eigen::Vector3f _dg;          // Gravity-vector
     int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
     Eigen::Vector3f _cP;          // Contact Point
@@ -62,6 +64,7 @@ class force {
     double Tau();
     double Press();
     void calculateStressTensor();
+    Eigen::Matrix3f localStressTensor();
 };
 
 class forceRow {

@@ -18,6 +18,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _volPart = 0.0;
   std::vector <std::shared_ptr<particle> > _allPart;
   std::vector <std::shared_ptr<force> > _allForces;
+  _localStressTensorAVG = _localStressTensorAVG.Zero();
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
@@ -61,13 +62,12 @@ void bandRow::fillBands (){
       double dZmin = _cfg->dDz()*z;
       double dZmax = _cfg->dDz()*(z+1);
       std::shared_ptr<band> tmpBand (new band(i, z, r, dRmin, dRmax, dZmin, dZmax));
-      _bandAll.push_back(tmpBand);
+      _bandAll[i] = tmpBand;
       i++;
     }
   }
   
   //Put particles into band
-  
   long long particleRemoved = 0;
   //Put particles
   for (int z = 0; z<_pRow->arraySize(); z++) {
@@ -158,6 +158,7 @@ void bandRow::calculateValues () {
   for(unsigned int i=0; i<_bandAll.size(); i++) {
     _bandAll[i]->calculateValues();
   }
+  
 };
 
 
@@ -168,6 +169,7 @@ void band::calculateValues () {
   for(unsigned long long f=0; f<_allForces.size(); f++) {
     _tau += _allForces[f]->Tau();
     _p += _allForces[f]->Press();
+    _localStressTensorAVG += _allForces[f]->localStressTensor();
   }
   
   unsigned long long i = 0;
@@ -185,5 +187,8 @@ void band::calculateValues () {
   _tauavg = _tau/_volPart;
   _pavg = _p/_volPart;
   
+  std::cerr<<i<<std::endl;
+  _localStressTensorAVG = _localStressTensorAVG/_volPart;
+  std::cerr<<_localStressTensorAVG<<std::endl<<std::endl;
 };
 

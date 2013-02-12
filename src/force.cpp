@@ -13,6 +13,7 @@ force::force(unsigned long long pid1, unsigned long long pid2, Eigen::Vector3f p
   _cP = (pos1-pos2)/2.0 + pos1;
   _axisMatrix = _axisMatrix.Zero();
   _StressTensor = _StressTensor.Zero();
+  _localStressTensor = _localStressTensor.Zero();
 };
 
 force::force() {
@@ -27,6 +28,7 @@ force::force() {
   _calculateStressTensor = false;
   _axisMatrix = _axisMatrix.Zero();
   _StressTensor = _StressTensor.Zero();
+  _localStressTensor = _localStressTensor.Zero();
 };
 
 double force::Tau() {
@@ -42,6 +44,11 @@ double force::Press() {
   return SigmaP;
 };
 
+Eigen::Matrix3f force::localStressTensor() {
+  if (not(_calculateStressTensor)) {calculateStressTensor();};
+  return _localStressTensor;
+};
+
 void force::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
   _axisMatrix = _axisMatrix.Zero();
   dr.normalize(); dz.normalize(); df.normalize();
@@ -53,6 +60,10 @@ void force::calculateStressTensor() {
   Eigen::Matrix3f forceMatrix; forceMatrix << _val, _val, _val;
   forceMatrix.transposeInPlace();
   _StressTensor = _axisMatrix.cwiseProduct(forceMatrix);
+  
+  Eigen::Vector3f lpc; lpc = (_pos1-_cP); lpc.normalize();
+  _localStressTensor = _val*lpc.transpose();
+  
   _calculateStressTensor  =  true;
 };
 

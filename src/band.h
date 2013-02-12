@@ -20,6 +20,8 @@ class band {
     std::vector <std::shared_ptr<particle> > _allPart;  // Vector of particles;
     std::vector <std::shared_ptr<force> > _allForces;   // Vector of forces;
     
+    Eigen::Matrix3f _localStressTensorAVG;
+    
     double _tau, _tauavg, _vol, _volPart;                 // Results, Tau, Vol, Vol of particles
     double _p, _pavg;                                     // Results, Press
     double _vavg;                                         // Results, angular velocity of particles
