@@ -35,14 +35,14 @@ force::force() {
 
 double force::Tau() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
-  double SigmaR = _val.dot(_axisMatrix.row(2));
-  double SigmaZ = _val.dot(_axisMatrix.row(1));
+  double SigmaR = _val.dot(_axisMatrix.row(2))*_radLen;
+  double SigmaZ = _val.dot(_axisMatrix.row(1))*_radLen;
   return sqrt(SigmaR*SigmaR + SigmaZ*SigmaZ);
 };
 
 double force::Press() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
-  double SigmaP = sqrt(_val.dot(_dg)*_val.dot(_dg));
+  double SigmaP = sqrt(_val.dot(_dg)*_val.dot(_dg)*_radLen*_radLen);
   return SigmaP;
 };
 
