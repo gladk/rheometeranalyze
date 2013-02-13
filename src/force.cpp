@@ -14,6 +14,7 @@ force::force(unsigned long long pid1, unsigned long long pid2, Eigen::Vector3f p
   _axisMatrix = _axisMatrix.Zero();
   _StressTensor = _StressTensor.Zero();
   _localStressTensor = _localStressTensor.Zero();
+  _radLen = ((pos2-pos1)/2.0).norm();
 };
 
 force::force() {
@@ -29,6 +30,7 @@ force::force() {
   _axisMatrix = _axisMatrix.Zero();
   _StressTensor = _StressTensor.Zero();
   _localStressTensor = _localStressTensor.Zero();
+  _radLen = 0.0;
 };
 
 double force::Tau() {
@@ -46,7 +48,7 @@ double force::Press() {
 
 Eigen::Matrix3f force::localStressTensor() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
-  return _localStressTensor;
+  return _localStressTensor*_radLen;
 };
 
 void force::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
@@ -61,7 +63,7 @@ void force::calculateStressTensor() {
   forceMatrix.transposeInPlace();
   _StressTensor = _axisMatrix.cwiseProduct(forceMatrix);
   
-  Eigen::Vector3f lpc; lpc = (_cP - _pos1); //lpc.normalize();    !!WHY should it not be normalized???
+  Eigen::Vector3f lpc; lpc = (_cP - _pos1); lpc.normalize();    // !!WHY should not it be normalized???
   _localStressTensor = _val*lpc.transpose();
   
   _calculateStressTensor  =  true;

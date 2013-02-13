@@ -32,6 +32,8 @@ class force {
     bool _disable;                // Disable force, if it is out of region
     bool _calculateStressTensor;  // Whether the StressTensor was calculated
     
+    double _radLen;              // Length of the vector from center to contact point
+    
     
     
 
