@@ -198,7 +198,7 @@ void band::calculateValues () {
   
   //std::cerr<<i<<std::endl;
   _localStressTensorAVG = _localStressTensorAVG/_volPart;
-  _pLocalAvg = _localStressTensorAVG.trace()/3.0;
+  _pLocalAvg = _localStressTensorAVG.trace();
   
   //std::cerr<<_localStressTensorAVG<<std::endl<<std::endl;
 };
