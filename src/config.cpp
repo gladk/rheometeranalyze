@@ -25,6 +25,7 @@ configopt::configopt(const std::string &filename) {
 
   _nAt = pt.get<int>("Particle.nAt");
   _nDat = pt.get<int>("Particle.nDat");
+  _tC = pt.get<double>("Particle.tC");
 
   _cId = pt.get<int>("Particle.cId"); _maxColumnCheck(_cId, 0);
   _cT = pt.get<int>("Particle.cT"); _maxColumnCheck(_cT, 0);

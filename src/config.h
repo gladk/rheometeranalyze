@@ -16,6 +16,7 @@ class configopt {
     int _nDat;                // Begin of data string
     int _cId;                 // Column of Id
     int _cT;                  // Column of type
+    int _tC;                  // Type of particle, which will be calculated. -1 means calculating of all particles
     int _cC;                  // Column of center
     int _cV;                  // Column of linear velocity
     int _cO;                  // Column of angular velocity
@@ -48,6 +49,7 @@ class configopt {
     int nDat(){return _nDat;};
     int cId(){return _cId;};
     int cT(){return _cT;};
+    int tC(){return _tC;};
     int cC(){return _cC;};
     int cV(){return _cV;};
     int cO(){return _cO;};

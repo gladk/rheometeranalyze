@@ -15,8 +15,8 @@ Dout = 0.09
 H = 0.025
 
 ;number of sections, in which the rheometer will be divided in radial- and Z-direction 
-SecRadial = 5
-SecZ = 7
+SecRadial = 10
+SecZ = 10
 
 ;gravity direction
 gX = 0.0
@@ -48,4 +48,32 @@ cO = 16
 
 ;column of radius
 cR = 19
+
+;type of particle, which will be calculated. -1 means calculating of all particles
+tC = 1
+
+[Force]
+;number of forces string
+nFt = 4
+
+;begin of data string
+nDat = 6
+
+;column Pos1
+cPos1 = 1
+
+;column Pos2
+cPos2 = 4
+
+;column Pos1ID
+cPos1ID = 7
+
+;column Pos2ID
+cPos2ID = 8
+
+;column Forc
+cForc = 10
+
+
+
 

@@ -166,7 +166,9 @@ void bandRow::calculateValues () {
   // Scherrate
   for(unsigned int i=1; i<_bandAll.size(); i++) {
     if (_bandAll[i]->idR() > _bandAll[i-1]->idR()) {
-      _bandAll[i]->set_scherRate(_bandAll[i-1]->omega()-_bandAll[i]->omega());
+      if (_bandAll[i-1]->omega()>0) {
+        _bandAll[i]->set_scherRate(_bandAll[i-1]->omega()-_bandAll[i]->omega());
+      }
     }
   }
   
