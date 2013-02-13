@@ -190,14 +190,14 @@ void band::calculateValues () {
   if (i>0) {
     _volFraction  = _volPart/_vol;
     _contactNumAVG = (double)_allForces.size()/i;
-    _tauavg = _tau/_volPart;
-    _pavg = _p/_volPart;
+    _tauavg = _tau/_vol;
+    _pavg = _p/_vol;
   }
   
   
   
-  //std::cerr<<i<<std::endl;
-  _localStressTensorAVG = _localStressTensorAVG/_volPart;
+  
+  _localStressTensorAVG = _localStressTensorAVG/_vol;
   _pLocalAvg = _localStressTensorAVG.trace();
   
   //std::cerr<<_localStressTensorAVG<<std::endl<<std::endl;
