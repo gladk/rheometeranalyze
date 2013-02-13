@@ -12,7 +12,7 @@ force::force(unsigned long long pid1, unsigned long long pid2, Eigen::Vector3f p
   _calculateStressTensor = false;
   _cP = (pos1-pos2)/2.0 + pos1;
   _axisMatrix = _axisMatrix.Zero();
-  _StressTensor = _StressTensor.Zero();
+  _globalStressTensor = _globalStressTensor.Zero();
   _localStressTensor = _localStressTensor.Zero();
   _radLen = ((pos2-pos1)/2.0).norm();
 };
@@ -28,21 +28,24 @@ force::force() {
   _disable = false;
   _calculateStressTensor = false;
   _axisMatrix = _axisMatrix.Zero();
-  _StressTensor = _StressTensor.Zero();
+  _globalStressTensor = _globalStressTensor.Zero();
   _localStressTensor = _localStressTensor.Zero();
   _radLen = 0.0;
 };
 
 double force::Tau() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
-  double SigmaR = _val.dot(_axisMatrix.row(2))*_radLen;
-  double SigmaZ = _val.dot(_axisMatrix.row(1))*_radLen;
+  //double SigmaR = _val.dot(_axisMatrix.row(2))*_radLen;
+  //double SigmaZ = _val.dot(_axisMatrix.row(1))*_radLen;
+  double SigmaR = _globalStressTensor.row(2).norm()*_radLen;
+  double SigmaZ = _globalStressTensor.row(1).norm()*_radLen;
   return sqrt(SigmaR*SigmaR + SigmaZ*SigmaZ);
 };
 
 double force::Press() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
-  double SigmaP = sqrt(_val.dot(_dg)*_val.dot(_dg)*_radLen*_radLen);
+  //double SigmaP = sqrt(_val.dot(_dg)*_val.dot(_dg)*_radLen*_radLen);
+  double SigmaP = sqrt(_globalStressTensor.row(1).norm()*_radLen*_globalStressTensor.row(1).norm()*_radLen);
   return SigmaP;
 };
 
@@ -61,7 +64,7 @@ void force::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df)
 void force::calculateStressTensor() {
   Eigen::Matrix3f forceMatrix; forceMatrix << _val, _val, _val;
   forceMatrix.transposeInPlace();
-  _StressTensor = _axisMatrix.cwiseProduct(forceMatrix);
+  _globalStressTensor = _axisMatrix.cwiseProduct(forceMatrix);
   
   Eigen::Vector3f lpc; lpc = (_cP - _pos1); lpc.normalize();    // !!WHY should not it be normalized???
   _localStressTensor = _val*lpc.transpose();

@@ -19,9 +19,9 @@ class force {
                                   // [dzX, dzY, dzZ]
                                   // [dfX, dfY, dfZ]
     
-    Eigen::Matrix3f _StressTensor;// [drX, drY, drZ]
-                                  // [dzX, dzY, dzZ]
-                                  // [dfX, dfY, dfZ]
+    Eigen::Matrix3f _globalStressTensor;  // [drX, drY, drZ]
+                                          // [dzX, dzY, dzZ]
+                                          // [dfX, dfY, dfZ]
     
     Eigen::Matrix3f _localStressTensor;
     
