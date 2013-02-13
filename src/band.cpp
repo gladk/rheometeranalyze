@@ -21,6 +21,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   std::vector <std::shared_ptr<particle> > _allPart;
   std::vector <std::shared_ptr<force> > _allForces;
   _localStressTensorAVG = _localStressTensorAVG.Zero();
+  _scherRate = 0.0;
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
@@ -32,7 +33,6 @@ void band::addForce(std::shared_ptr<force> tmpForc) {
   _allForces.push_back(tmpForc);
   _forceNumb ++;
 };
-
 
 bandRow::bandRow (std::shared_ptr<configopt> cfg, std::shared_ptr<particleRow> pRow, std::shared_ptr<forceRow> fRow){
   _cfg =  cfg;
@@ -157,12 +157,20 @@ int bandRow::getBandZ(double height) {
 };
 
 void bandRow::calculateValues () {
+  
+  // Common values
   for(unsigned int i=0; i<_bandAll.size(); i++) {
     _bandAll[i]->calculateValues();
   }
   
+  // Scherrate
+  for(unsigned int i=1; i<_bandAll.size(); i++) {
+    if (_bandAll[i]->idR() > _bandAll[i-1]->idR()) {
+      _bandAll[i]->set_scherRate(_bandAll[i-1]->omega()-_bandAll[i]->omega());
+    }
+  }
+  
 };
-
 
 void band::calculateValues () {
   _tau = 0.0;
@@ -194,12 +202,8 @@ void band::calculateValues () {
     _pavg = _p/_vol;
   }
   
-  
-  
-  
   _localStressTensorAVG = _localStressTensorAVG/_vol;
   _pLocalAvg = _localStressTensorAVG.trace();
   
-  //std::cerr<<_localStressTensorAVG<<std::endl<<std::endl;
 };
 
