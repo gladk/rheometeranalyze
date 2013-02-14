@@ -197,7 +197,6 @@ void exportclass::exportVTK() {
     spheresUg->GetPointData()->AddArray(bandScherRate);
     spheresUg->GetPointData()->AddArray(bandLocSigmDev);
     spheresUg->GetPointData()->AddArray(bandLocMu);
-    //spheresUg->GetPointData()->AddArray(bandMu);
     
   }
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
