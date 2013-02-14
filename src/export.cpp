@@ -5,7 +5,7 @@ exportclass::exportclass(std::shared_ptr<configopt> cfg, std::shared_ptr <bandRo
   _bandRow = bandAll;
 };
 
-void exportclass::exportVTK() {
+void exportclass::VTK() {
   
   //Export Particles
   vtkSmartPointer<vtkPoints>  spheresPos = vtkSmartPointer<vtkPoints>::New();
@@ -204,6 +204,9 @@ void exportclass::exportVTK() {
   writer->SetInput(spheresUg);
   writer->SetFileName("a.vtu");
   writer->Write();
+};
+
+void exportclass::gnuplotSchearRate() {
   
   
 };

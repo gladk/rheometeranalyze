@@ -43,7 +43,8 @@ class exportclass {
     
   public:
     exportclass(std::shared_ptr<configopt>, std::shared_ptr <bandRow>);
-    void exportVTK();
+    void VTK();
+    void gnuplotSchearRate();
 };
 
 #endif
