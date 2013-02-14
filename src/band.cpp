@@ -14,6 +14,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _tau = 0.0; _tauavg = 0.0; _tauLocalAvg = 0.0;
   _p = 0.0; _pavg = 0.0; _pLocalAvg = 0.0;
   _vavg = 0.0;
+  _dLocalAvg = 0.0;
   _vol = M_PI*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin);
   _volPart = 0.0;
   _volFraction = 0.0;
@@ -205,7 +206,20 @@ void band::calculateValues () {
   }
   
   _localStressTensorAVG = _localStressTensorAVG/_vol;
-  _pLocalAvg = _localStressTensorAVG.trace();
+  _pLocalAvg = _localStressTensorAVG.trace()/3.0;                       // Pressure, Luding 2008, constitutive, p.5
+  
+  double SMax = _localStressTensorAVG.diagonal().maxCoeff();
+  double SMin = _localStressTensorAVG.diagonal().minCoeff();
+  double SNul = _localStressTensorAVG.trace() - 
+                _localStressTensorAVG.diagonal().maxCoeff() - 
+                _localStressTensorAVG.diagonal().minCoeff();
+  
+  _dLocalAvg = sqrt( (SMax-SMin)*(SMax-SMin) +                          // SigmaD, Luding 2008, constitutive, p.5
+                     (SMax-SNul)*(SMax-SNul) + 
+                     (SNul-SMin)*(SNul-SMin) ) / sqrt(6);
+  
+  
+  std::cerr<<_pLocalAvg<<"    "<<_dLocalAvg<<"    "<<_dLocalAvg/_pLocalAvg<<std::endl;
   
 };
 

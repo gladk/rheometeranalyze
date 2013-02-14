@@ -37,9 +37,15 @@ double force::Tau() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
   //double SigmaR = _val.dot(_axisMatrix.row(2))*_radLen;
   //double SigmaZ = _val.dot(_axisMatrix.row(1))*_radLen;
-  double SigmaR = _globalStressTensor.row(2).norm()*_radLen;
-  double SigmaZ = _globalStressTensor.row(1).norm()*_radLen;
-  return sqrt(SigmaR*SigmaR + SigmaZ*SigmaZ);
+  
+  //double SigmaR = _globalStressTensor.row(2).norm()*_radLen;
+  //double SigmaZ = _globalStressTensor.row(1).norm()*_radLen;
+  
+  //return sqrt(SigmaR*SigmaR + SigmaZ*SigmaZ);
+  
+  //double SigmaR = _globalStressTensor.row(2).norm()*_radLen;
+  double SigmaR = sqrt(_globalStressTensor.row(1).norm()*_radLen*_globalStressTensor.row(1).norm()*_radLen);
+  return SigmaR;
 };
 
 double force::Press() {

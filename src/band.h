@@ -23,7 +23,8 @@ class band {
     Eigen::Matrix3f _localStressTensorAVG;
     
     double _tau, _tauavg, _tauLocalAvg, _vol, _volPart;   // Results, Tau, Vol, Vol of particles
-    double _p, _pavg, _pLocalAvg;                         // Results, Press
+    double _p, _pavg, _pLocalAvg;                         // Results, Press (trace), hydrostatic stress
+    double _dLocalAvg;                                    // Results, Deviatoric stress
     double _vavg;                                         // Results, angular velocity of particles
     double _scherRate;                                    // Results, scherrate
     double _volFraction;                                  // Volume fraction
@@ -48,7 +49,8 @@ class band {
     int idR() {return _idR;}
     double tau() {return _tauavg;}
     double press() {return _pavg;}
-    double localPress() {return _pLocalAvg;}
+    double localPress() {return _pLocalAvg;}                            //Trace
+    double dLocalAvg() {return _dLocalAvg;}                             //Deviatoric
     double omega() {return _vavg;}
     void set_scherRate(double scherRate) {_scherRate = scherRate;}
     double scherRate() { return _scherRate;}
