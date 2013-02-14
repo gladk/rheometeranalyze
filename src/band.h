@@ -24,7 +24,8 @@ class band {
     
     double _tau, _tauavg, _tauLocalAvg, _vol, _volPart;   // Results, Tau, Vol, Vol of particles
     double _p, _pavg, _pLocalAvg;                         // Results, Press (trace), hydrostatic stress
-    double _dLocalAvg;                                    // Results, Deviatoric stress
+    double _dLocalAvg;                                    // Results, Deviatoric stress, SigmaDev
+    double _muLocalAVG;                                   // Results, mu calculated
     double _vavg;                                         // Results, angular velocity of particles
     double _scherRate;                                    // Results, scherrate
     double _volFraction;                                  // Volume fraction
@@ -50,7 +51,8 @@ class band {
     double tau() {return _tauavg;}
     double press() {return _pavg;}
     double localPress() {return _pLocalAvg;}                            //Trace
-    double dLocalAvg() {return _dLocalAvg;}                             //Deviatoric
+    double dLocalAvg() {return _dLocalAvg;}                             //Deviatoric, SigmaD
+    double muLocalAVG() {return _muLocalAVG;}                           //Mu
     double omega() {return _vavg;}
     void set_scherRate(double scherRate) {_scherRate = scherRate;}
     double scherRate() { return _scherRate;}

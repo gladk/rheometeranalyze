@@ -79,6 +79,10 @@ void exportclass::exportVTK() {
   bandLocSigmDev->SetNumberOfComponents(1);
   bandLocSigmDev->SetName("bandLocSigmDev");
   
+  vtkSmartPointer<vtkDoubleArray> bandLocMu = vtkSmartPointer<vtkDoubleArray>::New();
+  bandLocMu->SetNumberOfComponents(1);
+  bandLocMu->SetName("bandLocMu");
+  
   vtkSmartPointer<vtkDoubleArray> bandOmega = vtkSmartPointer<vtkDoubleArray>::New();
   bandOmega->SetNumberOfComponents(1);
   bandOmega->SetName("bandOmega");
@@ -158,6 +162,7 @@ void exportclass::exportVTK() {
         bandVolFraction->InsertNextValue(bandTMP->volFraction());
         bandContactNumAVG->InsertNextValue(bandTMP->contactNumAVG());
         bandScherRate->InsertNextValue(bandTMP->scherRate());
+        bandLocMu->InsertNextValue(bandTMP->muLocalAVG());
         //bandMu->InsertNextValue(bandTMP->tau()/bandTMP->press());
         
         spheresCells->InsertNextCell(1,pid);
@@ -191,6 +196,7 @@ void exportclass::exportVTK() {
     spheresUg->GetPointData()->AddArray(bandContactNumAVG);
     spheresUg->GetPointData()->AddArray(bandScherRate);
     spheresUg->GetPointData()->AddArray(bandLocSigmDev);
+    spheresUg->GetPointData()->AddArray(bandLocMu);
     //spheresUg->GetPointData()->AddArray(bandMu);
     
   }
