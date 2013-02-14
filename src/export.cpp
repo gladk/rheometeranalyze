@@ -207,6 +207,18 @@ void exportclass::VTK() {
 };
 
 void exportclass::gnuplotSchearRate() {
-  
-  
+  ofstream myfile ("gnuplot_shearrate.txt");
+  if (myfile.is_open()) {
+    for(unsigned int b=0; b<_bandRow->size(); b++) {
+      
+      std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
+      if (bandTMP->partNumb()>0) {
+        double p = bandTMP->localPress();
+        double SigmD = bandTMP->dLocalAvg();
+        double mu = bandTMP->muLocalAVG();
+        myfile << p << "\t"<< SigmD << "\t"<< mu << std::endl;
+      }
+    }
+  }   
+  myfile.close();
 };

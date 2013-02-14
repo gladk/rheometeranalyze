@@ -17,6 +17,7 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg, string particlesFileName, s
   
   std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
   exp->VTK();
+  exp->gnuplotSchearRate();
 };
 
 void rheometer::loadParticles() {
