@@ -24,6 +24,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _localStressTensorAVG = _localStressTensorAVG.Zero();
   _scherRate = 0.0;
   _muLocalAVG = 0.0;
+  _radAvg = 0.0;
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
@@ -169,7 +170,7 @@ void bandRow::calculateValues () {
   for(unsigned int i=1; i<_bandAll.size(); i++) {
     if (_bandAll[i]->idR() > _bandAll[i-1]->idR()) {
       if (_bandAll[i-1]->omega()>0) {
-        _bandAll[i]->set_scherRate(_bandAll[i-1]->omega()-_bandAll[i]->omega());
+        _bandAll[i]->set_scherRate(_bandAll[i-1]->omega()-_bandAll[i]->omega());    //Calculate Scherrate
       }
     }
   }
@@ -187,23 +188,26 @@ void band::calculateValues () {
     _localStressTensorAVG += _allForces[f]->localStressTensor();
   }
   
+  double radTMP = 0;
   unsigned long long i = 0;
   double angVelTmp = 0.0;
   for(unsigned long long p=0; p<_allPart.size(); p++) {
     if (not(_allPart[p]->disabled())) {
       angVelTmp += _allPart[p]->realAngular();
       _volPart  += _allPart[p]->vol();
+      radTMP += _allPart[p]->rad();
       i++;
     }
   }
   
-  _vavg = angVelTmp / i;
   
   if (i>0) {
     _volFraction  = _volPart/_vol;
     _contactNumAVG = (double)_allForces.size()/i;
+    _vavg = angVelTmp / i;
     _tauavg = _tau/_vol;
     _pavg = _p/_vol;
+    _radAvg = radTMP/i;
     
     _localStressTensorAVG = _localStressTensorAVG/_vol;
     _pLocalAvg = _localStressTensorAVG.trace()/3.0;                       // Pressure, Luding 2008, constitutive, p.5

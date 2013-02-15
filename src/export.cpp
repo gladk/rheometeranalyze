@@ -207,8 +207,9 @@ void exportclass::VTK() {
 };
 
 void exportclass::gnuplotSchearRate() {
-  ofstream myfile ("gnuplot_shearrate.txt");
-  if (myfile.is_open()) {
+  ofstream myfile1 ("gnuplot_shearrate.txt");
+  if (myfile1.is_open()) {
+    myfile1 << "P\tSigmaD\tmu" << std::endl;
     for(unsigned int b=0; b<_bandRow->size(); b++) {
       
       std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
@@ -216,9 +217,36 @@ void exportclass::gnuplotSchearRate() {
         double p = bandTMP->localPress();
         double SigmD = bandTMP->dLocalAvg();
         double mu = bandTMP->muLocalAVG();
-        myfile << p << "\t"<< SigmD << "\t"<< mu << std::endl;
+        myfile1 << p << "\t"<< SigmD << "\t"<< mu << std::endl;
       }
     }
-  }   
-  myfile.close();
+  }  
+  myfile1.close();
+  
+  ofstream myfile2 ("gnuplot_vel1_c.txt");
+  if (myfile2.is_open()) {
+    myfile2 << "y_durch_d\tVabs\tV_durch_V0" << std::endl;
+    double V0 = 0;
+    for(int R=0; R<_cfg->SecRadial(); R++) {
+      double rAVG = 0;
+      double midLinedR = 0;
+      double y_durch_d = 0;
+      double V = 0;
+      for(int Z=0; Z<_cfg->SecZ(); Z++) {
+        std::shared_ptr<band> bandTMP = _bandRow->getBand(R, Z);
+        rAVG += bandTMP->radAvg();
+        midLinedR += bandTMP->midLinedR();
+        V = bandTMP->omega();
+      }
+      rAVG /=_cfg->SecRadial();
+      V /=_cfg->SecRadial();
+      if (R == 0) {V0 = V;};
+      midLinedR = midLinedR/_cfg->SecRadial()  - _cfg->Din()/2.0;
+      y_durch_d = midLinedR/rAVG;
+      myfile2 << y_durch_d << "\t"<< V << "\t"<< V/V0 << std::endl;
+    }
+  }  
+  myfile2.close();
+  
+  
 };

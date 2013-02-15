@@ -30,6 +30,7 @@ class band {
     double _scherRate;                                    // Results, scherrate
     double _volFraction;                                  // Volume fraction
     double _contactNumAVG;                                // Contact number per particle, AVG
+    double _radAvg;                                       // Average particle radius
 
   public:
     band(int, int, int, double, double, double, double);
@@ -40,7 +41,9 @@ class band {
     double PressAVG() {return _pavg;};
     double vol() {return _vol;};
     double volFraction() {return _volFraction;};
+    double radAvg() {return _radAvg;};
     double contactNumAVG() {return _contactNumAVG;};
+    double midLinedR() {return ((_dRmax - _dRmin)/2.0 + _dRmin);};
     long long partNumb () {return _partNumb;};
     long long forceNumb () {return _forceNumb;};
     std::shared_ptr<particle> getPart (long long id) { return _allPart[id];}
@@ -71,6 +74,7 @@ class bandRow {
     int getBandZ(double);
     void calculateValues();
     std::shared_ptr<band> getBand(unsigned int id) {return _bandAll[id];}
+    std::shared_ptr<band> getBand(unsigned int idR, unsigned int idZ) {return _bandAll[idZ*_cfg->SecRadial() + idR];}
     unsigned int size() {return _bandAll.size();}
 };
 
