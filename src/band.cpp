@@ -205,20 +205,20 @@ void band::calculateValues () {
     _tauavg = _tau/_vol;
     _pavg = _p/_vol;
     
-      _localStressTensorAVG = _localStressTensorAVG/_vol;
-      _pLocalAvg = _localStressTensorAVG.trace()/3.0;                       // Pressure, Luding 2008, constitutive, p.5
-  
-      double SMax = _localStressTensorAVG.diagonal().maxCoeff();
-      double SMin = _localStressTensorAVG.diagonal().minCoeff();
-      double SNul = _localStressTensorAVG.trace() - 
-                    _localStressTensorAVG.diagonal().maxCoeff() - 
-                    _localStressTensorAVG.diagonal().minCoeff();
+    _localStressTensorAVG = _localStressTensorAVG/_vol;
+    _pLocalAvg = _localStressTensorAVG.trace()/3.0;                       // Pressure, Luding 2008, constitutive, p.5
 
-      _dLocalAvg = sqrt( (SMax-SMin)*(SMax-SMin) +                         // SigmaD, Luding 2008, constitutive, p.5
-                         (SMax-SNul)*(SMax-SNul) + 
-                         (SNul-SMin)*(SNul-SMin) ) / sqrt(6);
-                         
-      _muLocalAVG = _dLocalAvg/_pLocalAvg;
+    double SMax = _localStressTensorAVG.diagonal().maxCoeff();
+    double SMin = _localStressTensorAVG.diagonal().minCoeff();
+    double SNul = _localStressTensorAVG.trace() - 
+                  _localStressTensorAVG.diagonal().maxCoeff() - 
+                  _localStressTensorAVG.diagonal().minCoeff();
+
+    _dLocalAvg = sqrt( (SMax-SMin)*(SMax-SMin) +                         // SigmaD, Luding 2008, constitutive, p.5
+                       (SMax-SNul)*(SMax-SNul) + 
+                       (SNul-SMin)*(SNul-SMin) ) / sqrt(6);
+                       
+    _muLocalAVG = _dLocalAvg/_pLocalAvg;
   }
 };
 
