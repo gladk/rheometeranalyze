@@ -225,7 +225,7 @@ void exportclass::gnuplotSchearRate() {
   
   ofstream myfile2 ("gnuplot_vel1_c.txt");
   if (myfile2.is_open()) {
-    myfile2 << "y_durch_d\ty_durch_d^2\tVabs\tV_durch_V0\tV_Deviation\tVolFraction" << std::endl;
+    myfile2 << "y_durch_d\ty_durch_d^2\tVabs\tV_durch_V0\tV_Deviation\tVolFraction\td" << std::endl;
     double V0 = 0;
     for(int R=0; R<_cfg->SecRadial(); R++) {
       double rAVG = 0;
@@ -249,7 +249,7 @@ void exportclass::gnuplotSchearRate() {
       if (R == 0) {V0 = V;};
       midLinedR = midLinedR/_cfg->SecRadial()  - _cfg->Din()/2.0;
       y_durch_d = midLinedR/(rAVG*2.0);
-      myfile2 << y_durch_d<< "\t"<< y_durch_d*y_durch_d << "\t"<< V << "\t"<< V/V0 << "\t"<< VStDev << "\t"<< VolFract << std::endl;
+      myfile2 << y_durch_d<< "\t"<< y_durch_d*y_durch_d << "\t"<< V << "\t"<< V/V0 << "\t"<< VStDev << "\t"<< VolFract << "\t"<< rAVG*2.0 << std::endl;
     }
   }  
   myfile2.close();

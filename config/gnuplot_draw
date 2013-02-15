@@ -160,3 +160,29 @@ set grid
 plot "build/gnuplot_vel1_c.txt" using ($1):($5) notitle with lines lt 1
 
 #=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Velocity Fluctuation"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "Velocity_fluct_g_a.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "(y/d)^2 [-]"
+set ylabel "Geschwindigkeit, Fluktiation VDev/sqrt(g*d) [-]"
+
+set log y
+
+set grid
+plot "build/gnuplot_vel1_c.txt" using ($1):($5/sqrt(9.8*$7)) notitle with lines lt 1
+
+#=======================================================================
