@@ -14,6 +14,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _tau = 0.0; _tauavg = 0.0; _tauLocalAvg = 0.0;
   _p = 0.0; _pavg = 0.0; _pLocalAvg = 0.0;
   _vavg = 0.0;
+  _vavgStDev = 0.0;
   _dLocalAvg = 0.0;
   _vol = M_PI*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin);
   _volPart = 0.0;
@@ -188,29 +189,36 @@ void band::calculateValues () {
     _localStressTensorAVG += _allForces[f]->localStressTensor();
   }
   
-  double radTMP = 0;
+  
   unsigned long long i = 0;
-  double angVelTmp = 0.0;
+  std::vector<double> angVelTmpV;
+  std::vector<double> radTMPV;
+  
   for(unsigned long long p=0; p<_allPart.size(); p++) {
     if (not(_allPart[p]->disabled())) {
-      angVelTmp += _allPart[p]->realAngular();
+      angVelTmpV.push_back(_allPart[p]->realAngular());
+      radTMPV.push_back(_allPart[p]->rad());
       _volPart  += _allPart[p]->vol();
-      radTMP += _allPart[p]->rad();
       i++;
     }
   }
   
-  
   if (i>0) {
     _volFraction  = _volPart/_vol;
     _contactNumAVG = (double)_allForces.size()/i;
-    _vavg = angVelTmp / i;
+    _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
+    
+    double vAVGsq_sum = std::inner_product(angVelTmpV.begin(), angVelTmpV.end(), angVelTmpV.begin(), 0.0);
+    _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);
+    
+    
     _tauavg = _tau/_vol;
     _pavg = _p/_vol;
-    _radAvg = radTMP/i;
+    _radAvg = std::accumulate(radTMPV.begin(), radTMPV.end(), 0.0) / radTMPV.size();
+    
     
     _localStressTensorAVG = _localStressTensorAVG/_vol;
-    _pLocalAvg = _localStressTensorAVG.trace()/3.0;                       // Pressure, Luding 2008, constitutive, p.5
+    _pLocalAvg = _localStressTensorAVG.trace()/3.0;                     // Pressure, Luding 2008, constitutive, p.5
 
     double SMax = _localStressTensorAVG.diagonal().maxCoeff();
     double SMin = _localStressTensorAVG.diagonal().minCoeff();
@@ -218,7 +226,7 @@ void band::calculateValues () {
                   _localStressTensorAVG.diagonal().maxCoeff() - 
                   _localStressTensorAVG.diagonal().minCoeff();
 
-    _dLocalAvg = sqrt( (SMax-SMin)*(SMax-SMin) +                         // SigmaD, Luding 2008, constitutive, p.5
+    _dLocalAvg = sqrt( (SMax-SMin)*(SMax-SMin) +                        // SigmaD, Luding 2008, constitutive, p.5
                        (SMax-SNul)*(SMax-SNul) + 
                        (SNul-SMin)*(SNul-SMin) ) / sqrt(6);
                        

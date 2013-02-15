@@ -26,7 +26,7 @@ class band {
     double _p, _pavg, _pLocalAvg;                         // Results, Press (trace), hydrostatic stress
     double _dLocalAvg;                                    // Results, Deviatoric stress, SigmaDev
     double _muLocalAVG;                                   // Results, mu calculated
-    double _vavg;                                         // Results, angular velocity of particles
+    double _vavg, _vavgStDev;                             // Results, angular velocity of particles, standard deviation
     double _scherRate;                                    // Results, scherrate
     double _volFraction;                                  // Volume fraction
     double _contactNumAVG;                                // Contact number per particle, AVG
@@ -57,6 +57,7 @@ class band {
     double dLocalAvg() {return _dLocalAvg;}                             //Deviatoric, SigmaD
     double muLocalAVG() {return _muLocalAVG;}                           //Mu
     double omega() {return _vavg;}
+    double omegaStDev() {return _vavgStDev;}
     void set_scherRate(double scherRate) {_scherRate = scherRate;}
     double scherRate() { return _scherRate;}
 };

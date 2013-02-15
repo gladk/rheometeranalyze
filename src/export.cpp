@@ -225,7 +225,7 @@ void exportclass::gnuplotSchearRate() {
   
   ofstream myfile2 ("gnuplot_vel1_c.txt");
   if (myfile2.is_open()) {
-    myfile2 << "y_durch_d\ty_durch_d^2\tVabs\tV_durch_V0\tVolFraction" << std::endl;
+    myfile2 << "y_durch_d\ty_durch_d^2\tVabs\tV_durch_V0\tV_Deviation\tVolFraction" << std::endl;
     double V0 = 0;
     for(int R=0; R<_cfg->SecRadial(); R++) {
       double rAVG = 0;
@@ -233,20 +233,23 @@ void exportclass::gnuplotSchearRate() {
       double y_durch_d = 0;
       double V = 0;
       double VolFract = 0;
+      double VStDev = 0;
       for(int Z=0; Z<_cfg->SecZ(); Z++) {
         std::shared_ptr<band> bandTMP = _bandRow->getBand(R, Z);
         rAVG += bandTMP->radAvg();
         midLinedR += bandTMP->midLinedR();
         V += bandTMP->omega();
         VolFract += bandTMP->volFraction();
+        VStDev += bandTMP->omegaStDev();
       }
       rAVG /=_cfg->SecRadial();
       V /=_cfg->SecRadial();
       VolFract /=_cfg->SecRadial();
+      VStDev /=_cfg->SecRadial();
       if (R == 0) {V0 = V;};
       midLinedR = midLinedR/_cfg->SecRadial()  - _cfg->Din()/2.0;
-      y_durch_d = midLinedR/rAVG;
-      myfile2 << y_durch_d<< "\t"<< y_durch_d*y_durch_d << "\t"<< V << "\t"<< V/V0 << "\t"<< VolFract << std::endl;
+      y_durch_d = midLinedR/(rAVG*2.0);
+      myfile2 << y_durch_d<< "\t"<< y_durch_d*y_durch_d << "\t"<< V << "\t"<< V/V0 << "\t"<< VStDev << "\t"<< VolFract << std::endl;
     }
   }  
   myfile2.close();
