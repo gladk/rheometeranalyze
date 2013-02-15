@@ -1,0 +1,162 @@
+#!/usr/bin/env gnuplot
+set terminal png
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Scherrate [1/s]"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "Scherrate1.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "r [mm]"
+set ylabel "z [mm]"
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "build/gnuplot_shearrate.txt" using ($1):($2) title "0.01" with points lt 1 pt 8 pointsize 1.0
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Velocity"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "Velocity_1_c.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "y/d [-]"
+set ylabel "Geschwindigkeit V/Vw [-]"
+
+
+set grid
+plot "build/gnuplot_vel1_c.txt" using ($1):($4) notitle with lines lt 1
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Velocity"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "Velocity_1_d.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "y/d [-]"
+set ylabel "Geschwindigkeit V/Vw [-]"
+
+set log y
+
+set grid
+plot "build/gnuplot_vel1_c.txt" using ($1):($4) notitle with lines lt 1
+
+#=======================================================================
+
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Velocity"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "Velocity_1_e.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "(y/d)^2 [-]"
+set ylabel "Geschwindigkeit V/Vw [-]"
+
+set log y
+
+set grid
+plot "build/gnuplot_vel1_c.txt" using ($2):($4) notitle with lines lt 1
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Volume Fraction"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "VolFraction_f.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "y/d [-]"
+set ylabel "Volume Fraction [-]"
+
+set log y
+
+set grid
+plot "build/gnuplot_vel1_c.txt" using ($1):($6) notitle with lines lt 1
+
+#=======================================================================
+
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Velocity Fluctuation"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "Velocity_fluct_g.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "(y/d)^2 [-]"
+set ylabel "Geschwindigkeit, Fluktiation VDev [-]"
+
+set log y
+
+set grid
+plot "build/gnuplot_vel1_c.txt" using ($1):($5) notitle with lines lt 1
+
+#=======================================================================
