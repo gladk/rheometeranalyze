@@ -65,8 +65,6 @@ class force {
     void enable() {_disable=false;};
     bool disabled() { return _disable; }
     void set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df);
-    double Tau();
-    double Press();
     void calculateStressTensor();
     Eigen::Matrix3f localStressTensor();
     Eigen::Matrix3f potEnergie();

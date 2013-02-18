@@ -35,22 +35,6 @@ force::force() {
   _radLen = 0.0;
 };
 
-double force::Tau() {
-  if (not(_calculateStressTensor)) {calculateStressTensor();};
-  double SigmaF = (_val*_radLen).dot(this->df());
-  double SigmaR = (_val*_radLen).dot(this->dr());
-  double SigmaT = sqrt(SigmaF*SigmaF + SigmaR*SigmaR);
-  
-  SigmaT = ((_val*_radLen).cross(this->df())).norm();
-  return SigmaT;
-};
-
-double force::Press() {
-  if (not(_calculateStressTensor)) {calculateStressTensor();};
-  double SigmaP = (_val*_radLen).dot(-this->dz());
-  return SigmaP;
-};
-
 Eigen::Matrix3f force::localStressTensor() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
   return _localStressTensor*_radLen;

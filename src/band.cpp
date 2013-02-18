@@ -26,6 +26,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _globalStressTensorAVG = _globalStressTensorAVG.Zero();
   _scherRate = 0.0;
   _muLocalAVG = 0.0;
+  _muGlobAVG = 0.0;
   _radAvg = 0.0;
 };
 
@@ -180,8 +181,6 @@ void bandRow::calculateValues () {
 };
 
 void band::calculateValues () {
-  _tau = 0.0;
-  _p = 0.0;
   _volPart = 0.0;
   _volFraction  = 0.0;
   
@@ -189,8 +188,6 @@ void band::calculateValues () {
   Eigen::Matrix3f _globalStressTensorParticles = Eigen::Matrix3f::Zero();
   
   for(unsigned long long f=0; f<_allForces.size(); f++) {
-    _tau += _allForces[f]->Tau();
-    _p += _allForces[f]->Press();
     _localStressTensorAVG += _allForces[f]->localStressTensor();
     _globalStressTensorForces += _allForces[f]->potEnergie();
   }
@@ -215,15 +212,13 @@ void band::calculateValues () {
     _globalStressTensorAVG = (_globalStressTensorParticles + _globalStressTensorForces)/_vol;
     
     /*
-    std::cerr<<"Velocities:"<<std::endl<<_globalStressTensorParticles/_vol<<std::endl<<std::endl;
-    std::cerr<<"Forces:"<<std::endl<<_globalStressTensorForces/_vol<<std::endl<<std::endl;
-    std::cerr<<"Total:"<<std::endl<<_globalStressTensorAVG<<std::endl<<std::endl;
-    
-    std::cerr<<"Tau:"<<sqrt(_globalStressTensorAVG(2)*_globalStressTensorAVG(2) + _globalStressTensorAVG(7)*_globalStressTensorAVG(7))<<std::endl;
-    std::cerr<<"Press:"<<(_globalStressTensorAVG.trace())*(-1.0)<<std::endl<<std::endl<<"======================================="<<std::endl<<std::endl;
-    */
-    
-    
+    [S_rr  S_rz  S_rf]
+    [S_zr  S_zz  S_zf]
+    [S_fr  S_fz  S_ff]
+    * 
+    * Tau   = sqrt(S_rf*S_rf + S_fz*S_fz)
+    * Press = sqrt(S_rr*S_rr + S_zz*S_zz)
+    */ 
     
     _volFraction  = _volPart/_vol;
     _contactNumAVG = (double)_allForces.size()/i;
@@ -232,10 +227,6 @@ void band::calculateValues () {
     double vAVGsq_sum = std::inner_product(angVelTmpV.begin(), angVelTmpV.end(), angVelTmpV.begin(), 0.0);
     _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);
     
-    /*
-    _tauavg = _tau/_vol;
-    _pavg = _p/_vol;
-    */ 
     _tauavg = sqrt(_globalStressTensorAVG(2)*_globalStressTensorAVG(2) + _globalStressTensorAVG(7)*_globalStressTensorAVG(7));
     _pavg = sqrt(_globalStressTensorAVG(0)*_globalStressTensorAVG(0) + _globalStressTensorAVG(4)*_globalStressTensorAVG(4));
     
@@ -256,6 +247,7 @@ void band::calculateValues () {
                        (SNul-SMin)*(SNul-SMin) ) / sqrt(6);
                        
     _muLocalAVG = _dLocalAvg/_pLocalAvg;
+    _muGlobAVG = _tauavg/_pavg;
   }
 };
 
