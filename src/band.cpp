@@ -192,6 +192,7 @@ void band::calculateValues () {
     _tau += _allForces[f]->Tau();
     _p += _allForces[f]->Press();
     _localStressTensorAVG += _allForces[f]->localStressTensor();
+    _globalStressTensorForces += _allForces[f]->potEnergie();
   }
   
   

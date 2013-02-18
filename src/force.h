@@ -10,6 +10,8 @@
 class force {
   private:
     Eigen::Vector3f _pos1, _pos2, _val;   // Pos1, Pos2 and force value
+    Eigen::Vector3f _valZylindrical;      // Force Values in Zylindrical coordinates (dR, dZ, dF)
+    Eigen::Vector3f _cPZylindrical;       // Branch-Vector in Zylindrical coordinates (dR, dZ, dF)
     unsigned long long _pid1, _pid2;      // Particles ids
 
     double _dist;                 // Distance from axis
@@ -67,6 +69,7 @@ class force {
     double Press();
     void calculateStressTensor();
     Eigen::Matrix3f localStressTensor();
+    Eigen::Matrix3f potEnergie();
 };
 
 class forceRow {

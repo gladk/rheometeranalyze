@@ -23,6 +23,8 @@ force::force() {
   _pos2 = Eigen::Vector3f::Zero();
   _val = Eigen::Vector3f::Zero();
   _cP = Eigen::Vector3f::Zero();
+  _valZylindrical = Eigen::Vector3f::Zero();
+  _cPZylindrical = Eigen::Vector3f::Zero();
   _bandR = -1; _bandZ=-1; _bandN=-1;
   _dist = -1; _height = -1;
   _disable = false;
@@ -69,8 +71,17 @@ void force::calculateStressTensor() {
   Eigen::Vector3f lpc; lpc = (_cP - _pos1); lpc.normalize();
   _localStressTensor = _val*lpc.transpose();
   
+  _valZylindrical = Eigen::Vector3f(_val.dot(this->dr()), _val.dot(this->dz()), _val.dot(this->df()));
+  Eigen::Vector3f branchV = (_pos2-_pos1)/2.0;
+  _cPZylindrical = Eigen::Vector3f(branchV.dot(this->dr()), branchV.dot(this->dz()), branchV.dot(this->df()));
+  
   _calculateStressTensor  =  true;
 };
+
+Eigen::Matrix3f force::potEnergie() {
+  if (not(_calculateStressTensor)) {calculateStressTensor();};
+  return _valZylindrical*_cPZylindrical.transpose();
+}
 
 forceRow::forceRow() {
   std::vector <std::shared_ptr<force> > _allForce;

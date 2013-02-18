@@ -55,7 +55,7 @@ double particle::realAngular() {
   return _vZylindrical(2)/_dist;
 };
 
-Eigen::Matrix3f  particle::potEnergie() {
+Eigen::Matrix3f particle::potEnergie() {
   if (not(_calculateVel)) { calculateVel();};
   return _m*_vZylindrical*_vZylindrical.transpose();
 };
