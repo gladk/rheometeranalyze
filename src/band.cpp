@@ -211,7 +211,20 @@ void band::calculateValues () {
   }
   
   if (i>0) {
-    _globalStressTensorAVG = _globalStressTensorParticles/_vol;
+    
+    _globalStressTensorAVG = (_globalStressTensorParticles + _globalStressTensorForces)/_vol;
+    
+    /*
+    std::cerr<<"Velocities:"<<std::endl<<_globalStressTensorParticles/_vol<<std::endl<<std::endl;
+    std::cerr<<"Forces:"<<std::endl<<_globalStressTensorForces/_vol<<std::endl<<std::endl;
+    std::cerr<<"Total:"<<std::endl<<_globalStressTensorAVG<<std::endl<<std::endl;
+    
+    std::cerr<<"Tau:"<<sqrt(_globalStressTensorAVG(2)*_globalStressTensorAVG(2) + _globalStressTensorAVG(7)*_globalStressTensorAVG(7))<<std::endl;
+    std::cerr<<"Press:"<<(_globalStressTensorAVG.trace())*(-1.0)<<std::endl<<std::endl<<"======================================="<<std::endl<<std::endl;
+    */
+    
+    
+    
     _volFraction  = _volPart/_vol;
     _contactNumAVG = (double)_allForces.size()/i;
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
@@ -219,9 +232,13 @@ void band::calculateValues () {
     double vAVGsq_sum = std::inner_product(angVelTmpV.begin(), angVelTmpV.end(), angVelTmpV.begin(), 0.0);
     _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);
     
-    
+    /*
     _tauavg = _tau/_vol;
     _pavg = _p/_vol;
+    */ 
+    _tauavg = sqrt(_globalStressTensorAVG(2)*_globalStressTensorAVG(2) + _globalStressTensorAVG(7)*_globalStressTensorAVG(7));
+    _pavg = fabs((_globalStressTensorAVG.trace()));
+    
     _radAvg = std::accumulate(radTMPV.begin(), radTMPV.end(), 0.0) / radTMPV.size();
     
     
