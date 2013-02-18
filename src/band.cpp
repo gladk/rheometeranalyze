@@ -205,7 +205,7 @@ void band::calculateValues () {
       angVelTmpV.push_back(_allPart[p]->realAngular());
       radTMPV.push_back(_allPart[p]->rad());
       _volPart  += _allPart[p]->vol();
-      _globalStressTensorParticles += _allPart[p]->potEnergie();
+      _globalStressTensorParticles += _allPart[p]->kinEnergie();
       i++;
     }
   }

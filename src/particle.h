@@ -56,7 +56,7 @@ class particle {
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }
-    Eigen::Matrix3f potEnergie();
+    Eigen::Matrix3f kinEnergie();
 };
 
 class particleRow {
