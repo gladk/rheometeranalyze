@@ -35,6 +35,8 @@ class particle {
     unsigned long long id() {return _id;};
     int type() {return _type;};
     double rad() {return _rad;};
+    double mass() {return _m;};
+    double density() {return _d;};
     double realAngular();    //_v.dot(df)
     Eigen::Vector3f c() {return _c;}
     Eigen::Vector3f v() {return _v;}

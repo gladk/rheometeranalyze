@@ -15,6 +15,14 @@ void exportclass::VTK() {
   radii->SetNumberOfComponents(1);
   radii->SetName("radii");
 
+  vtkSmartPointer<vtkDoubleArray> mass = vtkSmartPointer<vtkDoubleArray>::New();
+  mass->SetNumberOfComponents(1);
+  mass->SetName("mass");
+
+  vtkSmartPointer<vtkDoubleArray> density = vtkSmartPointer<vtkDoubleArray>::New();
+  density->SetNumberOfComponents(1);
+  density->SetName("density");
+
   vtkSmartPointer<vtkDoubleArray> dist = vtkSmartPointer<vtkDoubleArray>::New();
   dist->SetNumberOfComponents(1);
   dist->SetName("dist");
@@ -128,6 +136,8 @@ void exportclass::VTK() {
         vtkIdType pid[1];
         pid[0] = spheresPos->InsertNextPoint(partTemp->c()[0], partTemp->c()[1], partTemp->c()[2]);
         radii->InsertNextValue(partTemp->rad());
+        mass->InsertNextValue(partTemp->mass());
+        density->InsertNextValue(partTemp->density());
         dist->InsertNextValue(partTemp->dist());
         height->InsertNextValue(partTemp->height());
         spheresId->InsertNextValue(partTemp->id());
@@ -173,6 +183,8 @@ void exportclass::VTK() {
     spheresUg->SetPoints(spheresPos);
     spheresUg->SetCells(VTK_VERTEX, spheresCells);
     spheresUg->GetPointData()->AddArray(radii);
+    spheresUg->GetPointData()->AddArray(mass);
+    spheresUg->GetPointData()->AddArray(density);
     spheresUg->GetPointData()->AddArray(dist);
     spheresUg->GetPointData()->AddArray(height);
     spheresUg->GetPointData()->AddArray(spheresId);
