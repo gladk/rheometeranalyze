@@ -35,23 +35,17 @@ force::force() {
 
 double force::Tau() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
-  //double SigmaR = _val.dot(_axisMatrix.row(2))*_radLen;
-  //double SigmaZ = _val.dot(_axisMatrix.row(1))*_radLen;
+  double SigmaF = (_val*_radLen).dot(this->df());
+  double SigmaR = (_val*_radLen).dot(this->dr());
+  double SigmaT = sqrt(SigmaF*SigmaF + SigmaR*SigmaR);
   
-  //double SigmaR = _globalStressTensor.row(2).norm()*_radLen;
-  //double SigmaZ = _globalStressTensor.row(1).norm()*_radLen;
-  
-  //return sqrt(SigmaR*SigmaR + SigmaZ*SigmaZ);
-  
-  //double SigmaR = _globalStressTensor.row(2).norm()*_radLen;
-  double SigmaR = sqrt(_globalStressTensor.row(1).norm()*_radLen*_globalStressTensor.row(1).norm()*_radLen);
-  return SigmaR;
+  SigmaT = ((_val*_radLen).cross(this->df())).norm();
+  return SigmaT;
 };
 
 double force::Press() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
-  //double SigmaP = sqrt(_val.dot(_dg)*_val.dot(_dg)*_radLen*_radLen);
-  double SigmaP = sqrt(_globalStressTensor.row(1).norm()*_radLen*_globalStressTensor.row(1).norm()*_radLen);
+  double SigmaP = (_val*_radLen).dot(-this->dz());
   return SigmaP;
 };
 
@@ -72,7 +66,7 @@ void force::calculateStressTensor() {
   forceMatrix.transposeInPlace();
   _globalStressTensor = _axisMatrix.cwiseProduct(forceMatrix);
   
-  Eigen::Vector3f lpc; lpc = (_cP - _pos1); lpc.normalize();    // !!WHY should not it be normalized???
+  Eigen::Vector3f lpc; lpc = (_cP - _pos1); lpc.normalize();
   _localStressTensor = _val*lpc.transpose();
   
   _calculateStressTensor  =  true;

@@ -53,7 +53,7 @@ class band {
     int idR() {return _idR;}
     double tau() {return _tauavg;}
     double press() {return _pavg;}
-    double localPress() {return _pLocalAvg;}                            //Trace
+    double localPress() {return _pLocalAvg;}                            //Trace, Press
     double dLocalAvg() {return _dLocalAvg;}                             //Deviatoric, SigmaD
     double muLocalAVG() {return _muLocalAVG;}                           //Mu
     double omega() {return _vavg;}
