@@ -26,6 +26,7 @@ particle::particle() {
   _c = Eigen::Vector3f::Zero();
   _v = Eigen::Vector3f::Zero();
   _o = Eigen::Vector3f::Zero();
+  _vZylindrical = Eigen::Vector3f::Zero();
   _dist = -1; _height = -1;
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
@@ -43,6 +44,7 @@ void particle::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f 
 
 void particle::calculateVel() {
   Eigen::Matrix3f velTempMatrix; velTempMatrix << _v, _v, _v;
+  _vZylindrical = Eigen::Vector3f(_v.dot(this->dr()), _v.dot(this->dz()), _v.dot(this->df()));
   velTempMatrix.transposeInPlace();
   _velMatrix = _axisMatrix.cwiseProduct(velTempMatrix);
   _calculateVel = true;
@@ -50,7 +52,7 @@ void particle::calculateVel() {
 
 double particle::realAngular() {
   if (not(_calculateVel)) { calculateVel();};
-  return _v.dot(_axisMatrix.row(2))/_dist;
+  return _vZylindrical(2)/_dist;
 };
 
 particleRow::particleRow(long long partN ) {

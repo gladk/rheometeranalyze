@@ -21,6 +21,7 @@ class band {
     std::vector <std::shared_ptr<force> > _allForces;     // Vector of forces;
     
     Eigen::Matrix3f _localStressTensorAVG;
+    Eigen::Matrix3f _globalStressTensorAVG;
     
     double _tau, _tauavg, _tauLocalAvg, _vol, _volPart;   // Results, Tau, Vol, Vol of particles
     double _p, _pavg, _pLocalAvg;                         // Results, Press (trace), hydrostatic stress

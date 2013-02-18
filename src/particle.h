@@ -28,6 +28,7 @@ class particle {
                                   
     bool _disable;                // Disable particle, if it is out of region
     bool _calculateVel;           // Whether the velocity matrix was calculated
+    Eigen::Vector3f _vZylindrical;// Linear velocity in Zylindrical coordinates (dR, dZ, dF)
 
   public:
     particle(unsigned long long, int, double, double, double, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);

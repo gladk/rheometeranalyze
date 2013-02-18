@@ -23,6 +23,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   std::vector <std::shared_ptr<particle> > _allPart;
   std::vector <std::shared_ptr<force> > _allForces;
   _localStressTensorAVG = _localStressTensorAVG.Zero();
+  _globalStressTensorAVG = _globalStressTensorAVG.Zero();
   _scherRate = 0.0;
   _muLocalAVG = 0.0;
   _radAvg = 0.0;
@@ -199,6 +200,7 @@ void band::calculateValues () {
       angVelTmpV.push_back(_allPart[p]->realAngular());
       radTMPV.push_back(_allPart[p]->rad());
       _volPart  += _allPart[p]->vol();
+      //_globalStressTensorAVG += 
       i++;
     }
   }
