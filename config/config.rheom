@@ -37,6 +37,9 @@ cId = 1
 ;column of type 
 cT = 2
 
+;column of mass
+cM = 3
+
 ;column of Center
 cC = 4
 
@@ -48,6 +51,9 @@ cO = 16
 
 ;column of radius
 cR = 19
+
+;column of density
+cD = 27
 
 ;type of particle, which will be calculated. -1 means calculating of all particles
 tC = 1

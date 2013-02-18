@@ -12,9 +12,12 @@ class particle {
     Eigen::Vector3f _c, _v, _o;   // Center of mass, linear velocity, angular velocity of the particle
     unsigned long long _id; int _type;     // Particle id, type
     double _rad;                  // Particle radius
+    double _m;                    // Mass of the particle
+    double _d;                    // Density of the particle
 
     double _dist;                 // Distance from axis
     double _height;               // Height on Z-axis
+    
     Eigen::Matrix3f _axisMatrix;  // [drX, drY, drZ]
                                   // [dzX, dzY, dzZ]
                                   // [dfX, dfY, dfZ]
@@ -27,7 +30,7 @@ class particle {
     bool _calculateVel;           // Whether the velocity matrix was calculated
 
   public:
-    particle(unsigned long long, int, double, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
+    particle(unsigned long long, int, double, double, double, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
     particle();
     unsigned long long id() {return _id;};
     int type() {return _type;};

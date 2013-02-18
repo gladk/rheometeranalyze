@@ -35,7 +35,7 @@ void rheometer::loadParticles() {
     
     int valInt;
     double valD;
-    double pR;
+    double pR, pM, pD;
     int pT;
     unsigned long long pId;
     Eigen::Vector3f pC, pV, pO;
@@ -67,6 +67,12 @@ void rheometer::loadParticles() {
         } else if (i==_cfg->cR()) {
           linestream >> pR;
           //std::cerr<<pR<<std::endl;
+        } else if (i==_cfg->cM()) {
+          linestream >> pM;
+          //std::cerr<<pM<<std::endl;
+        } else if (i==_cfg->cD()) {
+          linestream >> pD;
+          //std::cerr<<pD<<std::endl;
         } else {
           linestream >> valD;
         }
@@ -74,7 +80,7 @@ void rheometer::loadParticles() {
       
       if (((_cfg->tC()>=0) and (pT == _cfg->tC())) or (_cfg->tC()<0)) {
         maxId = max(pId, maxId);
-        std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, pR, pC,pV, pO));
+        std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, pR, pM, pD, pC,pV, pO));
         tmpPartVector.push_back(tmpParticle);
       }
 

@@ -1,13 +1,15 @@
 #include "particle.h"
 #include <iostream>
 
-particle::particle(unsigned long long id, int type, double rad, Eigen::Vector3f c, Eigen::Vector3f v, Eigen::Vector3f o) {
+particle::particle(unsigned long long id, int type, double rad, double mass, double dens, Eigen::Vector3f c, Eigen::Vector3f v, Eigen::Vector3f o) {
   _id = id;
   _type = type;
   _rad = rad;
   _c = c;
   _v = v;
   _o = o;
+  _m = mass;
+  _d = dens;
   _dist = -1; _height = -1;
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
@@ -19,6 +21,8 @@ particle::particle() {
   _id = -1;
   _type = -1;
   _rad = -1;
+  _d = -1;
+  _m = -1;
   _c = Eigen::Vector3f::Zero();
   _v = Eigen::Vector3f::Zero();
   _o = Eigen::Vector3f::Zero();

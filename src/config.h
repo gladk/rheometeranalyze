@@ -21,6 +21,8 @@ class configopt {
     int _cV;                  // Column of linear velocity
     int _cO;                  // Column of angular velocity
     int _cR;                  // Column of radius
+    int _cM;                  // Column of mass
+    int _cD;                  // Column of density
     int _maxC;                // Maximal column number
     void _maxColumnCheck(int, int);    // Check whether the new column is maximal
     void _maxColumnCheckForce(int, int);    // Check whether the new column is maximal for Forces
@@ -54,6 +56,8 @@ class configopt {
     int cV(){return _cV;};
     int cO(){return _cO;};
     int cR(){return _cR;};
+    int cD(){return _cD;};
+    int cM(){return _cM;};
     int maxC(){return _maxC;};
     int maxCF(){return _maxCF;};
     double dDr(){return (_Dout - _Din)/_SecRadial/2.0;};
