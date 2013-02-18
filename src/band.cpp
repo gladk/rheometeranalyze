@@ -237,7 +237,7 @@ void band::calculateValues () {
     _pavg = _p/_vol;
     */ 
     _tauavg = sqrt(_globalStressTensorAVG(2)*_globalStressTensorAVG(2) + _globalStressTensorAVG(7)*_globalStressTensorAVG(7));
-    _pavg = fabs((_globalStressTensorAVG.trace()));
+    _pavg = sqrt(_globalStressTensorAVG(0)*_globalStressTensorAVG(0) + _globalStressTensorAVG(4)*_globalStressTensorAVG(4));
     
     _radAvg = std::accumulate(radTMPV.begin(), radTMPV.end(), 0.0) / radTMPV.size();
     
