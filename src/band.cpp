@@ -184,6 +184,10 @@ void band::calculateValues () {
   _p = 0.0;
   _volPart = 0.0;
   _volFraction  = 0.0;
+  
+  Eigen::Matrix3f _globalStressTensorForces = Eigen::Matrix3f::Zero(); 
+  Eigen::Matrix3f _globalStressTensorParticles = Eigen::Matrix3f::Zero();
+  
   for(unsigned long long f=0; f<_allForces.size(); f++) {
     _tau += _allForces[f]->Tau();
     _p += _allForces[f]->Press();
@@ -200,12 +204,13 @@ void band::calculateValues () {
       angVelTmpV.push_back(_allPart[p]->realAngular());
       radTMPV.push_back(_allPart[p]->rad());
       _volPart  += _allPart[p]->vol();
-      //_globalStressTensorAVG += 
+      _globalStressTensorParticles += _allPart[p]->potEnergie();
       i++;
     }
   }
   
   if (i>0) {
+    _globalStressTensorAVG = _globalStressTensorParticles/_vol;
     _volFraction  = _volPart/_vol;
     _contactNumAVG = (double)_allForces.size()/i;
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();

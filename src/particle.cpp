@@ -55,6 +55,11 @@ double particle::realAngular() {
   return _vZylindrical(2)/_dist;
 };
 
+Eigen::Matrix3f  particle::potEnergie() {
+  if (not(_calculateVel)) { calculateVel();};
+  return _m*_vZylindrical*_vZylindrical.transpose();
+};
+
 particleRow::particleRow(long long partN ) {
    _tmpP = std::shared_ptr <particle> (new particle());
   _realPartNum = 0;
