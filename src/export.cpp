@@ -271,7 +271,7 @@ void exportclass::gnuplotSchearRate() {
         }
 
         //HACK==================================
-        if (bandTMP->scherRate() > 0.0) {
+        if (bandTMP->scherRate() >= 0.0) {
           if (bandTMP->scherRate() <= 0.01) {
             myfile001 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << "\t"<< bandTMP->midLinedR() <<  "\t"<< bandTMP->midLinedZ() << std::endl;
           } else if (bandTMP->scherRate() <= 0.02) {
