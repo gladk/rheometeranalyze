@@ -1,3 +1,7 @@
+[Files]
+;Folder for output files
+output = output
+
 [Rheometer]
 ;coordinates of center
 cX = 0.0
