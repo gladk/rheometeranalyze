@@ -1,3 +1,5 @@
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#include <boost/filesystem.hpp> 
 #include <boost/program_options.hpp>
 
 #include <iostream>
