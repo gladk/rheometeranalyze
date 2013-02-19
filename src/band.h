@@ -32,6 +32,9 @@ class band {
     double _volFraction;                                  // Volume fraction
     double _contactNumAVG;                                // Contact number per particle, AVG
     double _radAvg;                                       // Average particle radius
+    double _I;                                            // Schear intensity, dimensionless
+    double _densAVG;                                      // Average particle denisty
+    
 
   public:
     band(int, int, int, double, double, double, double);
@@ -60,8 +63,11 @@ class band {
     double muGlobAVG() {return _muGlobAVG;}                             //Mu Global
     double omega() {return _vavg;}
     double omegaStDev() {return _vavgStDev;}
-    void set_scherRate(double scherRate) {_scherRate = scherRate;}
+    void set_scherRate(double );
+    void set_I(double I) {_I = I;}
     double scherRate() { return _scherRate;}
+    double I() { return _I;}
+    double density() { return _densAVG;}
 };
 
 class bandRow {

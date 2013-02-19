@@ -28,6 +28,8 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _muLocalAVG = 0.0;
   _muGlobAVG = 0.0;
   _radAvg = 0.0;
+  _I = 0.0;
+  _densAVG = 0.0;
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
@@ -38,6 +40,11 @@ void band::addParticle(std::shared_ptr<particle> tmpPart) {
 void band::addForce(std::shared_ptr<force> tmpForc) {
   _allForces.push_back(tmpForc);
   _forceNumb ++;
+};
+
+void band::set_scherRate(double scherRate) {
+  _scherRate = scherRate;
+  _I = _scherRate*(2.0*_radAvg)/(sqrt(_densAVG/_pavg));
 };
 
 bandRow::bandRow (std::shared_ptr<configopt> cfg, std::shared_ptr<particleRow> pRow, std::shared_ptr<forceRow> fRow){
@@ -196,11 +203,13 @@ void band::calculateValues () {
   unsigned long long i = 0;
   std::vector<double> angVelTmpV;
   std::vector<double> radTMPV;
+  std::vector<double> densTMP;
   
   for(unsigned long long p=0; p<_allPart.size(); p++) {
     if (not(_allPart[p]->disabled())) {
       angVelTmpV.push_back(_allPart[p]->realAngular());
       radTMPV.push_back(_allPart[p]->rad());
+      densTMP.push_back(_allPart[p]->density());
       _volPart  += _allPart[p]->vol();
       _globalStressTensorParticles += _allPart[p]->kinEnergie();
       i++;
@@ -231,6 +240,7 @@ void band::calculateValues () {
     _pavg = sqrt(_globalStressTensorAVG(0)*_globalStressTensorAVG(0) + _globalStressTensorAVG(4)*_globalStressTensorAVG(4));
     
     _radAvg = std::accumulate(radTMPV.begin(), radTMPV.end(), 0.0) / radTMPV.size();
+    _densAVG = std::accumulate(densTMP.begin(), densTMP.end(), 0.0) / densTMP.size();
     
     
     _localStressTensorAVG = _localStressTensorAVG/_vol;
