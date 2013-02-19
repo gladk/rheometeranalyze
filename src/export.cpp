@@ -14,8 +14,8 @@ exportclass::exportclass(std::shared_ptr<configopt> cfg, std::shared_ptr <bandRo
   _fileNameG2 =  _cfg->FOutput();
   _fileNameG2 += "/gnuplot_scherrate2.txt";
   
-  _fileNameG2 =  _cfg->FOutput();
-  _fileNameG2 += "/gnuplot_vel1_c.txt";
+  _fileNameG3 =  _cfg->FOutput();
+  _fileNameG3 += "/gnuplot_vel1_c.txt";
 };
 
 void exportclass::VTK() {
@@ -254,7 +254,7 @@ void exportclass::gnuplotSchearRate() {
   
   if (myfile1.is_open() and myfile11.is_open()) {
     myfile1 << "P\tSigmaD\tmu" << std::endl;
-    myfile11 << "PressGlob\tTauGlob\tScherrate\tScherrateI\tEta" << std::endl;
+    myfile11 << "PressGlob\tTauGlob\tScherrate\tScherrateI\tEta\tXPos\tZPos" << std::endl;
     for(unsigned int b=0; b<_bandRow->size(); b++) {
       std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
       if (bandTMP->partNumb()>0) {
@@ -262,27 +262,30 @@ void exportclass::gnuplotSchearRate() {
         double SigmD = bandTMP->dLocalAvg();
         double mu = bandTMP->muLocalAVG();
         
+        
+        bandTMP->midLinedZ();
+        
         if (bandTMP->scherRate() > 0.0) {
           myfile1 << p << "\t"<< SigmD << "\t"<< mu << std::endl;
-          myfile11 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+          myfile11 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << "\t"<< bandTMP->midLinedR() <<  "\t"<< bandTMP->midLinedZ() << std::endl;
         }
 
         //HACK==================================
         if (bandTMP->scherRate() > 0.0) {
           if (bandTMP->scherRate() <= 0.01) {
-            myfile001 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+            myfile001 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << "\t"<< bandTMP->midLinedR() <<  "\t"<< bandTMP->midLinedZ() << std::endl;
           } else if (bandTMP->scherRate() <= 0.02) {
-            myfile002 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+            myfile002 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << "\t"<< bandTMP->midLinedR() <<  "\t"<< bandTMP->midLinedZ() << std::endl;
           } else if (bandTMP->scherRate() <= 0.04) {
-            myfile004 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+            myfile004 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << "\t"<< bandTMP->midLinedR() <<  "\t"<< bandTMP->midLinedZ() << std::endl;
           } else if (bandTMP->scherRate() <= 0.06) {
-            myfile006 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+            myfile006 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << "\t"<< bandTMP->midLinedR() <<  "\t"<< bandTMP->midLinedZ() << std::endl;
           } else if (bandTMP->scherRate() <= 0.08) {
-            myfile008 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+            myfile008 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << "\t"<< bandTMP->midLinedR() <<  "\t"<< bandTMP->midLinedZ() << std::endl;
           } else if (bandTMP->scherRate() <= 0.16) {
-            myfile016 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+            myfile016 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << "\t"<< bandTMP->midLinedR() <<  "\t"<< bandTMP->midLinedZ() << std::endl;
           } else {
-            myfile100 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+            myfile100 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << "\t"<< bandTMP->midLinedR() <<  "\t"<< bandTMP->midLinedZ() << std::endl;
           }
         }
         //HACK==================================

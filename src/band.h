@@ -49,6 +49,7 @@ class band {
     double radAvg() {return _radAvg;};
     double contactNumAVG() {return _contactNumAVG;};
     double midLinedR() {return ((_dRmax - _dRmin)/2.0 + _dRmin);};
+    double midLinedZ() {return ((_dZmax - _dZmin)/2.0 + _dZmin);};
     long long partNumb () {return _partNumb;};
     long long forceNumb () {return _forceNumb;};
     std::shared_ptr<particle> getPart (long long id) { return _allPart[id];}
