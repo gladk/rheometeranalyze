@@ -62,9 +62,8 @@ int main(int ac, char* av[])
       cerr << "Exception of unknown type!\n";
   }
   
-  
-  
   if (not(fs::is_regular_file(configFileName))) {
+    fs::path p = configFileName;
     std::cerr<<"The file "<<configFileName<<" does not exists. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
   }

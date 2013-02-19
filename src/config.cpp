@@ -1,7 +1,6 @@
 #include "config.h"
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/ini_parser.hpp>
-#include <iostream>
+
+namespace fs = boost::filesystem;
 
 configopt::configopt(const std::string &filename) {
   boost::property_tree::ptree pt;
@@ -45,6 +44,16 @@ configopt::configopt(const std::string &filename) {
   _cPos1ID = pt.get<int>("Force.cPos1ID"); _maxColumnCheckForce(_cPos1ID, 0);
   _cPos2ID = pt.get<int>("Force.cPos2ID"); _maxColumnCheckForce(_cPos2ID, 0);
   _cForc = pt.get<int>("Force.cForc"); _maxColumnCheckForce(_cForc, 2);
+  
+  
+  //Files
+  _FOutput = pt.get<std::string>("Files.output");
+  if (not fs::is_directory(_FOutput)) {
+    std::cerr<<"The direcrory " << _FOutput<< " does not exists. Creating."<<std::endl;
+    if (fs::create_directory(_FOutput)) {
+      std::cerr<<"The direcrory " << _FOutput<< " created."<<std::endl;
+    }
+  }
   
 };
 

@@ -3,6 +3,19 @@
 exportclass::exportclass(std::shared_ptr<configopt> cfg, std::shared_ptr <bandRow> bandAll) {
   _cfg = cfg;
   _bandRow = bandAll;
+  
+  
+  _fileNameVTU =  _cfg->FOutput();
+  _fileNameVTU += "/output.vtu";
+  
+  _fileNameG1 =  _cfg->FOutput();
+  _fileNameG1 += "/gnuplot_shearrate.txt";
+  
+  _fileNameG2 =  _cfg->FOutput();
+  _fileNameG2 += "/gnuplot_scherrate2.txt";
+  
+  _fileNameG2 =  _cfg->FOutput();
+  _fileNameG2 += "/gnuplot_vel1_c.txt";
 };
 
 void exportclass::VTK() {
@@ -219,13 +232,14 @@ void exportclass::VTK() {
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   writer->SetDataModeToAscii();
   writer->SetInput(spheresUg);
-  writer->SetFileName("a.vtu");
+  
+  writer->SetFileName(_fileNameVTU.c_str());
   writer->Write();
 };
 
-void exportclass::gnuplotSchearRate() {
-  ofstream myfile1 ("gnuplot_shearrate.txt");
-  ofstream myfile11 ("gnuplot_scherrate2.txt");
+void exportclass::gnuplotSchearRate() {  
+  ofstream myfile1 (_fileNameG1.c_str());
+  ofstream myfile11 (_fileNameG2.c_str());
   if (myfile1.is_open() and myfile11.is_open()) {
     myfile1 << "P\tSigmaD\tmu" << std::endl;
     myfile11 << "PressGlob\tTauGlob\tScherrate\tScherrateI\tEta" << std::endl;
@@ -245,7 +259,7 @@ void exportclass::gnuplotSchearRate() {
   myfile1.close();
   myfile11.close();
   
-  ofstream myfile2 ("gnuplot_vel1_c.txt");
+  ofstream myfile2 (_fileNameG3.c_str());
   if (myfile2.is_open()) {
     myfile2 << "y_durch_d\ty_durch_d^2\tVabs\tV_durch_V0\tV_Deviation\tVolFraction\td\tScherrate" << std::endl;
     double V0 = 0;

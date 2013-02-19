@@ -1,6 +1,12 @@
 #ifndef CONFIGCLASS
 #define CONFIGCLASS
 
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#include <boost/filesystem.hpp> 
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+
+#include <iostream>
 #include <string>
 #include <Eigen/Dense>
 
@@ -26,6 +32,7 @@ class configopt {
     int _maxC;                // Maximal column number
     void _maxColumnCheck(int, int);    // Check whether the new column is maximal
     void _maxColumnCheckForce(int, int);    // Check whether the new column is maximal for Forces
+    std::string _FOutput;          //Folder for output files
     
     //Force
     int _fAt;                 // Number of forces string
@@ -62,6 +69,7 @@ class configopt {
     int maxCF(){return _maxCF;};
     double dDr(){return (_Dout - _Din)/_SecRadial/2.0;};
     double dDz(){return _H/_SecZ;};
+    std::string FOutput(){return _FOutput;};
     
     //force
     int fAt(){return _fAt;};
