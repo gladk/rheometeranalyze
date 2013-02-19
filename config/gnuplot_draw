@@ -19,14 +19,41 @@ set style line 3 lt 1 lw 5 pt 1 lc 3
 set style line 4 lt 1 lw 5 pt 1 lc 4 
 set style line 5 lt 1 lw 5 pt 1 lc 5 
 set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "r [mm]"
-set ylabel "z [mm]"
+set xlabel "p [Pa]"
+set ylabel "SigmaD [Pa]"
 
 #set xrange [24:45]
 #set yrange [-5:20]
 
 set grid
 plot "build/gnuplot_shearrate.txt" using ($1):($2) title "0.01" with points lt 1 pt 8 pointsize 1.0
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Scherrate [1/s]"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "Scherrate2.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "p [Pa]"
+set ylabel "SigmaD/P [Pa]"
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "build/gnuplot_shearrate.txt" using ($1):($2/$1) notitle with points lt 1 pt 8 pointsize 1.0
 
 #=======================================================================
 
@@ -210,5 +237,84 @@ set log y
 
 set grid
 plot "build/gnuplot_vel1_c.txt" using ($1):($5/($7*$8)) notitle with lines lt 1
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Scherrate"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "Scherrate_2d_a.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "y/d [-]"
+set ylabel "Scherrate [-]"
+
+set log y
+
+set grid
+plot "build/gnuplot_vel1_c.txt" using ($1):($8) notitle with lines lt 1
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Scherrate"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "Scherrate_2d_b.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "y/d [-]"
+set ylabel "Scherrate [-]"
+
+#set log y
+
+set grid
+plot "build/gnuplot_vel1_c.txt" using ($1):($8) notitle with lines lt 1
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Scherrate [1/s]"
+set key out vert
+set key left top
+
+set size 1.0,1.0
+set output "Scherrate_glob.png"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel "Press [Pa]"
+set ylabel "Tau [Pa]"
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "build/gnuplot_scherrate2.txt" using ($1):($2):(10.*$3) title "0.01" with points lt 1 pt 7 ps variable
 
 #=======================================================================

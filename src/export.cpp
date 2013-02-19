@@ -225,20 +225,25 @@ void exportclass::VTK() {
 
 void exportclass::gnuplotSchearRate() {
   ofstream myfile1 ("gnuplot_shearrate.txt");
-  if (myfile1.is_open()) {
+  ofstream myfile11 ("gnuplot_scherrate2.txt");
+  if (myfile1.is_open() and myfile11.is_open()) {
     myfile1 << "P\tSigmaD\tmu" << std::endl;
+    myfile11 << "PressGlob\tTauGlob\tTauGlob\tScherrate" << std::endl;
     for(unsigned int b=0; b<_bandRow->size(); b++) {
-      
       std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
       if (bandTMP->partNumb()>0) {
         double p = bandTMP->localPress();
         double SigmD = bandTMP->dLocalAvg();
         double mu = bandTMP->muLocalAVG();
+        
+        
         myfile1 << p << "\t"<< SigmD << "\t"<< mu << std::endl;
+        myfile11 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << std::endl;
       }
     }
   }  
   myfile1.close();
+  myfile11.close();
   
   ofstream myfile2 ("gnuplot_vel1_c.txt");
   if (myfile2.is_open()) {
