@@ -30,6 +30,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _radAvg = 0.0;
   _I = 0.0;
   _densAVG = 0.0;
+  _eta = 0.0;
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
@@ -43,8 +44,9 @@ void band::addForce(std::shared_ptr<force> tmpForc) {
 };
 
 void band::set_scherRate(double scherRate) {
-  _scherRate = scherRate;
+  _scherRate = fabs(scherRate);
   _I = _scherRate*(2.0*_radAvg)/(sqrt(_densAVG/_pavg));
+  _eta = _tauavg/_scherRate;
 };
 
 bandRow::bandRow (std::shared_ptr<configopt> cfg, std::shared_ptr<particleRow> pRow, std::shared_ptr<forceRow> fRow){

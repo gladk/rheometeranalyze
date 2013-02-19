@@ -34,6 +34,7 @@ class band {
     double _radAvg;                                       // Average particle radius
     double _I;                                            // Schear intensity, dimensionless
     double _densAVG;                                      // Average particle denisty
+    double _eta;                                          // Viscosity
     
 
   public:
@@ -68,6 +69,7 @@ class band {
     double scherRate() { return _scherRate;}
     double I() { return _I;}
     double density() { return _densAVG;}
+    double eta() { return _eta;}
 };
 
 class bandRow {
