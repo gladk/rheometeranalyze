@@ -240,6 +240,18 @@ void exportclass::VTK() {
 void exportclass::gnuplotSchearRate() {  
   ofstream myfile1 (_fileNameG1.c_str());
   ofstream myfile11 (_fileNameG2.c_str());
+  
+  //HACK==================================
+  std::string myfile001_name = _fileNameG2; myfile001_name += "_001"; ofstream myfile001 (myfile001_name.c_str());
+  std::string myfile002_name = _fileNameG2; myfile002_name += "_002"; ofstream myfile002 (myfile002_name.c_str());
+  std::string myfile004_name = _fileNameG2; myfile004_name += "_004"; ofstream myfile004 (myfile004_name.c_str());
+  std::string myfile006_name = _fileNameG2; myfile006_name += "_006"; ofstream myfile006 (myfile006_name.c_str());
+  std::string myfile008_name = _fileNameG2; myfile008_name += "_008"; ofstream myfile008 (myfile008_name.c_str());
+  std::string myfile016_name = _fileNameG2; myfile016_name += "_016"; ofstream myfile016 (myfile016_name.c_str());
+  std::string myfile100_name = _fileNameG2; myfile100_name += "_100"; ofstream myfile100 (myfile100_name.c_str());
+  //HACK==================================
+  
+  
   if (myfile1.is_open() and myfile11.is_open()) {
     myfile1 << "P\tSigmaD\tmu" << std::endl;
     myfile11 << "PressGlob\tTauGlob\tScherrate\tScherrateI\tEta" << std::endl;
@@ -250,14 +262,44 @@ void exportclass::gnuplotSchearRate() {
         double SigmD = bandTMP->dLocalAvg();
         double mu = bandTMP->muLocalAVG();
         
+        if (bandTMP->scherRate() > 0.0) {
+          myfile1 << p << "\t"<< SigmD << "\t"<< mu << std::endl;
+          myfile11 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+        }
+
+        //HACK==================================
+        if (bandTMP->scherRate() > 0.0) {
+          if (bandTMP->scherRate() <= 0.01) {
+            myfile001 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+          } else if (bandTMP->scherRate() <= 0.02) {
+            myfile002 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+          } else if (bandTMP->scherRate() <= 0.04) {
+            myfile004 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+          } else if (bandTMP->scherRate() <= 0.06) {
+            myfile006 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+          } else if (bandTMP->scherRate() <= 0.08) {
+            myfile008 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+          } else if (bandTMP->scherRate() <= 0.16) {
+            myfile016 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+          } else {
+            myfile100 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
+          }
+        }
+        //HACK==================================
         
-        myfile1 << p << "\t"<< SigmD << "\t"<< mu << std::endl;
-        myfile11 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << std::endl;
       }
     }
   }  
   myfile1.close();
   myfile11.close();
+
+  myfile001.close();
+  myfile002.close();
+  myfile004.close();
+  myfile006.close();
+  myfile008.close();
+  myfile016.close();
+  myfile100.close();
   
   ofstream myfile2 (_fileNameG3.c_str());
   if (myfile2.is_open()) {
