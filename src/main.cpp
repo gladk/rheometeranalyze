@@ -1,19 +1,7 @@
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#include <boost/filesystem.hpp> 
-#include <boost/program_options.hpp>
-
-#include <iostream>
-#include <algorithm>
-#include <iterator>
-#include <string>
-#include <Eigen/Dense>
-#include "config.h"
-#include "particle.h"
-#include "band.h"
-#include "rheometer.h"
-
+#include "main.h"
 
 namespace po = boost::program_options;
+namespace fs = boost::filesystem;
 using namespace std;
 
 int main(int ac, char* av[])
@@ -72,6 +60,23 @@ int main(int ac, char* av[])
   }
   catch(...) {
       cerr << "Exception of unknown type!\n";
+  }
+  
+  
+  
+  if (not(fs::is_regular_file(configFileName))) {
+    std::cerr<<"The file "<<configFileName<<" does not exists. Exiting."<<std::endl;
+    exit (EXIT_FAILURE);
+  }
+  
+  if (not(fs::is_regular_file(particlesFileName))) {
+    std::cerr<<"The file "<<particlesFileName<<" does not exists. Exiting."<<std::endl;
+    exit (EXIT_FAILURE);
+  }
+  
+  if (not(fs::is_regular_file(forcesFileName))) {
+    std::cerr<<"The file "<<forcesFileName<<" does not exists. Exiting."<<std::endl;
+    exit (EXIT_FAILURE);
   }
   
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
