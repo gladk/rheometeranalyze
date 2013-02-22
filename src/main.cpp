@@ -30,6 +30,13 @@ int main(int ac, char* av[])
   string configFileName;
   string particlesFileName;
   string forcesFileName;
+  
+  std::cerr<<"\n\
+Rheometeranalyze\n\
+Copyright (C) 2013 TU Bergakademie Freiberg\nInstitute for Mechanics and Fluid Dynamics\n\
+This program comes with ABSOLUTELY NO WARRANTY.\n\
+"<<std::endl;
+  
   try {
 
     po::options_description desc("Allowed options");
