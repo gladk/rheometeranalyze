@@ -94,9 +94,19 @@ class band {
     double eta() { return _eta;}
 };
 
+class bandShearZone {
+  private:
+    int _id;
+    double _W;
+    std::shared_ptr<band> _bandPTR;
+  public:
+    bandShearZone(double, std::shared_ptr<band>);
+};
+
 class bandRow {
   private:
     std::vector<std::shared_ptr<band> > _bandAll;
+    std::vector<std::shared_ptr<bandShearZone> > _bandShearZones;
     std::shared_ptr<configopt> _cfg; 
     std::shared_ptr<particleRow> _pRow;
     std::shared_ptr<forceRow> _fRow;
@@ -109,6 +119,8 @@ class bandRow {
     std::shared_ptr<band> getBand(unsigned int id) {return _bandAll[id];}
     std::shared_ptr<band> getBand(unsigned int idR, unsigned int idZ) {return _bandAll[idZ*_cfg->SecRadial() + idR];}
     unsigned int size() {return _bandAll.size();}
+    
+    
 };
 
 #endif

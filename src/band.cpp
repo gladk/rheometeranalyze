@@ -198,7 +198,7 @@ void bandRow::calculateValues () {
   for(unsigned int i=0; i<_bandAll.size(); i++) {
     _bandAll[i]->calculateValues();
   }
-  
+
   // Scherrate
   for(unsigned int i=1; i<_bandAll.size(); i++) {
     if (_bandAll[i]->idR() > _bandAll[i-1]->idR()) {
@@ -208,6 +208,23 @@ void bandRow::calculateValues () {
     }
   }
   
+  //Create vector of bandShearZones
+  std::shared_ptr<band> maxBandShear;
+  double maxShearTemp = -1.0;
+  for(unsigned int i=1; i<_bandAll.size(); i++) {
+    if (_bandAll[i]->idR() > _bandAll[i-1]->idR()) {
+      if (_bandAll[i]->scherRate() > maxShearTemp) {
+        maxShearTemp = _bandAll[i]->scherRate();
+        maxBandShear = _bandAll[i];
+      }
+    } else {
+      double W = 2*(maxBandShear->midLinedR()-_cfg->Din()/2.0)*0.5/(sqrt(M_PI)*(maxBandShear->scherRate()-0.5));
+      std::shared_ptr<bandShearZone> tmpBandShearZone (new bandShearZone(W, maxBandShear));
+      std::cerr<<maxShearTemp<<"    "<<W<<std::endl;
+      _bandShearZones.push_back(tmpBandShearZone);
+      maxShearTemp = -1.0;
+    }  
+  }
 };
 
 void band::calculateValues () {
@@ -283,4 +300,9 @@ void band::calculateValues () {
     _muGlobAVG = _tauavg/_pavg;
   }
 };
+
+bandShearZone::bandShearZone (double W, std::shared_ptr<band> bandPTR) {
+  _bandPTR = bandPTR;
+  _W = W;
+}
 
