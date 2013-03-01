@@ -1,5 +1,6 @@
 #!/usr/bin/env gnuplot
-set terminal png
+set terminal epslatex color
+
 
 #=======================================================================
 
@@ -11,22 +12,31 @@ set key title "Scherrate [1/s]"
 set key out vert
 set key left top
 
-set size 1.0,1.0
-set output "Scherrate1.png"
+set size 1.4,0.8
+set output "dia/Scherrate_XY_W.tex"
 set style line 1 lt 1 lw 5 pt 1 lc 1 
 set style line 2 lt 1 lw 5 pt 1 lc 2 
 set style line 3 lt 1 lw 5 pt 1 lc 3 
 set style line 4 lt 1 lw 5 pt 1 lc 4 
 set style line 5 lt 1 lw 5 pt 1 lc 5 
 set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "p [Pa]"
-set ylabel "SigmaD [Pa]"
+set xlabel '$r$ [$mm$]'
+set ylabel '$z$ [$mm$]'
 
 #set xrange [24:45]
 #set yrange [-5:20]
 
 set grid
-plot "build/gnuplot_shearrate.txt" using ($1):($2) title "0.01" with points lt 1 pt 8 pointsize 1.0
+plot "data_rot/gnuplot_scherrate2.txt_001" using ($6*1000):($7*1000) title "<=0.01" with points lc 1 pt 8 pointsize 1.0,\
+     "data_rot/gnuplot_scherrate2.txt_002" using ($6*1000):($7*1000) title "0.02"   with points lc 1 pt 6 pointsize 1.25,\
+     "data_rot/gnuplot_scherrate2.txt_004" using ($6*1000):($7*1000) title "0.04"   with points lc 1 pt 4 pointsize 1.5,\
+     "data_rot/gnuplot_scherrate2.txt_006" using ($6*1000):($7*1000) title "0.06"   with points lc 1 pt 9 pointsize 1.75,\
+     "data_rot/gnuplot_scherrate2.txt_008" using ($6*1000):($7*1000) title "0.08"   with points lc 1 pt 7 pointsize 2.0,\
+     "data_rot/gnuplot_scherrate2.txt_016" using ($6*1000):($7*1000) title "0.16"   with points lc 1 pt 5 pointsize 2.25,\
+     "data_rot/gnuplot_scherrate2.txt_100" using ($6*1000):($7*1000) title ">0.16"   with points lc 1 pt 15 pointsize 2.75,\
+     "data_rot/gnuplot_shearZone.txt" using ($1*1000):($2*1000) title "Rz" smooth bezier with l lc 0  lt 1 lw 5.0,\
+     "data_rot/gnuplot_shearZone.txt" using ($1*1000 - $3*1000/2.0):($2*1000) title "Rz - W" smooth bezier with l lc 0  lt 2 lw 5.0,\
+     "data_rot/gnuplot_shearZone.txt" using ($1*1000 + $3*1000/2.0):($2*1000) title "Rz + W" smooth bezier with l lc 0  lt 3 lw 5.0
 
 #=======================================================================
 
@@ -38,257 +48,31 @@ set key title "Scherrate [1/s]"
 set key out vert
 set key left top
 
-set size 1.0,1.0
-set output "Scherrate2.png"
+set size 1.4,0.8
+set output "dia/Scherrate_XY_H.tex"
 set style line 1 lt 1 lw 5 pt 1 lc 1 
 set style line 2 lt 1 lw 5 pt 1 lc 2 
 set style line 3 lt 1 lw 5 pt 1 lc 3 
 set style line 4 lt 1 lw 5 pt 1 lc 4 
 set style line 5 lt 1 lw 5 pt 1 lc 5 
 set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "p [Pa]"
-set ylabel "SigmaD/P [Pa]"
+set xlabel '$r$ [$mm$]'
+set ylabel '$z$ [$mm$]'
 
 #set xrange [24:45]
 #set yrange [-5:20]
 
 set grid
-plot "build/gnuplot_shearrate.txt" using ($1):($2/$1) notitle with points lt 1 pt 8 pointsize 1.0
-
-#=======================================================================
-
-reset
-set rmargin 5
-set bmargin 4
-#set pointsize 2
-set key title "Velocity"
-set key out vert
-set key left top
-
-set size 1.0,1.0
-set output "Velocity_1_c.png"
-set style line 1 lt 1 lw 5 pt 1 lc 1 
-set style line 2 lt 1 lw 5 pt 1 lc 2 
-set style line 3 lt 1 lw 5 pt 1 lc 3 
-set style line 4 lt 1 lw 5 pt 1 lc 4 
-set style line 5 lt 1 lw 5 pt 1 lc 5 
-set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "y/d [-]"
-set ylabel "Geschwindigkeit V/Vw [-]"
-
-
-set grid
-plot "build/gnuplot_vel1_c.txt" using ($1):($4) notitle with lines lt 1
-
-#=======================================================================
-
-reset
-set rmargin 5
-set bmargin 4
-#set pointsize 2
-set key title "Velocity"
-set key out vert
-set key left top
-
-set size 1.0,1.0
-set output "Velocity_1_d.png"
-set style line 1 lt 1 lw 5 pt 1 lc 1 
-set style line 2 lt 1 lw 5 pt 1 lc 2 
-set style line 3 lt 1 lw 5 pt 1 lc 3 
-set style line 4 lt 1 lw 5 pt 1 lc 4 
-set style line 5 lt 1 lw 5 pt 1 lc 5 
-set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "y/d [-]"
-set ylabel "Geschwindigkeit V/Vw [-]"
-
-set log y
-
-set grid
-plot "build/gnuplot_vel1_c.txt" using ($1):($4) notitle with lines lt 1
-
-#=======================================================================
-
-
-reset
-set rmargin 5
-set bmargin 4
-#set pointsize 2
-set key title "Velocity"
-set key out vert
-set key left top
-
-set size 1.0,1.0
-set output "Velocity_1_e.png"
-set style line 1 lt 1 lw 5 pt 1 lc 1 
-set style line 2 lt 1 lw 5 pt 1 lc 2 
-set style line 3 lt 1 lw 5 pt 1 lc 3 
-set style line 4 lt 1 lw 5 pt 1 lc 4 
-set style line 5 lt 1 lw 5 pt 1 lc 5 
-set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "(y/d)^2 [-]"
-set ylabel "Geschwindigkeit V/Vw [-]"
-
-set log y
-
-set grid
-plot "build/gnuplot_vel1_c.txt" using ($2):($4) notitle with lines lt 1
-
-#=======================================================================
-
-reset
-set rmargin 5
-set bmargin 4
-#set pointsize 2
-set key title "Volume Fraction"
-set key out vert
-set key left top
-
-set size 1.0,1.0
-set output "VolFraction_f.png"
-set style line 1 lt 1 lw 5 pt 1 lc 1 
-set style line 2 lt 1 lw 5 pt 1 lc 2 
-set style line 3 lt 1 lw 5 pt 1 lc 3 
-set style line 4 lt 1 lw 5 pt 1 lc 4 
-set style line 5 lt 1 lw 5 pt 1 lc 5 
-set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "y/d [-]"
-set ylabel "Volume Fraction [-]"
-
-set log y
-
-set grid
-plot "build/gnuplot_vel1_c.txt" using ($1):($6) notitle with lines lt 1
-
-#=======================================================================
-
-
-reset
-set rmargin 5
-set bmargin 4
-#set pointsize 2
-set key title "Velocity Fluctuation"
-set key out vert
-set key left top
-
-set size 1.0,1.0
-set output "Velocity_fluct_g.png"
-set style line 1 lt 1 lw 5 pt 1 lc 1 
-set style line 2 lt 1 lw 5 pt 1 lc 2 
-set style line 3 lt 1 lw 5 pt 1 lc 3 
-set style line 4 lt 1 lw 5 pt 1 lc 4 
-set style line 5 lt 1 lw 5 pt 1 lc 5 
-set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "(y/d)^2 [-]"
-set ylabel "Geschwindigkeit, Fluktiation VDev [-]"
-
-set log y
-
-set grid
-plot "build/gnuplot_vel1_c.txt" using ($1):($5) notitle with lines lt 1
-
-#=======================================================================
-
-reset
-set rmargin 5
-set bmargin 4
-#set pointsize 2
-set key title "Velocity Fluctuation"
-set key out vert
-set key left top
-
-set size 1.0,1.0
-set output "Velocity_fluct_g_a.png"
-set style line 1 lt 1 lw 5 pt 1 lc 1 
-set style line 2 lt 1 lw 5 pt 1 lc 2 
-set style line 3 lt 1 lw 5 pt 1 lc 3 
-set style line 4 lt 1 lw 5 pt 1 lc 4 
-set style line 5 lt 1 lw 5 pt 1 lc 5 
-set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "y/d [-]"
-set ylabel "Geschwindigkeit, Fluktiation VDev/sqrt(g*d) [-]"
-
-set log y
-
-set grid
-plot "build/gnuplot_vel1_c.txt" using ($1):($5/sqrt(9.8*$7)) notitle with lines lt 1
-
-#=======================================================================
-
-reset
-set rmargin 5
-set bmargin 4
-#set pointsize 2
-set key title "Velocity Fluctuation, Scherrate"
-set key out vert
-set key left top
-
-set size 1.0,1.0
-set output "Velocity_fluct_g_b.png"
-set style line 1 lt 1 lw 5 pt 1 lc 1 
-set style line 2 lt 1 lw 5 pt 1 lc 2 
-set style line 3 lt 1 lw 5 pt 1 lc 3 
-set style line 4 lt 1 lw 5 pt 1 lc 4 
-set style line 5 lt 1 lw 5 pt 1 lc 5 
-set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "y/d [-]"
-set ylabel "Geschwindigkeit, Fluktiation VDev/scher*d [-]"
-
-set log y
-
-set grid
-plot "build/gnuplot_vel1_c.txt" using ($1):($5/($7*$8)) notitle with lines lt 1
-
-#=======================================================================
-
-reset
-set rmargin 5
-set bmargin 4
-#set pointsize 2
-set key title "Scherrate"
-set key out vert
-set key left top
-
-set size 1.0,1.0
-set output "Scherrate_2d_a.png"
-set style line 1 lt 1 lw 5 pt 1 lc 1 
-set style line 2 lt 1 lw 5 pt 1 lc 2 
-set style line 3 lt 1 lw 5 pt 1 lc 3 
-set style line 4 lt 1 lw 5 pt 1 lc 4 
-set style line 5 lt 1 lw 5 pt 1 lc 5 
-set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "y/d [-]"
-set ylabel "Scherrate [-]"
-
-set log y
-
-set grid
-plot "build/gnuplot_vel1_c.txt" using ($1):($8) notitle with lines lt 1
-
-#=======================================================================
-
-reset
-set rmargin 5
-set bmargin 4
-#set pointsize 2
-set key title "Scherrate"
-set key out vert
-set key left top
-
-set size 1.0,1.0
-set output "Scherrate_2d_b.png"
-set style line 1 lt 1 lw 5 pt 1 lc 1 
-set style line 2 lt 1 lw 5 pt 1 lc 2 
-set style line 3 lt 1 lw 5 pt 1 lc 3 
-set style line 4 lt 1 lw 5 pt 1 lc 4 
-set style line 5 lt 1 lw 5 pt 1 lc 5 
-set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "y/d [-]"
-set ylabel "Scherrate [-]"
-
-#set log y
-
-set grid
-plot "build/gnuplot_vel1_c.txt" using ($1):($8) notitle with lines lt 1
+plot "data_blau/gnuplot_scherrate2.txt_001" using ($6*1000):($7*1000) title "<=0.01" with points lc 3 pt 8 pointsize 1.0,\
+     "data_blau/gnuplot_scherrate2.txt_002" using ($6*1000):($7*1000) title "0.02"   with points lc 3 pt 6 pointsize 1.25,\
+     "data_blau/gnuplot_scherrate2.txt_004" using ($6*1000):($7*1000) title "0.04"   with points lc 3 pt 4 pointsize 1.5,\
+     "data_blau/gnuplot_scherrate2.txt_006" using ($6*1000):($7*1000) title "0.06"   with points lc 3 pt 9 pointsize 1.75,\
+     "data_blau/gnuplot_scherrate2.txt_008" using ($6*1000):($7*1000) title "0.08"   with points lc 3 pt 7 pointsize 2.0,\
+     "data_blau/gnuplot_scherrate2.txt_016" using ($6*1000):($7*1000) title "0.16"   with points lc 3 pt 5 pointsize 2.25,\
+     "data_blau/gnuplot_scherrate2.txt_100" using ($6*1000):($7*1000) title ">0.16"   with points lc 3 pt 15 pointsize 2.75,\
+     "data_blau/gnuplot_shearZone.txt" using ($1*1000):($2*1000) title "Rz" smooth bezier with l lc 0  lt 1 lw 5.0,\
+     "data_blau/gnuplot_shearZone.txt" using ($1*1000 - $3*1000/2.0):($2*1000) title "Rz - W" smooth bezier with l lc 0  lt 2 lw 5.0,\
+     "data_blau/gnuplot_shearZone.txt" using ($1*1000 + $3*1000/2.0):($2*1000) title "Rz + W" smooth bezier with l lc 0  lt 3 lw 5.0
 
 #=======================================================================
 
@@ -300,21 +84,295 @@ set key title "Scherrate [1/s]"
 set key out vert
 set key left top
 
-set size 1.0,1.0
-set output "Scherrate_glob.png"
+set size 1.4,0.8
+set output "dia/Scherspannung.tex"
 set style line 1 lt 1 lw 5 pt 1 lc 1 
 set style line 2 lt 1 lw 5 pt 1 lc 2 
 set style line 3 lt 1 lw 5 pt 1 lc 3 
 set style line 4 lt 1 lw 5 pt 1 lc 4 
 set style line 5 lt 1 lw 5 pt 1 lc 5 
 set style line 6 lt 1 lw 5 pt 1 lc 6 
-set xlabel "Press [Pa]"
-set ylabel "Tau [Pa]"
+set xlabel '$p$ [$Pa$]'
+set ylabel '$\tau$ [$N/m^2$]'
 
 #set xrange [24:45]
 #set yrange [-5:20]
 
 set grid
-plot "build/gnuplot_scherrate2.txt" using ($1):($2):(10.*$3) title "0.01" with points lt 1 pt 7 ps variable
+plot "data_blau/gnuplot_scherrate2.txt_001" using ($1):($2) title "<=0.01" with points lc 3 pt 8 pointsize 1.0,\
+     "data_blau/gnuplot_scherrate2.txt_002" using ($1):($2) title "0.02"   with points lc 3 pt 6 pointsize 1.25,\
+     "data_blau/gnuplot_scherrate2.txt_004" using ($1):($2) title "0.04"   with points lc 3 pt 4 pointsize 1.5,\
+     "data_blau/gnuplot_scherrate2.txt_006" using ($1):($2) title "0.06"   with points lc 3 pt 9 pointsize 1.75,\
+     "data_blau/gnuplot_scherrate2.txt_008" using ($1):($2) title "0.08"   with points lc 3 pt 7 pointsize 2.0,\
+     "data_blau/gnuplot_scherrate2.txt_016" using ($1):($2) title "0.16"   with points lc 3 pt 5 pointsize 2.25,\
+     "data_blau/gnuplot_scherrate2.txt_100" using ($1):($2) title ">0.16"   with points lc 3 pt 15 pointsize 2.75,\
+     "data_rot/gnuplot_scherrate2.txt_001" using ($1):($2) notitle with points lc 1 pt 8 pointsize 1.0,\
+     "data_rot/gnuplot_scherrate2.txt_002" using ($1):($2) notitle  with points lc 1 pt 6 pointsize 1.25,\
+     "data_rot/gnuplot_scherrate2.txt_004" using ($1):($2) notitle  with points lc 1 pt 4 pointsize 1.5,\
+     "data_rot/gnuplot_scherrate2.txt_006" using ($1):($2) notitle  with points lc 1 pt 9 pointsize 1.75,\
+     "data_rot/gnuplot_scherrate2.txt_008" using ($1):($2) notitle  with points lc 1 pt 7 pointsize 2.0,\
+     "data_rot/gnuplot_scherrate2.txt_016" using ($1):($2) notitle  with points lc 1 pt 5 pointsize 2.25,\
+     "data_rot/gnuplot_scherrate2.txt_100" using ($1):($2) notitle  with points lc 1 pt 15 pointsize 2.75
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Scherrate [1/s]"
+set key out vert
+set key left top
+
+set size 1.4,0.8
+set output "dia/Scherspannungsintensitaet.tex"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel '$p$ [$Pa$]'
+set ylabel '$\tau/p$ [$-$]'
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "data_blau/gnuplot_scherrate2.txt_001" using ($1):($2/$1) title "<=0.01" with points lc 3 pt 8 pointsize 1.0,\
+     "data_blau/gnuplot_scherrate2.txt_002" using ($1):($2/$1) title "0.02"   with points lc 3 pt 6 pointsize 1.25,\
+     "data_blau/gnuplot_scherrate2.txt_004" using ($1):($2/$1) title "0.04"   with points lc 3 pt 4 pointsize 1.5,\
+     "data_blau/gnuplot_scherrate2.txt_006" using ($1):($2/$1) title "0.06"   with points lc 3 pt 9 pointsize 1.75,\
+     "data_blau/gnuplot_scherrate2.txt_008" using ($1):($2/$1) title "0.08"   with points lc 3 pt 7 pointsize 2.0,\
+     "data_blau/gnuplot_scherrate2.txt_016" using ($1):($2/$1) title "0.16"   with points lc 3 pt 5 pointsize 2.25,\
+     "data_blau/gnuplot_scherrate2.txt_100" using ($1):($2/$1) title ">0.16"   with points lc 3 pt 15 pointsize 2.75,\
+     "data_rot/gnuplot_scherrate2.txt_001" using ($1):($2/$1) notitle with points lc 1 pt 8 pointsize 1.0,\
+     "data_rot/gnuplot_scherrate2.txt_002" using ($1):($2/$1) notitle  with points lc 1 pt 6 pointsize 1.25,\
+     "data_rot/gnuplot_scherrate2.txt_004" using ($1):($2/$1) notitle  with points lc 1 pt 4 pointsize 1.5,\
+     "data_rot/gnuplot_scherrate2.txt_006" using ($1):($2/$1) notitle  with points lc 1 pt 9 pointsize 1.75,\
+     "data_rot/gnuplot_scherrate2.txt_008" using ($1):($2/$1) notitle  with points lc 1 pt 7 pointsize 2.0,\
+     "data_rot/gnuplot_scherrate2.txt_016" using ($1):($2/$1) notitle  with points lc 1 pt 5 pointsize 2.25,\
+     "data_rot/gnuplot_scherrate2.txt_100" using ($1):($2/$1) notitle  with points lc 1 pt 15 pointsize 2.75
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+#set key title "Scherrate [1/s]"
+#set key out vert
+#set key left top
+
+set size 1.4,0.8
+set output "dia/Viskositaet.tex"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel '$\gamma$ [$1/s$]'
+set ylabel '$\eta$ [$Pas$]'
+
+set log x
+set log y
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "data_blau/gnuplot_scherrate2.txt" using ($3):($5) notitle with points lc 3 pt 9 pointsize 1.75,\
+     "data_rot/gnuplot_scherrate2.txt" using ($3):($5) notitle with points lc 1 pt 9 pointsize 1.75
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+set key title "Scherrate [1/s]"
+set key out vert
+set key left top
+
+set size 1.4,0.8
+set output "dia/Viskositaet2.tex"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel '$I$ [$-$]'
+set ylabel '$\tau/\gamma$ [$Pas$]'
+
+set log x
+set log y
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "data_blau/gnuplot_scherrate2.txt_001" using ($4):($2/$3) title "<=0.01" with points lc 3 pt 8 pointsize 1.0,\
+     "data_blau/gnuplot_scherrate2.txt_002" using ($4):($2/$3) title "0.02"   with points lc 3 pt 6 pointsize 1.25,\
+     "data_blau/gnuplot_scherrate2.txt_004" using ($4):($2/$3) title "0.04"   with points lc 3 pt 4 pointsize 1.5,\
+     "data_blau/gnuplot_scherrate2.txt_006" using ($4):($2/$3) title "0.06"   with points lc 3 pt 9 pointsize 1.75,\
+     "data_blau/gnuplot_scherrate2.txt_008" using ($4):($2/$3) title "0.08"   with points lc 3 pt 7 pointsize 2.0,\
+     "data_blau/gnuplot_scherrate2.txt_016" using ($4):($2/$3) title "0.16"   with points lc 3 pt 5 pointsize 2.25,\
+     "data_blau/gnuplot_scherrate2.txt_100" using ($4):($2/$3) title ">0.16"   with points lc 3 pt 15 pointsize 2.75,\
+     "data_rot/gnuplot_scherrate2.txt_001" using ($4):($2/$3) notitle with points lc 1 pt 8 pointsize 1.0,\
+     "data_rot/gnuplot_scherrate2.txt_002" using ($4):($2/$3) notitle  with points lc 1 pt 6 pointsize 1.25,\
+     "data_rot/gnuplot_scherrate2.txt_004" using ($4):($2/$3) notitle  with points lc 1 pt 4 pointsize 1.5,\
+     "data_rot/gnuplot_scherrate2.txt_006" using ($4):($2/$3) notitle  with points lc 1 pt 9 pointsize 1.75,\
+     "data_rot/gnuplot_scherrate2.txt_008" using ($4):($2/$3) notitle  with points lc 1 pt 7 pointsize 2.0,\
+     "data_rot/gnuplot_scherrate2.txt_016" using ($4):($2/$3) notitle  with points lc 1 pt 5 pointsize 2.25,\
+     "data_rot/gnuplot_scherrate2.txt_100" using ($4):($2/$3) notitle  with points lc 1 pt 15 pointsize 2.75
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+#set key title "Scherrate [1/s]"
+#set key out vert
+#set key left top
+
+set size 1.4,0.8
+set output "dia/Geschwindigkeit1.tex"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel '$y/d$ [$-$]'
+set ylabel '$\omega$ [$1/s$]'
+
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "data_blau/gnuplot_vel1_c.txt" using ($1):($3) notitle with lp lt 1 lc 3 pt 9 pointsize 1.75,\
+     "data_rot/gnuplot_vel1_c.txt" using ($1):($3) notitle with lp lt 1 lc 1 pt 9 pointsize 1.75
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+#set key title "Scherrate [1/s]"
+#set key out vert
+#set key left top
+
+set size 1.4,0.8
+set output "dia/Geschwindigkeit2.tex"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel '$y/d$ [$-$]'
+set ylabel '$\omega/\omega_{0}$ [$-$]'
+
+set log y
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "data_blau/gnuplot_vel1_c.txt" using ($1):($4) notitle with lp lt 1 lc 3 pt 9 pointsize 1.75,\
+     "data_rot/gnuplot_vel1_c.txt" using ($1):($4) notitle with lp lt 1 lc 1 pt 9 pointsize 1.75
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+#set key title "Scherrate [1/s]"
+#set key out vert
+#set key left top
+
+set size 1.4,0.8
+set output "dia/GeschwindigkeitFlukt.tex"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel '$y/d$ [$-$]'
+set ylabel '$\sqrt{{\delta V}^2/(g\cdot d)}$ [$-$]'
+
+set log y
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "data_blau/gnuplot_vel1_c.txt" using ($1):($5/sqrt(9.8*$7)) notitle with lp lt 1 lc 3 pt 9 pointsize 1.75,\
+     "data_rot/gnuplot_vel1_c.txt" using ($1):($5/sqrt(9.8*$7)) notitle with lp lt 1 lc 1 pt 9 pointsize 1.75
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+#set key title "Scherrate [1/s]"
+#set key out vert
+#set key left top
+
+set size 1.4,0.8
+set output "dia/Volumenfraktion.tex"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel '$y/d$ [$-$]'
+set ylabel '$\Phi$ [$-$]'
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "data_blau/gnuplot_vel1_c.txt" using ($1):($6) notitle with lp lt 1 lc 3 pt 9 pointsize 1.75,\
+     "data_rot/gnuplot_vel1_c.txt" using ($1):($6) notitle with lp lt 1 lc 1 pt 9 pointsize 1.75
+
+#=======================================================================
+
+reset
+set rmargin 5
+set bmargin 4
+#set pointsize 2
+#set key title "Scherrate [1/s]"
+#set key out vert
+#set key left top
+
+set size 1.4,0.8
+set output "dia/EnergieKin.tex"
+set style line 1 lt 1 lw 5 pt 1 lc 1 
+set style line 2 lt 1 lw 5 pt 1 lc 2 
+set style line 3 lt 1 lw 5 pt 1 lc 3 
+set style line 4 lt 1 lw 5 pt 1 lc 4 
+set style line 5 lt 1 lw 5 pt 1 lc 5 
+set style line 6 lt 1 lw 5 pt 1 lc 6 
+set xlabel '$t$ [$s$]'
+set ylabel '$E_{Kin}$ [$J$]'
+
+set log y
+
+#set xrange [24:45]
+#set yrange [-5:20]
+
+set grid
+plot "data_blau/energie_dump.txt" using ($1*0.000002):($3) notitle with l lt 1 lc 3,\
+     "data_rot/energie_dump.txt" using ($1*0.000002):($3) notitle with l lt 1 lc 1
 
 #=======================================================================

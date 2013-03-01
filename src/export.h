@@ -60,7 +60,7 @@ class exportclass {
     std::shared_ptr <configopt> _cfg;
     std::shared_ptr <bandRow> _bandRow;
     ofstream fileVTK;
-    std::string _fileNameVTU, _fileNameG1, _fileNameG2, _fileNameG3;
+    std::string _fileNameVTU, _fileNameG1, _fileNameG2, _fileNameG3, _fileNameG4;
     
   public:
     exportclass(std::shared_ptr<configopt>, std::shared_ptr <bandRow>);

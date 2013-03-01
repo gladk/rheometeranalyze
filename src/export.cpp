@@ -37,6 +37,11 @@ exportclass::exportclass(std::shared_ptr<configopt> cfg, std::shared_ptr <bandRo
   
   _fileNameG3 =  _cfg->FOutput();
   _fileNameG3 += "/gnuplot_vel1_c.txt";
+  
+  _fileNameG4 =  _cfg->FOutput();
+  _fileNameG4 += "/gnuplot_shearZone.txt";
+  
+  
 };
 
 void exportclass::VTK() {
@@ -261,6 +266,7 @@ void exportclass::VTK() {
 void exportclass::gnuplotSchearRate() {  
   ofstream myfile1 (_fileNameG1.c_str());
   ofstream myfile11 (_fileNameG2.c_str());
+  ofstream myfile4 (_fileNameG4.c_str());
   
   //HACK==================================
   std::string myfile001_name = _fileNameG2; myfile001_name += "_001"; ofstream myfile001 (myfile001_name.c_str());
@@ -313,9 +319,20 @@ void exportclass::gnuplotSchearRate() {
         
       }
     }
-  }  
+  }
+  
+  if (myfile4.is_open()) {
+    myfile4 << "RPOS\tZPOS\tW" << std::endl;
+    for(unsigned int b=0; b<_bandRow->getBandShearZonesSize(); b++) {
+      std::shared_ptr<bandShearZone> bandSZ = _bandRow->getBandShearZones(b);
+      myfile4 << bandSZ->RPOS() << "\t"<< bandSZ->ZPOS() << "\t"<< bandSZ->W() << std::endl;
+    }
+    
+  }
+    
   myfile1.close();
   myfile11.close();
+  myfile4.close();
 
   myfile001.close();
   myfile002.close();

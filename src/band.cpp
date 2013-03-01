@@ -210,21 +210,30 @@ void bandRow::calculateValues () {
   
   //Create vector of bandShearZones
   std::shared_ptr<band> maxBandShear;
-  double maxShearTemp = -1.0;
+  std::shared_ptr<band> minBandShear;
+  bool maxShearTemp = false;
+  bool minShearTemp = false;
+  
   for(unsigned int i=1; i<_bandAll.size(); i++) {
     if (_bandAll[i]->idR() > _bandAll[i-1]->idR()) {
-      if (_bandAll[i]->scherRate() > maxShearTemp) {
-        maxShearTemp = _bandAll[i]->scherRate();
+      if (_bandAll[i-1]->scherRate() < 0.01 and _bandAll[i]->scherRate() > 0.01 and not(minShearTemp)) {
+        minShearTemp = true;
+        minBandShear = _bandAll[i-1];
+      }
+      
+      if (_bandAll[i]->scherRate() < 0.01 and _bandAll[i-1]->scherRate() > 0.01 and not(maxShearTemp)) {
+        maxShearTemp = true;
         maxBandShear = _bandAll[i];
       }
     } else {
-      double W = 2*(maxBandShear->midLinedR()-_cfg->Din()/2.0)*0.5/(sqrt(M_PI)*(maxBandShear->scherRate()-0.5));
-      std::shared_ptr<bandShearZone> tmpBandShearZone (new bandShearZone(W, maxBandShear));
-      std::cerr<<maxShearTemp<<"    "<<W<<std::endl;
+      maxShearTemp = false;
+      minShearTemp = false;
+      std::shared_ptr<bandShearZone> tmpBandShearZone (new bandShearZone(minBandShear, maxBandShear));
       _bandShearZones.push_back(tmpBandShearZone);
-      maxShearTemp = -1.0;
-    }  
+    }
   }
+  std::shared_ptr<bandShearZone> tmpBandShearZone (new bandShearZone(minBandShear, maxBandShear));
+  _bandShearZones.push_back(tmpBandShearZone);
 };
 
 void band::calculateValues () {
@@ -301,8 +310,8 @@ void band::calculateValues () {
   }
 };
 
-bandShearZone::bandShearZone (double W, std::shared_ptr<band> bandPTR) {
-  _bandPTR = bandPTR;
-  _W = W;
+bandShearZone::bandShearZone (std::shared_ptr<band> bandMinPTR, std::shared_ptr<band> bandMaxPTR) {
+  _bandMinPTR = bandMinPTR;
+  _bandMaxPTR = bandMaxPTR;
 }
 

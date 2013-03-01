@@ -71,6 +71,8 @@ class band {
     double contactNumAVG() {return _contactNumAVG;};
     double midLinedR() {return ((_dRmax - _dRmin)/2.0 + _dRmin);};
     double midLinedZ() {return ((_dZmax - _dZmin)/2.0 + _dZmin);};
+    double dR() {return (_dRmax - _dRmin);};
+    double dZ() {return (_dZmax - _dZmin);};
     long long partNumb () {return _partNumb;};
     long long forceNumb () {return _forceNumb;};
     std::shared_ptr<particle> getPart (long long id) { return _allPart[id];}
@@ -97,10 +99,13 @@ class band {
 class bandShearZone {
   private:
     int _id;
-    double _W;
-    std::shared_ptr<band> _bandPTR;
+    std::shared_ptr<band> _bandMinPTR;
+    std::shared_ptr<band> _bandMaxPTR;
   public:
-    bandShearZone(double, std::shared_ptr<band>);
+    bandShearZone(std::shared_ptr<band>, std::shared_ptr<band>);
+    double RPOS () {return (_bandMaxPTR->midLinedR() - _bandMinPTR->midLinedR())/2.0 + _bandMinPTR->midLinedR();};
+    double ZPOS () {return _bandMaxPTR->midLinedZ();};
+    double W () {return (_bandMaxPTR->midLinedR() - _bandMinPTR->midLinedR() - _bandMinPTR->dR());};
 };
 
 class bandRow {
@@ -115,12 +120,12 @@ class bandRow {
     void fillBands();
     int getBandR(double);
     int getBandZ(double);
+    unsigned int getBandShearZonesSize() {return _bandShearZones.size();};
+    std::shared_ptr<bandShearZone> getBandShearZones(int id) {return _bandShearZones[id];};
     void calculateValues();
     std::shared_ptr<band> getBand(unsigned int id) {return _bandAll[id];}
     std::shared_ptr<band> getBand(unsigned int idR, unsigned int idZ) {return _bandAll[idZ*_cfg->SecRadial() + idR];}
     unsigned int size() {return _bandAll.size();}
-    
-    
 };
 
 #endif
