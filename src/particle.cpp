@@ -105,7 +105,7 @@ long long particleRow::elementsNum() {
 };
 
 bool particleRow::particleReal(long long id) {
-  if (_allPart[id] == _tmpP or _allPart[id]->disabled()) {
+  if (arraySize()<id or _allPart[id] == _tmpP or _allPart[id]->disabled()) {
     return false;
   } else {
     return true;
