@@ -327,7 +327,6 @@ void exportclass::gnuplotSchearRate() {
       std::shared_ptr<bandShearZone> bandSZ = _bandRow->getBandShearZones(b);
       myfile4 << bandSZ->RPOS() << "\t"<< bandSZ->ZPOS() << "\t"<< bandSZ->W() << std::endl;
     }
-    
   }
     
   myfile1.close();

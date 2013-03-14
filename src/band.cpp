@@ -226,14 +226,18 @@ void bandRow::calculateValues () {
         maxBandShear = _bandAll[i];
       }
     } else {
+      if (maxShearTemp and minShearTemp) {
+        std::shared_ptr<bandShearZone> tmpBandShearZone (new bandShearZone(minBandShear, maxBandShear));
+        _bandShearZones.push_back(tmpBandShearZone);
+      }
       maxShearTemp = false;
       minShearTemp = false;
-      std::shared_ptr<bandShearZone> tmpBandShearZone (new bandShearZone(minBandShear, maxBandShear));
-      _bandShearZones.push_back(tmpBandShearZone);
     }
   }
-  std::shared_ptr<bandShearZone> tmpBandShearZone (new bandShearZone(minBandShear, maxBandShear));
-  _bandShearZones.push_back(tmpBandShearZone);
+  if (maxShearTemp and minShearTemp) {
+    std::shared_ptr<bandShearZone> tmpBandShearZone (new bandShearZone(minBandShear, maxBandShear));
+    _bandShearZones.push_back(tmpBandShearZone);
+  }
 };
 
 void band::calculateValues () {
