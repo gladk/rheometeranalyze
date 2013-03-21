@@ -59,32 +59,35 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
         return 0;
     }
 
-    if (vm.count("config"))
-    {
-        cout << "config file is: " 
-              << vm["config"].as<string>() << "\n";
+    if (vm.count("config")) {
+      cout << "config file is: " << vm["config"].as<string>() << "\n";
+    } else {
+      cout << "config file is required, use `-c` option for that or `--help`.\n"; 
+      exit (EXIT_FAILURE);
     }
     configFileName = vm["config"].as<string>();
 
-    if (vm.count("particle"))
-    {
-        cout << "particles dump-file is: " 
-              << vm["particle"].as<string>() << "\n";
+    if (vm.count("particle")) {
+      cout << "particles dump-file is: " << vm["particle"].as<string>() << "\n";
+    } else {
+      cout << "particles dump-file is required, use `-p` option for that or `--help` for help.\n"; 
+      exit (EXIT_FAILURE);
     }
     
     particlesFileName = vm["particle"].as<string>();
     
-    if (vm.count("force"))
-    {
-        cout << "forces dump-file is: " 
-              << vm["force"].as<string>() << "\n";
+    if (vm.count("force")){
+      cout << "forces dump-file is: "  << vm["force"].as<string>() << "\n";
+    } else {
+      cout << "force dump-file is required, use `-p` option for that or `--help` for help.\n"; 
+      exit (EXIT_FAILURE);
     }
     forcesFileName = vm["force"].as<string>();
 
   }
   catch(exception& e) {
       cerr << "error: " << e.what() << "\n";
-      return 1;
+      exit (EXIT_FAILURE);
   }
   catch(...) {
       cerr << "Exception of unknown type!\n";
