@@ -99,15 +99,75 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     exit (EXIT_FAILURE);
   }
   
-  if (not(fs::is_regular_file(particlesFileName))) {
+  
+  
+  
+  //=====================================================
+  std::vector< fs::path > filesParticle;
+  
+  fs::path particle_path( particlesFileName );
+  fs::path particle_dir = particle_path.parent_path();
+  fs::path particle_filesmask = particle_path.filename();
+  
+  if (not(fs::is_directory(particle_dir))) {
+    std::cerr<<"The Directory "<<particle_dir.string()<<" does not exists. Exiting."<<std::endl;
+    exit (EXIT_FAILURE);
+  } else {
+    fs::directory_iterator end_itr; // Default ctor yields past-the-end
+    const boost::regex my_filter( particle_filesmask.string() );
+    for( boost::filesystem::directory_iterator i( particle_dir.string() ); i != end_itr; ++i )
+    {
+        // Skip if not a file
+        if( !boost::filesystem::is_regular_file( i->status() ) ) continue;
+        boost::smatch what;
+        // Skip if no match
+        if( !boost::regex_match(  i->path().filename().string(), what, my_filter ) ) continue;
+        // File matches, store it
+        if (fs::is_regular_file(i->path())) {
+          filesParticle.push_back(i->path());
+        }
+    }
+  }
+  std::cerr<< filesParticle.size()   <<std::endl;
+  if (filesParticle.size()<1) {
     std::cerr<<"The file "<<particlesFileName<<" does not exists. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
   }
   
-  if (not(fs::is_regular_file(forcesFileName))) {
+  //=====================================================
+  
+  std::vector< fs::path > filesForces;
+    
+  fs::path force_path( forcesFileName );
+  fs::path force_dir = force_path.parent_path();
+  fs::path force_filesmask = force_path.filename();
+  
+  if (not(fs::is_directory(force_dir))) {
+    std::cerr<<"The Directory "<<force_dir.string()<<" does not exists. Exiting."<<std::endl;
+    exit (EXIT_FAILURE);
+  } else {
+    fs::directory_iterator end_itr; // Default ctor yields past-the-end
+    const boost::regex my_filter( force_filesmask.string() );
+    for( boost::filesystem::directory_iterator i( force_dir.string() ); i != end_itr; ++i )
+    {
+        // Skip if not a file
+        if( !boost::filesystem::is_regular_file( i->status() ) ) continue;
+        boost::smatch what;
+        // Skip if no match
+        if( !boost::regex_match(  i->path().filename().string(), what, my_filter ) ) continue;
+        // File matches, store it
+        if (fs::is_regular_file(i->path())) {
+          filesForces.push_back(i->path());
+        }
+    }
+  }
+  std::cerr<< filesForces.size()   <<std::endl;
+  if (filesForces.size()<1) {
     std::cerr<<"The file "<<forcesFileName<<" does not exists. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
-  }
+  } 
+  
+  //=====================================================
   
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
   std::shared_ptr<rheometer> curRheom (new rheometer(configParams, particlesFileName, forcesFileName));

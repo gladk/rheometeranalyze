@@ -22,6 +22,7 @@
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #include <boost/filesystem.hpp> 
 #include <boost/program_options.hpp>
+#include <boost/regex.hpp>
 
 #include <iostream>
 #include <algorithm>
