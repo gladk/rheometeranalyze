@@ -32,21 +32,23 @@
 #include "band.h"
 #include "force.h"
 #include "export.h"
+#include "main.h"
 
+namespace fs = boost::filesystem;
 using namespace std;
 class rheometer {
   private:
     std::shared_ptr<configopt> _cfg;
-    string _particlesFileName;
-    string _forcesFileName;
+    std::vector<fs::path> _particlesFileName;
+    std::vector<fs::path> _forcesFileName;
     
     unsigned long long  _particleNum;
     unsigned long long _forceNum;
-    std::shared_ptr <particleRow> _particleAll;
-    std::shared_ptr <forceRow> _forceRow;
-    std::shared_ptr <bandRow> _bandRow;
+    std::vector<std::shared_ptr <particleRow>> _particleAll;
+    std::vector<std::shared_ptr <forceRow>> _forceRow;
+    std::vector<std::shared_ptr <bandRow>> _bandRow;
   public:
-    rheometer(std::shared_ptr<configopt>, string, string);
+    rheometer(std::shared_ptr<configopt>, std::vector<fs::path>, std::vector<fs::path>);
     void loadParticles();
     void loadForces();
 };

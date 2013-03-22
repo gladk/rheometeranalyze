@@ -192,7 +192,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   }
   
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
-  std::shared_ptr<rheometer> curRheom (new rheometer(configParams, particlesFileName, forcesFileName));
+  std::shared_ptr<rheometer> curRheom (new rheometer(configParams, filesParticle, filesForces));
   
   return 0;
 }

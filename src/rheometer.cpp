@@ -21,7 +21,7 @@
 
 #include "rheometer.h"
 
-rheometer::rheometer(std::shared_ptr<configopt> cfg, string particlesFileName, string forcesFileName) {
+rheometer::rheometer(std::shared_ptr<configopt> cfg, std::vector< fs::path > particlesFileName, std::vector< fs::path > forcesFileName) {
   _cfg = cfg;
   _particlesFileName = particlesFileName;
   _forcesFileName = forcesFileName;
@@ -32,161 +32,167 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg, string particlesFileName, s
   loadForces();
   
   //Create bands
-  std::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
-  std::shared_ptr <bandRow> _bandRow = bandRowTMP;
+  //std::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
+  //std::shared_ptr <bandRow> _bandRow = bandRowTMP;
   
   
-  std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
-  exp->VTK();
-  exp->gnuplotSchearRate();
+  //std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
+  //exp->VTK();
+  //exp->gnuplotSchearRate();
 };
 
 void rheometer::loadParticles() {
-  std::ifstream _file;
-  _file.open(_particlesFileName.c_str());
+  unsigned int partNumbCounter  = 1;
+  BOOST_FOREACH(fs::path fTMP, _particlesFileName) {
+    std::ifstream _file;
+    _file.open(fTMP.string());
+    
+    std::string   line;
+    int curLine = 1;
+    unsigned long long maxId = 0;
+    std::vector <std::shared_ptr<particle> > tmpPartVector;
   
-  std::string   line;
-  int curLine = 1;
-  unsigned long long maxId = 0;
-  std::vector <std::shared_ptr<particle> > tmpPartVector;
+    while(std::getline(_file, line)) {
+      std::stringstream linestream(line);
+      std::string data;
+      
+      int valInt;
+      double valD;
+      double pR, pM, pD;
+      int pT;
+      unsigned long long pId;
+      Eigen::Vector3f pC, pV, pO;
+      if (curLine>=_cfg->nDat()) {
+        for (int i=1; i<=_cfg->maxC(); i++) {
+          if (i==_cfg->cId()) {
+            linestream >> pId;
+          } else if (i==_cfg->cT()) {
+            linestream >> pT;
+            //std::cerr<<pT<<std::endl;
+          } else if (i==_cfg->cC()) {
+            linestream >> pC[0];
+            linestream >> pC[1];
+            linestream >> pC[2];
+            i+=2;
+            //std::cerr<<pC<<std::endl<<std::endl;
+          } else if (i==_cfg->cV()) {
+            linestream >> pV[0];
+            linestream >> pV[1];
+            linestream >> pV[2];
+            i+=2;
+            //std::cerr<<pV<<std::endl<<std::endl;
+          } else if (i==_cfg->cO()) {
+            linestream >> pO[0];
+            linestream >> pO[1];
+            linestream >> pO[2];
+            i+=2;
+            //std::cerr<<pO<<std::endl<<std::endl;
+          } else if (i==_cfg->cR()) {
+            linestream >> pR;
+            //std::cerr<<pR<<std::endl;
+          } else if (i==_cfg->cM()) {
+            linestream >> pM;
+            //std::cerr<<pM<<std::endl;
+          } else if (i==_cfg->cD()) {
+            linestream >> pD;
+            //std::cerr<<pD<<std::endl;
+          } else {
+            linestream >> valD;
+          }
+        }
+        
+        if (((_cfg->tC()>=0) and (pT == _cfg->tC())) or (_cfg->tC()<0)) {
+          maxId = max(pId, maxId);
+          std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, pR, pM, pD, pC,pV, pO));
+          tmpPartVector.push_back(tmpParticle);
+        }
+  
+      } else if (curLine == _cfg->nAt()) {
+        linestream >> valInt;
+        _particleNum = valInt;
+        std::cerr<<"Particle file "<<partNumbCounter<<"; Expected number of particles "<<_particleNum;
+      }
+      curLine++;
+    };
+    std::shared_ptr<particleRow> particleTMP ( new particleRow(maxId+1));
+    _particleAll.push_back(particleTMP);
+    
+    unsigned int partNumbTMP  = _particleAll.size()-1;
+    BOOST_FOREACH( std::shared_ptr<particle> p, tmpPartVector) {
+       _particleAll[partNumbTMP]->addP(p);
+    }
+    std::cerr<<"; "<<_particleAll[partNumbTMP]->elementsNum()<<" particles added"<<std::endl;
+    partNumbCounter++;
+  }
+};
 
-  while(std::getline(_file, line)) {
-    std::stringstream linestream(line);
-    std::string data;
+
+void rheometer::loadForces() {
+  BOOST_FOREACH(fs::path fTMP, _forcesFileName) {
+    std::ifstream _file;
+    _file.open(fTMP.string());
+    
+    std::string   line;
+    int curLine = 1;
+    
+    //std::vector <std::shared_ptr<particle> > tmpPartVector;
     
     int valInt;
     double valD;
-    double pR, pM, pD;
-    int pT;
-    unsigned long long pId;
-    Eigen::Vector3f pC, pV, pO;
-    if (curLine>=_cfg->nDat()) {
-      for (int i=1; i<=_cfg->maxC(); i++) {
-        if (i==_cfg->cId()) {
-          linestream >> pId;
-        } else if (i==_cfg->cT()) {
-          linestream >> pT;
-          //std::cerr<<pT<<std::endl;
-        } else if (i==_cfg->cC()) {
-          linestream >> pC[0];
-          linestream >> pC[1];
-          linestream >> pC[2];
-          i+=2;
-          //std::cerr<<pC<<std::endl<<std::endl;
-        } else if (i==_cfg->cV()) {
-          linestream >> pV[0];
-          linestream >> pV[1];
-          linestream >> pV[2];
-          i+=2;
-          //std::cerr<<pV<<std::endl<<std::endl;
-        } else if (i==_cfg->cO()) {
-          linestream >> pO[0];
-          linestream >> pO[1];
-          linestream >> pO[2];
-          i+=2;
-          //std::cerr<<pO<<std::endl<<std::endl;
-        } else if (i==_cfg->cR()) {
-          linestream >> pR;
-          //std::cerr<<pR<<std::endl;
-        } else if (i==_cfg->cM()) {
-          linestream >> pM;
-          //std::cerr<<pM<<std::endl;
-        } else if (i==_cfg->cD()) {
-          linestream >> pD;
-          //std::cerr<<pD<<std::endl;
-        } else {
-          linestream >> valD;
-        }
-      }
-      
-      if (((_cfg->tC()>=0) and (pT == _cfg->tC())) or (_cfg->tC()<0)) {
-        maxId = max(pId, maxId);
-        std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, pR, pM, pD, pC,pV, pO));
-        tmpPartVector.push_back(tmpParticle);
-      }
-
-    } else if (curLine == _cfg->nAt()) {
-      linestream >> valInt;
-      _particleNum = valInt;
-      std::cerr<<"Expected number of particles "<<_particleNum<<std::endl;
-    }
-    curLine++;
-  };
-  std::shared_ptr<particleRow> particleTMP ( new particleRow(maxId+1));
-  _particleAll = particleTMP;
-  
-  for(std::vector<std::shared_ptr<particle> >::iterator it = tmpPartVector.begin(); it != tmpPartVector.end(); ++it) {
-    _particleAll->addP(*it);
-  }
-  std::cerr<<_particleAll->elementsNum()<<" particles added"<<std::endl;
-};
-
-void rheometer::loadForces() {
-  std::ifstream _file;
-  _file.open(_forcesFileName.c_str());
-  
-  std::string   line;
-  int curLine = 1;
-  
-  //std::vector <std::shared_ptr<particle> > tmpPartVector;
-  
-  int valInt;
-  double valD;
-  
-  std::shared_ptr<forceRow> forceTMP ( new forceRow());
-  _forceRow = forceTMP;
-  
-  
-  
-  while(std::getline(_file, line)) {
-    std::stringstream linestream(line);
-    std::string data;
     
-    unsigned long long pid1, pid2;
-    Eigen::Vector3f pos1, pos2, val;
-  
-    if (curLine>=_cfg->fDat()) {
-      for (int i=1; i<=_cfg->maxCF(); i++) {
-        if (i==_cfg->cPos1ID()) {
-          linestream >> pid1;
-        } else if (i==_cfg->cPos2ID()) {
-          linestream >> pid2;
-        } else if (i==_cfg->cPos1()) {
-          linestream >> pos1[0];
-          linestream >> pos1[1];
-          linestream >> pos1[2];
-          i+=2;
-          //std::cerr<<"pos1 " << pos1<<std::endl<<std::endl;
-        } else if (i==_cfg->cPos2()) {
-          linestream >> pos2[0];
-          linestream >> pos2[1];
-          linestream >> pos2[2];
-          i+=2;
-          //std::cerr<<"pos2 " << pos2<<std::endl<<std::endl;
-        } else if (i==_cfg->cForc()) {
-          linestream >> val[0];
-          linestream >> val[1];
-          linestream >> val[2];
-          i+=2;
-          //std::cerr<<"val " << val<<std::endl<<std::endl;
-        } else {
-          linestream >> valD;
-        }
-      };
+    std::shared_ptr<forceRow> forceTMP ( new forceRow());
+    _forceRow.push_back(forceTMP);
+    unsigned int forceRowNumbTMP  = _forceRow.size()-1;
+    
+    
+    while(std::getline(_file, line)) {
+      std::stringstream linestream(line);
+      std::string data;
       
-      if (_particleAll->particleReal(pid1) and _particleAll->particleReal(pid2)){
-        std::shared_ptr<force> tmpForce ( new force (pid1, pid2, pos1, pos2, val));
-        _forceRow->addF(tmpForce);
+      unsigned long long pid1, pid2;
+      Eigen::Vector3f pos1, pos2, val;
+    
+      if (curLine>=_cfg->fDat()) {
+        for (int i=1; i<=_cfg->maxCF(); i++) {
+          if (i==_cfg->cPos1ID()) {
+            linestream >> pid1;
+          } else if (i==_cfg->cPos2ID()) {
+            linestream >> pid2;
+          } else if (i==_cfg->cPos1()) {
+            linestream >> pos1[0];
+            linestream >> pos1[1];
+            linestream >> pos1[2];
+            i+=2;
+            //std::cerr<<"pos1 " << pos1<<std::endl<<std::endl;
+          } else if (i==_cfg->cPos2()) {
+            linestream >> pos2[0];
+            linestream >> pos2[1];
+            linestream >> pos2[2];
+            i+=2;
+            //std::cerr<<"pos2 " << pos2<<std::endl<<std::endl;
+          } else if (i==_cfg->cForc()) {
+            linestream >> val[0];
+            linestream >> val[1];
+            linestream >> val[2];
+            i+=2;
+            //std::cerr<<"val " << val<<std::endl<<std::endl;
+          } else {
+            linestream >> valD;
+          }
+        };
+        
+        if (_particleAll[forceRowNumbTMP]->particleReal(pid1) and _particleAll[forceRowNumbTMP]->particleReal(pid2)){
+          std::shared_ptr<force> tmpForce ( new force (pid1, pid2, pos1, pos2, val));
+          _forceRow[forceRowNumbTMP]->addF(tmpForce);
+        }
+  
+      } else if (curLine == _cfg->fAt()) {
+        linestream >> valInt;
+        _forceNum = valInt;
+         std::cerr<<"Force file "<< forceRowNumbTMP+1 <<"; Expected number of forces "<<_forceNum;
       }
-
-    } else if (curLine == _cfg->fAt()) {
-      linestream >> valInt;
-      _forceNum = valInt;
-      std::cerr<<"Expected number of forces "<<_forceNum<<std::endl;
-    }
-    curLine++;
-  };
-  
-  std::cerr<<_forceRow->elementsNum()<<" forces added"<<std::endl;
-  
+      curLine++;
+    };
+    std::cerr<<"; "<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added"<<std::endl;
+  }
 };
