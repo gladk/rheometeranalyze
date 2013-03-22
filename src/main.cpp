@@ -128,7 +128,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
         }
     }
   }
-  std::cerr<< filesParticle.size()   <<std::endl;
+  
   if (filesParticle.size()<1) {
     std::cerr<<"The file "<<particlesFileName<<" does not exists. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
@@ -163,7 +163,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
         }
     }
   }
-  std::cerr<< filesForces.size()   <<std::endl;
+  
   if (filesForces.size()<1) {
     std::cerr<<"The file "<<forcesFileName<<" does not exists. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
@@ -182,6 +182,14 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     std::cout << fp.string()<<std::endl;
   }
   */
+  
+  if (filesParticle.size() != filesForces.size()) {
+    std::cerr<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting."<<std::endl;
+    exit (EXIT_FAILURE);
+  } else {
+    std::cerr<<"Number of particle files is "<< filesParticle.size()   <<std::endl;
+    std::cerr<<"Number of force files is "<< filesForces.size()   <<std::endl;
+  }
   
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
   std::shared_ptr<rheometer> curRheom (new rheometer(configParams, particlesFileName, forcesFileName));
