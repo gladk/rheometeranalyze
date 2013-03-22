@@ -197,7 +197,7 @@ void bandRow::calculateValues () {
   
   // Common values
   for(unsigned int i=0; i<_bandAll.size(); i++) {
-    _bandAll[i]->calculateValues();
+    _bandAll[i]->calculateValues(_cfg->numSnapshot());
   }
 
   // Scherrate
@@ -241,7 +241,7 @@ void bandRow::calculateValues () {
   }
 };
 
-void band::calculateValues () {
+void band::calculateValues (int numSnapshots) {
   _volPart = 0.0;
   _volFraction  = 0.0;
   
@@ -272,7 +272,7 @@ void band::calculateValues () {
   
   if (i>0) {
     
-    _globalStressTensorAVG = (_globalStressTensorParticles + _globalStressTensorForces)/_vol;
+    _globalStressTensorAVG = (_globalStressTensorParticles + _globalStressTensorForces)/_vol/numSnapshots;
     
     /*
     [S_rr  S_rz  S_rf]
@@ -283,7 +283,7 @@ void band::calculateValues () {
     * Press = sqrt(S_rr*S_rr + S_zz*S_zz)
     */ 
     
-    _volFraction  = _volPart/_vol;
+    _volFraction  = _volPart/_vol/numSnapshots;
     _contactNumAVG = (double)_allForces.size()/i;
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
     
@@ -297,7 +297,7 @@ void band::calculateValues () {
     _densAVG = std::accumulate(densTMP.begin(), densTMP.end(), 0.0) / densTMP.size();
     
     
-    _localStressTensorAVG = _localStressTensorAVG/_vol;
+    _localStressTensorAVG = _localStressTensorAVG/_vol/numSnapshots;
     _pLocalAvg = _localStressTensorAVG.trace()/3.0;                     // Pressure, Luding 2008, constitutive, p.5
 
     double SMax = _localStressTensorAVG.diagonal().maxCoeff();

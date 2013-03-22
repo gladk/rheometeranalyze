@@ -62,7 +62,7 @@ class band {
     band(int, int, int, double, double, double, double);
     void addParticle(std::shared_ptr<particle>);
     void addForce(std::shared_ptr<force>);
-    void calculateValues();
+    void calculateValues(int numSnapshots);
     double TauAVG() {return _tauavg;};
     double PressAVG() {return _pavg;};
     double vol() {return _vol;};
