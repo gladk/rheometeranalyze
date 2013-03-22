@@ -25,8 +25,8 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg, std::vector< fs::path > par
   _cfg = cfg;
   _particlesFileName = particlesFileName;
   _forcesFileName = forcesFileName;
-  _particleNum = -1;
-  _forceNum = -1;
+  _particleNum = 0;
+  _forceNum = 0;
   
   loadParticles();
   loadForces();
@@ -109,8 +109,7 @@ void rheometer::loadParticles() {
   
       } else if (curLine == _cfg->nAt()) {
         linestream >> valInt;
-        _particleNum = valInt;
-        std::cerr<<"Particle file "<<partNumbCounter<<"; Expected number of particles "<<_particleNum;
+        std::cerr<<"Particle file "<<partNumbCounter<<"; Expected number of particles "<<valInt;
       }
       curLine++;
     };
@@ -121,9 +120,11 @@ void rheometer::loadParticles() {
     BOOST_FOREACH( std::shared_ptr<particle> p, tmpPartVector) {
        _particleAll[partNumbTMP]->addP(p);
     }
-    std::cerr<<"; "<<_particleAll[partNumbTMP]->elementsNum()<<" particles added"<<std::endl;
+    std::cerr<<"; "<<_particleAll[partNumbTMP]->elementsNum()<<" particles added."<<std::endl;
+    _particleNum+=_particleAll[partNumbTMP]->elementsNum();
     partNumbCounter++;
   }
+  std::cerr<<"The total number of added particles is "<<_particleNum<<std::endl;
 };
 
 
@@ -188,11 +189,12 @@ void rheometer::loadForces() {
   
       } else if (curLine == _cfg->fAt()) {
         linestream >> valInt;
-        _forceNum = valInt;
-         std::cerr<<"Force file "<< forceRowNumbTMP+1 <<"; Expected number of forces "<<_forceNum;
+         std::cerr<<"Force file "<< forceRowNumbTMP+1 <<"; Expected number of forces "<<valInt;
       }
       curLine++;
     };
-    std::cerr<<"; "<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added"<<std::endl;
+    std::cerr<<"; "<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added."<<std::endl;
+    _forceNum+=_forceRow[forceRowNumbTMP]->elementsNum();
   }
+  std::cerr<<"The total number of added forces is "<<_forceNum<<std::endl;
 };
