@@ -134,6 +134,8 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     exit (EXIT_FAILURE);
   }
   
+  sort(filesParticle.begin(), filesParticle.end()); 
+  
   //=====================================================
   
   std::vector< fs::path > filesForces;
@@ -167,7 +169,19 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     exit (EXIT_FAILURE);
   } 
   
+  sort(filesForces.begin(), filesForces.end()); 
+  
   //=====================================================
+  
+  /*
+  BOOST_FOREACH( fs::path fp, filesParticle ) {
+    std::cout << fp.string()<<std::endl;
+  }
+  
+  BOOST_FOREACH( fs::path fp, filesForces ) {
+    std::cout << fp.string()<<std::endl;
+  }
+  */
   
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
   std::shared_ptr<rheometer> curRheom (new rheometer(configParams, particlesFileName, forcesFileName));

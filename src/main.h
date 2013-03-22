@@ -23,6 +23,7 @@
 #include <boost/filesystem.hpp> 
 #include <boost/program_options.hpp>
 #include <boost/regex.hpp>
+#include <boost/foreach.hpp>
 
 #include <iostream>
 #include <algorithm>
