@@ -36,9 +36,9 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg, std::vector< fs::path > par
   std::shared_ptr <bandRow> _bandRow = bandRowTMP;
   
   
-  //std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
-  //exp->VTK();
-  //exp->gnuplotSchearRate();
+  std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
+  exp->VTK();
+  exp->gnuplotSchearRate();
 };
 
 void rheometer::loadParticles() {
