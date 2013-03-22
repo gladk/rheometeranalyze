@@ -19,8 +19,7 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FORCECLASS
-#define FORCECLASS
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -108,4 +107,3 @@ class forceRow {
     std::shared_ptr<force> getF(unsigned long long);
     void disable(unsigned long long);
 };
-#endif

@@ -19,9 +19,7 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONFIGCLASS
-#define CONFIGCLASS
-
+#pragma once
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #include <boost/filesystem.hpp> 
 #include <boost/property_tree/ptree.hpp>
@@ -106,5 +104,3 @@ class configopt {
     int cForc(){return _cForc;};
     
 };
-
-#endif

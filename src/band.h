@@ -19,8 +19,7 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BANDCLASS
-#define BANDCLASS
+#pragma once
 
 #define _USE_MATH_DEFINES
 
@@ -128,4 +127,3 @@ class bandRow {
     unsigned int size() {return _bandAll.size();}
 };
 
-#endif

@@ -19,8 +19,7 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef EXPORTCLASS
-#define EXPORTCLASS
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -67,5 +66,3 @@ class exportclass {
     void VTK();
     void gnuplotSchearRate();
 };
-
-#endif

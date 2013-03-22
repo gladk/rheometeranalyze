@@ -19,8 +19,7 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RHEOMETERCLASS
-#define RHEOMETERCLASS
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -52,5 +51,3 @@ class rheometer {
     void loadParticles();
     void loadForces();
 };
-
-#endif

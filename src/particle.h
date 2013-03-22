@@ -19,8 +19,7 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PARTICLECLASS
-#define PARTICLECLASS
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -97,4 +96,3 @@ class particleRow {
     void disable(long long);
     void enable(long long);
 };
-#endif
