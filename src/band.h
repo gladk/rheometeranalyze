@@ -113,10 +113,10 @@ class bandRow {
     std::vector<std::shared_ptr<band> > _bandAll;
     std::vector<std::shared_ptr<bandShearZone> > _bandShearZones;
     std::shared_ptr<configopt> _cfg; 
-    std::shared_ptr<particleRow> _pRow;
-    std::shared_ptr<forceRow> _fRow;
+    std::vector<std::shared_ptr<particleRow>> _pRow;
+    std::vector<std::shared_ptr<forceRow>> _fRow;
   public:
-    bandRow (std::shared_ptr<configopt>, std::shared_ptr<particleRow>, std::shared_ptr<forceRow>);
+    bandRow (std::shared_ptr<configopt>, std::vector<std::shared_ptr <particleRow>>, std::vector<std::shared_ptr <forceRow>>);
     void fillBands();
     int getBandR(double);
     int getBandZ(double);

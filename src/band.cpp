@@ -70,7 +70,7 @@ void band::set_scherRate(double scherRate) {
   _eta = _tauavg/_scherRate;
 };
 
-bandRow::bandRow (std::shared_ptr<configopt> cfg, std::shared_ptr<particleRow> pRow, std::shared_ptr<forceRow> fRow){
+bandRow::bandRow (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<particleRow>> pRow, std::vector<std::shared_ptr<forceRow>> fRow){
   _cfg =  cfg;
   _pRow = pRow;
   _fRow = fRow;
@@ -108,70 +108,71 @@ void bandRow::fillBands (){
   //Put particles into band
   long long particleRemoved = 0;
   //Put particles
-  for (int z = 0; z<_pRow->arraySize(); z++) {
-    if (_pRow->particleReal(z)) {
-      std::shared_ptr<particle> partTemp = _pRow->getP(z);
-      Eigen::Vector3f OP = partTemp->c() - O;     //Vector from center to point
+  for (unsigned int i = 0; i < _pRow.size(); i++)  {
+    for (int z = 0; z<_pRow[i]->arraySize(); z++) {
+      if (_pRow[i]->particleReal(z)) {
+        std::shared_ptr<particle> partTemp = _pRow[i]->getP(z);
+        Eigen::Vector3f OP = partTemp->c() - O;     //Vector from center to point
+        Eigen::Vector3f OPV = Z.cross(OP);          //Vector, temporal
+        OPV.normalize();
+        Eigen::Vector3f OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
+        
+        OPV1.normalize();
+        double dist = OP.dot(-OPV1);
+        partTemp->set_dist(dist);
+        double height = OP.dot(Z);
+        partTemp->set_height(height);
+        partTemp->set_axis(-OPV1, Z, OPV);          //dr, dz, dv
+        
+        //Define band
+        int bR = getBandR(dist);
+        int bZ = getBandZ(height);
+        
+        if (bR>=0 and bZ>=0) {
+          int bN = bZ*(_cfg->SecRadial()) + bR;
+          _bandAll[bN]->addParticle(partTemp);
+        } else {
+          _pRow[i]->disable(z);    //Disable and remove particle, if they are out of bands
+          particleRemoved ++;
+        }
+      }
+    }
+  }
+  std::cerr<<particleRemoved<<" particles removed"<<std::endl;
+  
+ long long forceRemoved = 0;
+ //Put forces into band
+  for (unsigned int i = 0; i < _fRow.size(); i++)  {
+    //Put forces
+    for (int z = 0; z<_fRow[i]->arraySize(); z++) {
+      std::shared_ptr<force> forceTemp = _fRow[i]->getF(z);
+      Eigen::Vector3f OP = forceTemp->cP() - O;   //Vector from center to point
       Eigen::Vector3f OPV = Z.cross(OP);          //Vector, temporal
       OPV.normalize();
       Eigen::Vector3f OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
       
       OPV1.normalize();
       double dist = OP.dot(-OPV1);
-      partTemp->set_dist(dist);
+      forceTemp->set_dist(dist);
       double height = OP.dot(Z);
-      partTemp->set_height(height);
-      partTemp->set_axis(-OPV1, Z, OPV);          //dr, dz, dv
-      
+      forceTemp->set_height(height);
+      forceTemp->set_axis(-OPV1, Z, OPV);          //dr, dz, df
+      forceTemp->set_dg(_cfg->get_g());
       //Define band
       int bR = getBandR(dist);
       int bZ = getBandZ(height);
       
       if (bR>=0 and bZ>=0) {
         int bN = bZ*(_cfg->SecRadial()) + bR;
-        _bandAll[bN]->addParticle(partTemp);
+        forceTemp->set_band(bR, bZ, bN);
+        _bandAll[bN]->addForce(forceTemp);
       } else {
-        _pRow->disable(z);    //Disable and remove particle, if they are out of bands
-        particleRemoved ++;
+        _fRow[i]->disable(z);    //Disable and remove forces, if they are out of bands
+        forceRemoved ++;
       }
     }
   }
-  std::cerr<<particleRemoved<<" particles removed"<<std::endl;
- 
- 
- //Put forces into band
-  
-  long long forceRemoved = 0;
-  //Put forces
-  for (int z = 0; z<_fRow->arraySize(); z++) {
-    std::shared_ptr<force> forceTemp = _fRow->getF(z);
-    Eigen::Vector3f OP = forceTemp->cP() - O;   //Vector from center to point
-    Eigen::Vector3f OPV = Z.cross(OP);          //Vector, temporal
-    OPV.normalize();
-    Eigen::Vector3f OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
-    
-    OPV1.normalize();
-    double dist = OP.dot(-OPV1);
-    forceTemp->set_dist(dist);
-    double height = OP.dot(Z);
-    forceTemp->set_height(height);
-    forceTemp->set_axis(-OPV1, Z, OPV);          //dr, dz, df
-    forceTemp->set_dg(_cfg->get_g());
-    //Define band
-    int bR = getBandR(dist);
-    int bZ = getBandZ(height);
-    
-    if (bR>=0 and bZ>=0) {
-      int bN = bZ*(_cfg->SecRadial()) + bR;
-      forceTemp->set_band(bR, bZ, bN);
-      _bandAll[bN]->addForce(forceTemp);
-    } else {
-      _fRow->disable(z);    //Disable and remove forces, if they are out of bands
-      forceRemoved ++;
-    }
-  }
-  
-  std::cerr<<particleRemoved<<" forces removed"<<std::endl;
+  std::cerr<<forceRemoved<<" forces removed"<<std::endl;
   
 };
 

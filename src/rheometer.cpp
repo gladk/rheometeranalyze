@@ -32,8 +32,8 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg, std::vector< fs::path > par
   loadForces();
   
   //Create bands
-  //std::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
-  //std::shared_ptr <bandRow> _bandRow = bandRowTMP;
+  std::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
+  std::shared_ptr <bandRow> _bandRow = bandRowTMP;
   
   
   //std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
