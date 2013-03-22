@@ -22,10 +22,11 @@
 #include "particle.h"
 #include <iostream>
 
-particle::particle(unsigned long long id, int type, double rad, double mass, double dens, Eigen::Vector3f c, Eigen::Vector3f v, Eigen::Vector3f o) {
+particle::particle(unsigned long long id, int type, unsigned int fileid, double rad, double mass, double dens, Eigen::Vector3f c, Eigen::Vector3f v, Eigen::Vector3f o) {
   _id = id;
   _type = type;
   _rad = rad;
+  _fileId = fileid;
   _c = c;
   _v = v;
   _o = o;
@@ -44,6 +45,7 @@ particle::particle() {
   _rad = -1;
   _d = -1;
   _m = -1;
+  _fileId = -1;
   _c = Eigen::Vector3f::Zero();
   _v = Eigen::Vector3f::Zero();
   _o = Eigen::Vector3f::Zero();

@@ -32,6 +32,7 @@ class particle {
   private:
     Eigen::Vector3f _c, _v, _o;   // Center of mass, linear velocity, angular velocity of the particle
     unsigned long long _id; int _type;     // Particle id, type
+    unsigned int _fileId;         // File number of the particle
     double _rad;                  // Particle radius
     double _m;                    // Mass of the particle
     double _d;                    // Density of the particle
@@ -52,13 +53,14 @@ class particle {
     Eigen::Vector3f _vZylindrical;// Linear velocity in Zylindrical coordinates (dR, dZ, dF)
 
   public:
-    particle(unsigned long long, int, double, double, double, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
+    particle(unsigned long long, int, unsigned int, double, double, double, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
     particle();
     unsigned long long id() {return _id;};
     int type() {return _type;};
     double rad() {return _rad;};
     double mass() {return _m;};
     double density() {return _d;};
+    unsigned int  fileId() {return _fileId;};
     double realAngular();    //_v.dot(df)
     Eigen::Vector3f c() {return _c;}
     Eigen::Vector3f v() {return _v;}

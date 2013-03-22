@@ -38,6 +38,8 @@ class force {
     double _dist;                 // Distance from axis
     double _height;               // Height on Z-axis
     
+    unsigned int _fileId;         // File number of the particle
+    
     Eigen::Matrix3f _axisMatrix;  // [drX, drY, drZ]
                                   // [dzX, dzY, dzZ]
                                   // [dfX, dfY, dfZ]
@@ -61,13 +63,14 @@ class force {
     
 
   public:
-    force(unsigned long long, unsigned long long, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
+    force(unsigned long long, unsigned long long, unsigned  int, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
     force();
     int bandR() {return _bandR;};
     int bandZ() {return _bandZ;};
     int bandN() {return _bandN;};
     unsigned long long  pid1() {return _pid1;};
     unsigned long long  pid2() {return _pid2;};
+    unsigned int  fileId() {return _fileId;};
     Eigen::Vector3f pos1() {return _pos1;}
     Eigen::Vector3f pos2() {return _pos2;}
     Eigen::Vector3f val() {return _val;}

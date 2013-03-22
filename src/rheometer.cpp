@@ -103,7 +103,7 @@ void rheometer::loadParticles() {
         
         if (((_cfg->tC()>=0) and (pT == _cfg->tC())) or (_cfg->tC()<0)) {
           maxId = max(pId, maxId);
-          std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, pR, pM, pD, pC,pV, pO));
+          std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, partNumbCounter-1, pR, pM, pD, pC,pV, pO));
           tmpPartVector.push_back(tmpParticle);
         }
   
@@ -183,7 +183,7 @@ void rheometer::loadForces() {
         };
         
         if (_particleAll[forceRowNumbTMP]->particleReal(pid1) and _particleAll[forceRowNumbTMP]->particleReal(pid2)){
-          std::shared_ptr<force> tmpForce ( new force (pid1, pid2, pos1, pos2, val));
+          std::shared_ptr<force> tmpForce ( new force (pid1, pid2, forceRowNumbTMP, pos1, pos2, val));
           _forceRow[forceRowNumbTMP]->addF(tmpForce);
         }
   
