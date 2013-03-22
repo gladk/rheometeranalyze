@@ -173,16 +173,6 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   
   //=====================================================
   
-  /*
-  BOOST_FOREACH( fs::path fp, filesParticle ) {
-    std::cout << fp.string()<<std::endl;
-  }
-  
-  BOOST_FOREACH( fs::path fp, filesForces ) {
-    std::cout << fp.string()<<std::endl;
-  }
-  */
-  
   if (filesParticle.size() != filesForces.size()) {
     std::cerr<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting."<<std::endl;
     exit (EXIT_FAILURE);
@@ -192,6 +182,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   }
   
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
+  configParams->setSnapshot(filesParticle.size());
   std::shared_ptr<rheometer> curRheom (new rheometer(configParams, filesParticle, filesForces));
   
   return 0;

@@ -65,6 +65,8 @@ class configopt {
     int _cForc;               // Column of force value
     int _maxCF;               // Maximal column number for forces
     
+    //other
+    int _numSnapshot;          // Number of snapshots
   public:
     configopt(const std::string &);
     Eigen::Vector3f get_c(){return _c;};
@@ -88,6 +90,8 @@ class configopt {
     int cM(){return _cM;};
     int maxC(){return _maxC;};
     int maxCF(){return _maxCF;};
+    int numSnapshot(){return _numSnapshot;};
+    void setSnapshot(int numSnapshot) {_numSnapshot = numSnapshot;}
     double dDr(){return (_Dout - _Din)/_SecRadial/2.0;};
     double dDz(){return _H/_SecZ;};
     std::string FOutput(){return _FOutput;};
