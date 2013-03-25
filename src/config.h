@@ -36,8 +36,10 @@ class configopt {
     int _SecRadial, _SecZ;    // Numer of sections, in which the rheometer will
                               // be divided in radial- and Z-direction 
     Eigen::Vector3f _g;       // Gravity direction
-
+      
+    double _dT;               // Delta time
     int _nAt;                 // Number of atom string
+    int _nPSt;                // Number of timestep string (particles)
     int _nDat;                // Begin of data string
     int _cId;                 // Column of Id
     int _cT;                  // Column of type
@@ -55,6 +57,7 @@ class configopt {
     
     // Forces
     int _fAt;                 // Number of forces string
+    int _nFSt;                // Number of timestep string (forces)
     int _fDat;                // Begin of force string
     int _cPos1;               // Column of Pos1
     int _cPos2;               // Column of Pos2
@@ -77,6 +80,7 @@ class configopt {
     int SecZ(){return _SecZ;};
     Eigen::Vector3f get_g(){return _g;};
     int nAt(){return _nAt;};
+    int nPSt(){return _nPSt;};
     int nDat(){return _nDat;};
     int cId(){return _cId;};
     int cT(){return _cT;};
@@ -93,10 +97,12 @@ class configopt {
     void setSnapshot(int numSnapshot) {_numSnapshot = numSnapshot;}
     double dDr(){return (_Dout - _Din)/_SecRadial/2.0;};
     double dDz(){return _H/_SecZ;};
+    double dT(){return _dT;};
     std::string FOutput(){return _FOutput;};
     
     // Force
     int fAt(){return _fAt;};
+    int nFSt(){return _nFSt;};
     int fDat(){return _fDat;};
     int cPos1(){return _cPos1;};
     int cPos2(){return _cPos2;};

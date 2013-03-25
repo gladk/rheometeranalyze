@@ -41,10 +41,13 @@ configopt::configopt(const std::string &filename) {
   _SecRadial = pt.get<int>("Rheometer.SecRadial");
   _SecZ = pt.get<int>("Rheometer.SecZ");
   
+  _dT = pt.get<double>("Rheometer.dT");
+  
   _g = Eigen::Vector3f(pt.get<double>("Rheometer.gX"), pt.get<double>("Rheometer.gY"), pt.get<double>("Rheometer.gZ"));
   _g.normalize();
 
   _nAt = pt.get<int>("Particle.nAt");
+  _nPSt = pt.get<int>("Particle.nPSt");
   _nDat = pt.get<int>("Particle.nDat");
   _tC = pt.get<double>("Particle.tC");
 
@@ -60,6 +63,7 @@ configopt::configopt(const std::string &filename) {
   
   //Force
   _fAt = pt.get<int>("Force.nFt");
+  _nFSt = pt.get<int>("Force.nFSt");
   _fDat = pt.get<int>("Force.nDat");
   _cPos1 = pt.get<int>("Force.cPos1"); _maxColumnCheckForce(_cPos1, 2);
   _cPos2 = pt.get<int>("Force.cPos2"); _maxColumnCheckForce(_cPos2, 2);
