@@ -203,7 +203,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
   configParams->setSnapshot(snapshots);
   if (setVtk) configParams->setVtk();
-  std::shared_ptr<rheometer> curRheom (new rheometer(configParams, filesParticle, filesForces));
+  std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
   
   return 0;
 }

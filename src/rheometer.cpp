@@ -20,18 +20,18 @@
 */
 
 #include "rheometer.h"
+#include "snapshot.h"
 
-rheometer::rheometer(std::shared_ptr<configopt> cfg, std::vector< fs::path > particlesFileName, std::vector< fs::path > forcesFileName) {
+rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   _cfg = cfg;
-  _particlesFileName = particlesFileName;
-  _forcesFileName = forcesFileName;
   _particleNum = 0;
   _forceNum = 0;
   
   loadParticles();
-  loadForces();
+  //loadForces();
   
   //Create bands
+  /*
   std::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
   std::shared_ptr <bandRow> _bandRow = bandRowTMP;
   
@@ -39,13 +39,19 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg, std::vector< fs::path > par
   std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
   if (_cfg->Vtk()) exp->VTK();
   exp->gnuplotSchearRate();
+  */ 
 };
 
 void rheometer::loadParticles() {
   unsigned int partNumbCounter  = 1;
-  BOOST_FOREACH(fs::path fTMP, _particlesFileName) {
+  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+  
+  for(unsigned int i=0; i<snapshots->size(); i++) {
+    
+    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+    
     std::ifstream _file;
-    _file.open(fTMP.string());
+    _file.open(snapshotCur->getParticleFile().string());
     
     std::string   line;
     int curLine = 1;
@@ -109,7 +115,7 @@ void rheometer::loadParticles() {
   
       } else if (curLine == _cfg->nAt()) {
         linestream >> valInt;
-        std::cerr<<"Particle file "<<partNumbCounter<<"/"<<_particlesFileName.size()<<"; Expected number of particles "<<valInt;
+        std::cerr<<"File "<<partNumbCounter<<"/"<<snapshots->size()<<std::endl<<"Expected particles "<<valInt;
       }
       curLine++;
     };
@@ -123,15 +129,19 @@ void rheometer::loadParticles() {
     std::cerr<<"; "<<_particleAll[partNumbTMP]->elementsNum()<<" particles added."<<std::endl;
     _particleNum+=_particleAll[partNumbTMP]->elementsNum();
     partNumbCounter++;
+    
+    this->loadForces(snapshotCur);
+  
   }
   std::cerr<<"The total number of added particles is "<<_particleNum<<std::endl;
+  std::cerr<<"The total number of added forces is "<<_forceNum<<std::endl;
+  
 };
 
 
-void rheometer::loadForces() {
-  BOOST_FOREACH(fs::path fTMP, _forcesFileName) {
+void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
     std::ifstream _file;
-    _file.open(fTMP.string());
+    _file.open(loadSnap->getForceFile().string());
     
     std::string   line;
     int curLine = 1;
@@ -189,12 +199,10 @@ void rheometer::loadForces() {
   
       } else if (curLine == _cfg->fAt()) {
         linestream >> valInt;
-         std::cerr<<"Force file "<< forceRowNumbTMP+1 <<"/"<<_forcesFileName.size()<<"; Expected number of forces "<<valInt;
+         std::cerr<<"Expected forces "<<valInt;
       }
       curLine++;
     };
-    std::cerr<<"; "<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added."<<std::endl;
+    std::cerr<<"; "<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added."<<std::endl<<std::endl;
     _forceNum+=_forceRow[forceRowNumbTMP]->elementsNum();
-  }
-  std::cerr<<"The total number of added forces is "<<_forceNum<<std::endl;
 };

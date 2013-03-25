@@ -97,6 +97,7 @@ class configopt {
     int maxCF(){return _maxCF;};
     int numSnapshot(){return _snapshotRow->size();};
     void setSnapshot(std::shared_ptr<snapshotRow> snapshotRowTMP) {_snapshotRow = snapshotRowTMP;}
+    std::shared_ptr<snapshotRow> snapshot() {return _snapshotRow;}
     double dDr(){return (_Dout - _Din)/_SecRadial/2.0;};
     double dDz(){return _H/_SecZ;};
     double dT(){return _dT;};

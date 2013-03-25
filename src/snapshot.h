@@ -37,4 +37,6 @@ class snapshot {
     void setParticlesFileName(fs::path particlesFileName);
     void setForcesFileName(fs::path forcesFileName);
     void setTimeStep(unsigned long long timeStep);
+    fs::path getParticleFile(){return _particlesFileName;} ;
+    fs::path getForceFile(){return _forcesFileName;} ;
 };

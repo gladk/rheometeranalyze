@@ -20,3 +20,13 @@
 */
 
 #include "snapshotRow.h"
+#include <iostream>
+
+std::shared_ptr<snapshot> snapshotRow::getSnapshot(unsigned int i) {
+  if (i<=_snapshotRow.size()) { 
+    return _snapshotRow[i];
+  } else {
+    std::cerr<<"Illegal access to snapshotRow."<<std::endl;
+    exit (EXIT_FAILURE);
+  }
+}

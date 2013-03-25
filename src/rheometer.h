@@ -30,8 +30,6 @@ using namespace std;
 class rheometer {
   private:
     std::shared_ptr<configopt> _cfg;
-    std::vector<fs::path> _particlesFileName;
-    std::vector<fs::path> _forcesFileName;
     
     unsigned long long  _particleNum;
     unsigned long long _forceNum;
@@ -39,7 +37,7 @@ class rheometer {
     std::vector<std::shared_ptr <forceRow>> _forceRow;
     std::vector<std::shared_ptr <bandRow>> _bandRow;
   public:
-    rheometer(std::shared_ptr<configopt>, std::vector<fs::path>, std::vector<fs::path>);
+    rheometer(std::shared_ptr<configopt>);
     void loadParticles();
-    void loadForces();
+    void loadForces(std::shared_ptr<snapshot> loadSnap);
 };
