@@ -109,7 +109,7 @@ void rheometer::loadParticles() {
   
       } else if (curLine == _cfg->nAt()) {
         linestream >> valInt;
-        std::cerr<<"Particle file "<<partNumbCounter<<"; Expected number of particles "<<valInt;
+        std::cerr<<"Particle file "<<partNumbCounter<<"/"<<_particlesFileName.size()<<"; Expected number of particles "<<valInt;
       }
       curLine++;
     };
@@ -189,7 +189,7 @@ void rheometer::loadForces() {
   
       } else if (curLine == _cfg->fAt()) {
         linestream >> valInt;
-         std::cerr<<"Force file "<< forceRowNumbTMP+1 <<"; Expected number of forces "<<valInt;
+         std::cerr<<"Force file "<< forceRowNumbTMP+1 <<"/"<<_forcesFileName.size()<<"; Expected number of forces "<<valInt;
       }
       curLine++;
     };

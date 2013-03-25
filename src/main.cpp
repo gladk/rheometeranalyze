@@ -117,15 +117,15 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     const boost::regex my_filter( particle_filesmask.string() );
     for( boost::filesystem::directory_iterator i( particle_dir.string() ); i != end_itr; ++i )
     {
-        // Skip if not a file
-        if( !boost::filesystem::is_regular_file( i->status() ) ) continue;
-        boost::smatch what;
-        // Skip if no match
-        if( !boost::regex_match(  i->path().filename().string(), what, my_filter ) ) continue;
-        // File matches, store it
-        if (fs::is_regular_file(i->path())) {
-          filesParticle.push_back(i->path());
-        }
+      // Skip if not a file
+      if( !boost::filesystem::is_regular_file( i->status() ) ) continue;
+      boost::smatch what;
+      // Skip if no match
+      if( !boost::regex_match(  i->path().filename().string(), what, my_filter ) ) continue;
+      // File matches, store it
+      if (fs::is_regular_file(i->path())) {
+        filesParticle.push_back(i->path());
+      }
     }
   }
   
@@ -152,15 +152,15 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     const boost::regex my_filter( force_filesmask.string() );
     for( boost::filesystem::directory_iterator i( force_dir.string() ); i != end_itr; ++i )
     {
-        // Skip if not a file
-        if( !boost::filesystem::is_regular_file( i->status() ) ) continue;
-        boost::smatch what;
-        // Skip if no match
-        if( !boost::regex_match(  i->path().filename().string(), what, my_filter ) ) continue;
-        // File matches, store it
-        if (fs::is_regular_file(i->path())) {
-          filesForces.push_back(i->path());
-        }
+      // Skip if not a file
+      if( !boost::filesystem::is_regular_file( i->status() ) ) continue;
+      boost::smatch what;
+      // Skip if no match
+      if( !boost::regex_match(  i->path().filename().string(), what, my_filter ) ) continue;
+      // File matches, store it
+      if (fs::is_regular_file(i->path())) {
+        filesForces.push_back(i->path());
+      }
     }
   }
   
