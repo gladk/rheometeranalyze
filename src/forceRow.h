@@ -20,19 +20,18 @@
 */
 
 #pragma once
-#define BOOST_FILESYSTEM_NO_DEPRECATED
 
-#include <boost/filesystem.hpp> 
-#include <boost/program_options.hpp>
-#include <boost/regex.hpp>
-#include <boost/foreach.hpp>
-
-#include <iostream>
-#include <algorithm>
-#include <iterator>
-#include <string>
-#include <Eigen/Dense>
-#include "config.h"
-#include "particle.h"
-#include "rheometer.h"
-#include "forceRow.h"
+class forceRow {
+  private: 
+    std::vector <std::shared_ptr<force> > _allForce;
+    std::shared_ptr<force> _tmpF;
+    long long _realForceNum;
+  public:
+    forceRow();
+    void addF(std::shared_ptr<force> );
+    long long arraySize() {return _allForce.size();};
+    long long elementsNum();
+    bool forceReal(unsigned long long);
+    std::shared_ptr<force> getF(unsigned long long);
+    void disable(unsigned long long);
+};

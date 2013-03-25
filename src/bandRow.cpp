@@ -23,6 +23,7 @@
 #include "bandRow.h"
 
 
+
 bandRow::bandRow (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<particleRow>> pRow, std::vector<std::shared_ptr<forceRow>> fRow){
   _cfg =  cfg;
   _pRow = pRow;

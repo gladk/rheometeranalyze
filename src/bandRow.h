@@ -22,6 +22,7 @@
 #pragma once
 
 #include "bandShearZone.h"
+#include "forceRow.h"
 
 class bandRow {
   private:

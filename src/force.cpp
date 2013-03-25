@@ -89,35 +89,3 @@ Eigen::Matrix3f force::potEnergie() {
   return _valZylindrical*_cPZylindrical.transpose();
 }
 
-forceRow::forceRow() {
-  std::vector <std::shared_ptr<force> > _allForce;
-  _realForceNum = 0;
-};
-
-void forceRow::addF(std::shared_ptr<force> forc ) {
-  _allForce.push_back(forc);
-  _realForceNum ++;
-};
-
-long long forceRow::elementsNum() {
-  return _realForceNum;
-};
-
-std::shared_ptr<force> forceRow::getF(unsigned long long id) {
-  return _allForce[id];
-};
-
-void forceRow::disable(unsigned long long id) {
-  if (not(_allForce[id]->disabled())) {
-    _allForce[id]->disable();
-    _realForceNum--;
-  }
-};
-
-bool forceRow::forceReal(unsigned long long id) {
-  if (_allForce[id]->disabled()) {
-    return false;
-  } else {
-    return true;
-  }
-};
