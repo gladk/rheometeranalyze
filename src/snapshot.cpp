@@ -39,3 +39,7 @@ void snapshot::setForcesFileName(fs::path forcesFileName) {
 void snapshot::setTimeStep(unsigned long long timeStep) {
   _timeStep = timeStep;
 };
+
+unsigned long long snapshot::timeStep() {
+  return _timeStep;
+};

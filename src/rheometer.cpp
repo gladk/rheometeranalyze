@@ -116,6 +116,9 @@ void rheometer::loadParticles() {
       } else if (curLine == _cfg->nAt()) {
         linestream >> valInt;
         std::cerr<<"File "<<partNumbCounter<<"/"<<snapshots->size()<<std::endl<<"Expected particles "<<valInt;
+      } else if (curLine == _cfg->nPSt()) {
+        linestream >> valInt;
+        snapshotCur->setTimeStep(valInt);
       }
       curLine++;
     };
@@ -200,6 +203,12 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
       } else if (curLine == _cfg->fAt()) {
         linestream >> valInt;
          std::cerr<<"Expected forces "<<valInt;
+      } else if (curLine == _cfg->nFSt()) {
+        linestream >> valInt;
+        if (valInt != loadSnap->timeStep()) {
+          std::cerr << "Timestep of force and particle files is not the same!\n"; 
+          exit (EXIT_FAILURE);
+        }
       }
       curLine++;
     };
