@@ -20,22 +20,18 @@
 */
 
 #pragma once
-#define BOOST_FILESYSTEM_NO_DEPRECATED
 
-#include <boost/filesystem.hpp> 
-#include <boost/program_options.hpp>
-#include <boost/regex.hpp>
-#include <boost/foreach.hpp>
-namespace po = boost::program_options;
-namespace fs = boost::filesystem;
+#include "main.h"
 
-#include <iostream>
-#include <algorithm>
-#include <iterator>
-#include <string>
-#include <Eigen/Dense>
-#include "config.h"
-#include "particle.h"
-#include "rheometer.h"
-#include "forceRow.h"
-#include "snapshot.h"
+class snapshot {
+  private:
+    fs::path _particlesFileName;
+    fs::path _forcesFileName;
+    unsigned long long _timeStep;
+
+  public:
+    snapshot(fs::path particlesFileName, fs::path forcesFileName, unsigned long long timeStep);
+    void setParticlesFileName(fs::path particlesFileName);
+    void setForcesFileName(fs::path forcesFileName);
+    void setTimeStep(unsigned long long timeStep);
+};

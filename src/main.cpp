@@ -21,8 +21,6 @@
 
 #include "main.h"
 
-namespace po = boost::program_options;
-namespace fs = boost::filesystem;
 using namespace std;
 
 int main(int ac, char* av[])
@@ -188,6 +186,14 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     std::cerr<<"Number of particle files is "<< filesParticle.size()   <<std::endl;
     std::cerr<<"Number of force files is "<< filesForces.size()   <<std::endl;
   }
+  
+  //=====================================================
+  std::vector< std::shared_ptr<snapshot> > snapshotRow;
+  for(unsigned int i=0; i<filesParticle.size(); i++) {
+    std::shared_ptr<snapshot> snapshoTMP (new snapshot(filesParticle[i], filesForces[i], 0));
+    snapshotRow.push_back(snapshoTMP);
+  }
+  
   
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
   configParams->setSnapshot(filesParticle.size());

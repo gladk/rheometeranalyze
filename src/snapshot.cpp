@@ -19,23 +19,23 @@
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-
-#include <boost/filesystem.hpp> 
-#include <boost/program_options.hpp>
-#include <boost/regex.hpp>
-#include <boost/foreach.hpp>
-namespace po = boost::program_options;
-namespace fs = boost::filesystem;
-
-#include <iostream>
-#include <algorithm>
-#include <iterator>
-#include <string>
-#include <Eigen/Dense>
-#include "config.h"
-#include "particle.h"
-#include "rheometer.h"
-#include "forceRow.h"
 #include "snapshot.h"
+
+snapshot::snapshot(fs::path particlesFileName, fs::path forcesFileName, 
+                   unsigned long long timeStep) {
+  _particlesFileName = particlesFileName;
+  _forcesFileName = forcesFileName;
+  _timeStep = timeStep;
+};
+
+void snapshot::setParticlesFileName(fs::path particlesFileName) {
+  _particlesFileName = particlesFileName;
+};
+
+void snapshot::setForcesFileName(fs::path forcesFileName) {
+  _forcesFileName = forcesFileName;
+};
+
+void snapshot::setTimeStep(unsigned long long timeStep) {
+  _timeStep = timeStep;
+};
