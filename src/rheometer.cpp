@@ -28,10 +28,8 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   _forceNum = 0;
   
   loadParticles();
-  //loadForces();
   
   //Create bands
-  /*
   std::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
   std::shared_ptr <bandRow> _bandRow = bandRowTMP;
   
@@ -39,7 +37,6 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
   if (_cfg->Vtk()) exp->VTK();
   exp->gnuplotSchearRate();
-  */ 
 };
 
 void rheometer::loadParticles() {
@@ -205,7 +202,8 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
          std::cerr<<"Expected forces "<<valInt;
       } else if (curLine == _cfg->nFSt()) {
         linestream >> valInt;
-        if (valInt != loadSnap->timeStep()) {
+        unsigned int valIntUn = valInt;
+        if (valIntUn != loadSnap->timeStep()) {
           std::cerr << "Timestep of force and particle files is not the same!\n"; 
           exit (EXIT_FAILURE);
         }
