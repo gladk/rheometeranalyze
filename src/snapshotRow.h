@@ -20,20 +20,14 @@
 */
 
 #pragma once
-#define BOOST_FILESYSTEM_NO_DEPRECATED
+#include "snapshot.h"
 
-#include <boost/filesystem.hpp> 
-#include <boost/program_options.hpp>
-#include <boost/regex.hpp>
-#include <boost/foreach.hpp>
-
-#include <iostream>
-#include <algorithm>
-#include <iterator>
-#include <string>
-#include <Eigen/Dense>
-#include "config.h"
-#include "particle.h"
-#include "rheometer.h"
-#include "forceRow.h"
-#include "snapshotRow.h"
+class snapshotRow {
+  private:
+    std::vector <std::shared_ptr<snapshot>> _snapshotRow;
+  public:
+    snapshotRow(){};
+    void addSnapshot(std::shared_ptr<snapshot> snapshotTmp){_snapshotRow.push_back(snapshotTmp);};
+    unsigned int size(){  return _snapshotRow.size();};
+    
+};

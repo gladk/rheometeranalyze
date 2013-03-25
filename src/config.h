@@ -29,6 +29,8 @@
 #include <string>
 #include <Eigen/Dense>
 
+#include "snapshotRow.h"
+
 class configopt {
   private:
     Eigen::Vector3f _c, _o;   // Center point and origin
@@ -67,7 +69,7 @@ class configopt {
     int _maxCF;               // Maximal column number for forces
   
     // Others
-    int _numSnapshot;          // Number of snapshots
+    std::shared_ptr<snapshotRow> _snapshotRow;    // Row of snapshots
     bool  _vtk;                // True, if VTK-file will be created
   public:
     configopt(const std::string &);
@@ -93,8 +95,8 @@ class configopt {
     int cM(){return _cM;};
     int maxC(){return _maxC;};
     int maxCF(){return _maxCF;};
-    int numSnapshot(){return _numSnapshot;};
-    void setSnapshot(int numSnapshot) {_numSnapshot = numSnapshot;}
+    int numSnapshot(){return _snapshotRow->size();};
+    void setSnapshot(std::shared_ptr<snapshotRow> snapshotRowTMP) {_snapshotRow = snapshotRowTMP;}
     double dDr(){return (_Dout - _Din)/_SecRadial/2.0;};
     double dDz(){return _H/_SecZ;};
     double dT(){return _dT;};
