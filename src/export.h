@@ -50,7 +50,7 @@
 #include "particle.h"
 #include "force.h"
 #include "band.h"
-
+#include "bandRow.h"
 
 
 using namespace std;

@@ -20,18 +20,15 @@
 */
 
 #pragma once
-#define BOOST_FILESYSTEM_NO_DEPRECATED
 
-#include <boost/filesystem.hpp> 
-#include <boost/program_options.hpp>
-#include <boost/regex.hpp>
-#include <boost/foreach.hpp>
-
-#include <iostream>
-#include <algorithm>
-#include <iterator>
-#include <string>
-#include <Eigen/Dense>
-#include "config.h"
-#include "particle.h"
-#include "rheometer.h"
+class bandShearZone {
+  private:
+    int _id;
+    std::shared_ptr<band> _bandMinPTR;
+    std::shared_ptr<band> _bandMaxPTR;
+  public:
+    bandShearZone(std::shared_ptr<band>, std::shared_ptr<band>);
+    double RPOS () {return (_bandMaxPTR->midLinedR() - _bandMinPTR->midLinedR())/2.0 + _bandMinPTR->midLinedR();};
+    double ZPOS () {return _bandMaxPTR->midLinedZ();};
+    double W () {return (_bandMaxPTR->midLinedR() - _bandMinPTR->midLinedR() - _bandMinPTR->dR());};
+};

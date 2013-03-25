@@ -103,7 +103,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   
   if (not(fs::is_regular_file(configFileName))) {
     fs::path p = configFileName;
-    std::cerr<<"The file "<<configFileName<<" does not exists. Exiting."<<std::endl;
+    std::cerr<<"The file "<<configFileName<<" does not exist. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
   }
   

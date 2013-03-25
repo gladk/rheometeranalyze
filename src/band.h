@@ -94,36 +94,3 @@ class band {
     double density() { return _densAVG;}
     double eta() { return _eta;}
 };
-
-class bandShearZone {
-  private:
-    int _id;
-    std::shared_ptr<band> _bandMinPTR;
-    std::shared_ptr<band> _bandMaxPTR;
-  public:
-    bandShearZone(std::shared_ptr<band>, std::shared_ptr<band>);
-    double RPOS () {return (_bandMaxPTR->midLinedR() - _bandMinPTR->midLinedR())/2.0 + _bandMinPTR->midLinedR();};
-    double ZPOS () {return _bandMaxPTR->midLinedZ();};
-    double W () {return (_bandMaxPTR->midLinedR() - _bandMinPTR->midLinedR() - _bandMinPTR->dR());};
-};
-
-class bandRow {
-  private:
-    std::vector<std::shared_ptr<band> > _bandAll;
-    std::vector<std::shared_ptr<bandShearZone> > _bandShearZones;
-    std::shared_ptr<configopt> _cfg; 
-    std::vector<std::shared_ptr<particleRow>> _pRow;
-    std::vector<std::shared_ptr<forceRow>> _fRow;
-  public:
-    bandRow (std::shared_ptr<configopt>, std::vector<std::shared_ptr <particleRow>>, std::vector<std::shared_ptr <forceRow>>);
-    void fillBands();
-    int getBandR(double);
-    int getBandZ(double);
-    unsigned int getBandShearZonesSize() {return _bandShearZones.size();};
-    std::shared_ptr<bandShearZone> getBandShearZones(int id) {return _bandShearZones[id];};
-    void calculateValues();
-    std::shared_ptr<band> getBand(unsigned int id) {return _bandAll[id];}
-    std::shared_ptr<band> getBand(unsigned int idR, unsigned int idZ) {return _bandAll[idZ*_cfg->SecRadial() + idR];}
-    unsigned int size() {return _bandAll.size();}
-};
-
