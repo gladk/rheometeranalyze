@@ -45,7 +45,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("config,c", po::value<string>(), "configuration file")
       ("particle,p", po::value<string>(), "particles dump file")
       ("force,f", po::value<string>(), "forces dump file")
-      ("vtk,v", "create VTK-file")
+      ("vtk,v", "create VTK-file, OFF by default")
     ;
     
     po::positional_options_description p;
