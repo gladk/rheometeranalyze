@@ -37,14 +37,15 @@ Copyright (C) 2013 TU Bergakademie Freiberg\nInstitute for Mechanics and Fluid D
 This program comes with ABSOLUTELY NO WARRANTY.\n\
 "<<std::endl;
   
+  bool setVtk = false;
   try {
-
     po::options_description desc("Allowed options");
     desc.add_options()
-        ("help", "produce help message")
-        ("config,c", po::value<string>(), "configuration file")
-        ("particle,p", po::value<string>(), "particles dump file")
-        ("force,f", po::value<string>(), "forces dump file")
+      ("help", "produce help message")
+      ("config,c", po::value<string>(), "configuration file")
+      ("particle,p", po::value<string>(), "particles dump file")
+      ("force,f", po::value<string>(), "forces dump file")
+      ("vtk,v", "create VTK-file")
     ;
     
     po::positional_options_description p;
@@ -55,12 +56,19 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     po::notify(vm);  
 
     if (vm.count("help")) {
-        cout << desc << "\n";
-        return 0;
+      cout << desc << std::endl;
+      return 0;
+    }
+    
+    if (vm.count("vtk")) {
+      cout << "VTK-file will be created" << std::endl;
+      setVtk = true;
+    } else {
+      cout << "VTK-file will NOT be created" << std::endl;
     }
 
     if (vm.count("config")) {
-      cout << "config file is: " << vm["config"].as<string>() << "\n";
+      cout << "config file is: " << vm["config"].as<string>() << std::endl;
     } else {
       cout << "config file is required, use `-c` option for that or `--help`.\n"; 
       exit (EXIT_FAILURE);
@@ -68,7 +76,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     configFileName = vm["config"].as<string>();
 
     if (vm.count("particle")) {
-      cout << "particles dump-file is: " << vm["particle"].as<string>() << "\n";
+      cout << "particles dump-file is: " << vm["particle"].as<string>() << std::endl;
     } else {
       cout << "particles dump-file is required, use `-p` option for that or `--help` for help.\n"; 
       exit (EXIT_FAILURE);
@@ -77,7 +85,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     particlesFileName = vm["particle"].as<string>();
     
     if (vm.count("force")){
-      cout << "forces dump-file is: "  << vm["force"].as<string>() << "\n";
+      cout << "forces dump-file is: "  << vm["force"].as<string>() << std::endl;
     } else {
       cout << "force dump-file is required, use `-p` option for that or `--help` for help.\n"; 
       exit (EXIT_FAILURE);
@@ -86,7 +94,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
 
   }
   catch(exception& e) {
-      cerr << "error: " << e.what() << "\n";
+      cerr << "error: " << e.what() << std::endl;
       exit (EXIT_FAILURE);
   }
   catch(...) {
@@ -183,6 +191,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
   configParams->setSnapshot(filesParticle.size());
+  if (setVtk) configParams->setVtk();
   std::shared_ptr<rheometer> curRheom (new rheometer(configParams, filesParticle, filesForces));
   
   return 0;

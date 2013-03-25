@@ -53,7 +53,7 @@ class configopt {
     void _maxColumnCheckForce(int, int);    // Check whether the new column is maximal for Forces
     std::string _FOutput;          //Folder for output files
     
-    //Force
+    // Forces
     int _fAt;                 // Number of forces string
     int _fDat;                // Begin of force string
     int _cPos1;               // Column of Pos1
@@ -62,9 +62,10 @@ class configopt {
     int _cPos2ID;             // Column of particle 2 id
     int _cForc;               // Column of force value
     int _maxCF;               // Maximal column number for forces
-    
-    //other
+  
+    // Others
     int _numSnapshot;          // Number of snapshots
+    bool  _vtk;                // True, if VTK-file will be created
   public:
     configopt(const std::string &);
     Eigen::Vector3f get_c(){return _c;};
@@ -94,7 +95,7 @@ class configopt {
     double dDz(){return _H/_SecZ;};
     std::string FOutput(){return _FOutput;};
     
-    //force
+    // Force
     int fAt(){return _fAt;};
     int fDat(){return _fDat;};
     int cPos1(){return _cPos1;};
@@ -102,5 +103,11 @@ class configopt {
     int cPos1ID(){return _cPos1ID;};
     int cPos2ID(){return _cPos2ID;};
     int cForc(){return _cForc;};
+    
+    // Others
+    void setVtk() {_vtk=true;}
+    void unSetVtk() {_vtk=false;}
+    bool Vtk() {return _vtk;}
+    
     
 };

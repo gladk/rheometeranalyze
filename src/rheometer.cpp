@@ -37,7 +37,7 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg, std::vector< fs::path > par
   
   
   std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
-  exp->VTK();
+  if (_cfg->Vtk()) exp->VTK();
   exp->gnuplotSchearRate();
 };
 
