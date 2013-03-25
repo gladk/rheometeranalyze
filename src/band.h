@@ -23,9 +23,6 @@
 
 #define _USE_MATH_DEFINES
 
-#include <string>
-#include <iostream>
-#include <vector>
 #include <memory>
 #include <Eigen/Dense>
 #include "config.h"

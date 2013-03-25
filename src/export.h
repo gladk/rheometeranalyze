@@ -21,9 +21,6 @@
 
 #pragma once
 
-#include <string>
-#include <iostream>
-#include <fstream>
 #include <Eigen/Dense>
 #include <memory>
 
@@ -46,9 +43,6 @@
 #include <vtkQuad.h>
 
 
-#include "config.h"
-#include "particle.h"
-#include "force.h"
 #include "band.h"
 #include "bandRow.h"
 

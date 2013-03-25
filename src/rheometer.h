@@ -21,15 +21,7 @@
 
 #pragma once
 
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <memory>
-#include <Eigen/Dense>
-#include "config.h"
-#include "particle.h"
 #include "band.h"
-#include "force.h"
 #include "export.h"
 #include "main.h"
 

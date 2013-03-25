@@ -21,11 +21,7 @@
 
 #pragma once
 
-#include <string>
-#include <iostream>
-#include <vector>
 #include <Eigen/Dense>
-#include <memory>
 
 class force {
   private:
