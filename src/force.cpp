@@ -21,9 +21,9 @@
 
 #include "force.h"
 
-force::force(unsigned long long pid1, unsigned long long pid2, unsigned int fileId, Eigen::Vector3f pos1, Eigen::Vector3f pos2, Eigen::Vector3f val) {
-  _pid1 = pid1;
-  _pid2 = pid2;
+force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, unsigned int fileId, Eigen::Vector3f pos1, Eigen::Vector3f pos2, Eigen::Vector3f val) {
+  _part1 = part1;
+  _part2 = part2;
   _pos1 = pos1;
   _pos2 = pos2;
   _val = val;
@@ -40,7 +40,7 @@ force::force(unsigned long long pid1, unsigned long long pid2, unsigned int file
 };
 
 force::force() {
-  _pid1 = -1; _pid2 = -1; _fileId = -1;
+  _fileId = -1;
   _pos1 = Eigen::Vector3f::Zero();
   _pos2 = Eigen::Vector3f::Zero();
   _val = Eigen::Vector3f::Zero();

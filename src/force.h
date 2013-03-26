@@ -22,13 +22,16 @@
 #pragma once
 
 #include <Eigen/Dense>
+#include <memory>
+#include "particle.h"
 
 class force {
   private:
     Eigen::Vector3f _pos1, _pos2, _val;   // Pos1, Pos2 and force value
     Eigen::Vector3f _valZylindrical;      // Force Values in Zylindrical coordinates (dR, dZ, dF)
     Eigen::Vector3f _cPZylindrical;       // Branch-Vector in Zylindrical coordinates (dR, dZ, dF)
-    unsigned long long _pid1, _pid2;      // Particles ids
+    std::shared_ptr<particle> _part1;     // Pointer into particle1
+    std::shared_ptr<particle> _part2;     // Pointer into particle2
 
     double _dist;                 // Distance from axis
     double _height;               // Height on Z-axis
@@ -58,13 +61,13 @@ class force {
     
 
   public:
-    force(unsigned long long, unsigned long long, unsigned  int, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
+    force(std::shared_ptr<particle>, std::shared_ptr<particle>, unsigned  int, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
     force();
     int bandR() {return _bandR;};
     int bandZ() {return _bandZ;};
     int bandN() {return _bandN;};
-    unsigned long long  pid1() {return _pid1;};
-    unsigned long long  pid2() {return _pid2;};
+    unsigned long long  pid1() {return _part1->id();};
+    unsigned long long  pid2() {return _part2->id();};
     unsigned int  fileId() {return _fileId;};
     Eigen::Vector3f pos1() {return _pos1;}
     Eigen::Vector3f pos2() {return _pos2;}
