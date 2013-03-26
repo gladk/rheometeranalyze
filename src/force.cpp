@@ -87,5 +87,13 @@ void force::calculateStressTensor() {
 Eigen::Matrix3f force::potEnergie() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
   return _valZylindrical*_cPZylindrical.transpose();
-}
+};
+
+std::shared_ptr<particle> force::part1() {
+  return _part1;
+};
+
+std::shared_ptr<particle> force::part2() {
+  return _part2;
+};
 

@@ -68,6 +68,8 @@ class force {
     int bandN() {return _bandN;};
     unsigned long long  pid1() {return _part1->id();};
     unsigned long long  pid2() {return _part2->id();};
+    std::shared_ptr<particle> part1();
+    std::shared_ptr<particle> part2();
     unsigned int  fileId() {return _fileId;};
     Eigen::Vector3f pos1() {return _pos1;}
     Eigen::Vector3f pos2() {return _pos2;}
