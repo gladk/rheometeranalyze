@@ -398,7 +398,9 @@ void exportclass::Utwente()  {
     C3d<<particles.size()<< "\t"<<snapshotCur->timeStep()*_cfg->dT()<< "\t"<<-_cfg->Dout()/2.0<< "\t"<<-_cfg->Dout()/2.0<< "\t0.0\t"<<_cfg->Dout()/2.0<< "\t"<<_cfg->Dout()/2.0<< "\t"<< _cfg->H()<< std::endl;
     
     BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
-      //C3d<<p.size()<< "\t"<< std::endl;
+      C3d << p->c()(0) << "\t" << p->c()(1) << "\t"<< p->c()(2) << "\t" 
+          << p->v()(0) << "\t" << p->v()(1) << "\t"<< p->v()(2) << "\t"
+          << p->rad() << std::endl;
     };
     
     C3d << "\t"<< std::endl;
