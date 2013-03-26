@@ -24,6 +24,9 @@
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #include <boost/filesystem.hpp> 
 
+#include "particle.h"
+#include "force.h"
+
 namespace fs = boost::filesystem;
 
 class snapshot {
@@ -32,6 +35,8 @@ class snapshot {
     fs::path _forcesFileName;
     unsigned long long _timeStep;
     double _time;
+    std::vector <std::shared_ptr<particle> > _particles;
+    std::vector <std::shared_ptr<force> > _forces;
 
   public:
     snapshot(fs::path particlesFileName, fs::path forcesFileName, unsigned long long timeStep);
@@ -41,4 +46,6 @@ class snapshot {
     unsigned long long timeStep();
     fs::path getParticleFile();
     fs::path getForceFile();
+    void addParticle(std::shared_ptr<particle> particleTmp);
+    void addForce(std::shared_ptr<force> forceTmp);
 };

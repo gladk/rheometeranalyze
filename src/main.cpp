@@ -39,6 +39,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
 "<<std::endl;
   
   bool setVtk = false;
+  bool setUtwente = false;
   try {
     po::options_description desc("Allowed options");
     desc.add_options()
@@ -47,6 +48,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("particle,p", po::value<string>(), "particles dump file")
       ("force,f", po::value<string>(), "forces dump file")
       ("vtk,v", "create VTK-file, OFF by default")
+      ("utwente,u", "create export files for UTwente, OFF by default")
     ;
     
     po::positional_options_description p;
@@ -66,6 +68,11 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       setVtk = true;
     } else {
       cout << "VTK-file will NOT be created" << std::endl;
+    }
+    
+    if (vm.count("utwente")) {
+      cout << "UTwente-files will be created" << std::endl;
+      setUtwente = true;
     }
 
     if (vm.count("config")) {
@@ -202,7 +209,10 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
   configParams->setSnapshot(snapshots);
+  
   if (setVtk) configParams->setVtk();
+  if (setUtwente) configParams->setUtwente();
+  
   std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
   
   return 0;

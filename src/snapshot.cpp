@@ -21,6 +21,7 @@
 
 #include "snapshot.h"
 
+
 snapshot::snapshot(fs::path particlesFileName, fs::path forcesFileName, 
                    unsigned long long timeStep) {
   _particlesFileName = particlesFileName;
@@ -50,4 +51,12 @@ fs::path snapshot::getParticleFile() {
 
 fs::path snapshot::getForceFile() {
   return _forcesFileName;
+};
+
+void snapshot::addParticle(std::shared_ptr<particle> particleTmp) {
+  _particles.push_back(particleTmp);
+};
+
+void snapshot::addForce(std::shared_ptr<force> forceTmp) {
+  _forces.push_back(forceTmp);
 };

@@ -375,6 +375,14 @@ void exportclass::gnuplotSchearRate() {
     }
   }  
   myfile2.close();
-  
-  
 };
+
+void exportclass::Utwente()  {
+  //ofstream c3d (_fileNameG1.c_str());
+  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+  for(unsigned int i=0; i<snapshots->size(); i++) {
+    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+    
+    
+  }
+}

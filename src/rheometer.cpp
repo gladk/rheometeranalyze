@@ -35,7 +35,10 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   
   
   std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
+  
   if (_cfg->Vtk()) exp->VTK();
+  if (_cfg->Vtk()) exp->Utwente();
+  
   exp->gnuplotSchearRate();
 };
 
@@ -108,6 +111,7 @@ void rheometer::loadParticles() {
           maxId = max(pId, maxId);
           std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, partNumbCounter-1, pR, pM, pD, pC,pV, pO));
           tmpPartVector.push_back(tmpParticle);
+          snapshotCur->addParticle(tmpParticle);
         }
   
       } else if (curLine == _cfg->nAt()) {
@@ -195,6 +199,7 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
         if (_particleAll[forceRowNumbTMP]->particleReal(pid1) and _particleAll[forceRowNumbTMP]->particleReal(pid2)){
           std::shared_ptr<force> tmpForce ( new force (pid1, pid2, forceRowNumbTMP, pos1, pos2, val));
           _forceRow[forceRowNumbTMP]->addF(tmpForce);
+          loadSnap->addForce(tmpForce);
         }
   
       } else if (curLine == _cfg->fAt()) {

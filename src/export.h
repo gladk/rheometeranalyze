@@ -59,4 +59,5 @@ class exportclass {
     exportclass(std::shared_ptr<configopt>, std::shared_ptr <bandRow>);
     void VTK();
     void gnuplotSchearRate();
+    void Utwente();
 };
