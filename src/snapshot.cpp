@@ -43,3 +43,11 @@ void snapshot::setTimeStep(unsigned long long timeStep) {
 unsigned long long snapshot::timeStep() {
   return _timeStep;
 };
+
+fs::path snapshot::getParticleFile() {
+  return _particlesFileName;
+};
+
+fs::path snapshot::getForceFile() {
+  return _forcesFileName;
+};
