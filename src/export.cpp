@@ -388,6 +388,9 @@ void exportclass::Utwente()  {
     stringstream ss;
     ss << setw(leadingZerosLen) << setfill('0') << i;
     
+    double timeTmp = snapshotCur->timeStep()*_cfg->dT();
+    //================================================
+    
     std::string _fileNameC3d;
     _fileNameC3d = _cfg->FOutput();
     _fileNameC3d += "/c3d.";
@@ -395,7 +398,10 @@ void exportclass::Utwente()  {
     
     ofstream C3d (_fileNameC3d.c_str());
     std::vector <std::shared_ptr<particle> > particles = snapshotCur->particles();
-    C3d<<particles.size()<< "\t"<<snapshotCur->timeStep()*_cfg->dT()<< "\t"<<-_cfg->Dout()/2.0<< "\t"<<-_cfg->Dout()/2.0<< "\t0.0\t"<<_cfg->Dout()/2.0<< "\t"<<_cfg->Dout()/2.0<< "\t"<< _cfg->H()<< std::endl;
+    C3d << particles.size() << "\t" << timeTmp
+        << "\t" << -_cfg->Dout()/2.0 << "\t"<<-_cfg->Dout()/2.0 << "\t0.0\t"
+        << _cfg->Dout()/2.0 << "\t" << _cfg->Dout()/2.0 << "\t" << _cfg->H()
+        << std::endl;
     
     BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
       C3d << p->c()(0) << "\t" << p->c()(1) << "\t"<< p->c()(2) << "\t" 
@@ -405,5 +411,42 @@ void exportclass::Utwente()  {
     
     C3d << "\t"<< std::endl;
     C3d.close();
+    
+    //================================================
+    std::string _fileNameFstat;
+    _fileNameFstat = _cfg->FOutput();
+    _fileNameFstat += "/fstat.";
+    _fileNameFstat += ss.str();
+    
+    ofstream Fstat (_fileNameFstat.c_str());
+    std::vector <std::shared_ptr<force> > forces = snapshotCur->forces();
+    Fstat<<"# TimeStep " << snapshotCur->timeStep() << std::endl;
+    Fstat<<"# Time " << timeTmp << std::endl;
+    Fstat<<"#  " << std::endl;
+    
+    
+    BOOST_FOREACH(std::shared_ptr<force> f, forces) {
+      Fstat << timeTmp << "\t" << f->pid1() << "\t" << f->pid2() << "\t"
+            << f->cP()(0) << "\t" << f->cP()(1) << "\t" << f->cP()(2) << "\t" 
+            << std::endl;
+    }
+    
+    Fstat.close();
+    /*
+    C3d << particles.size() << "\t" << snapshotCur->timeStep()*_cfg->dT()
+        << "\t" << -_cfg->Dout()/2.0 << "\t"<<-_cfg->Dout()/2.0 << "\t0.0\t"
+        << _cfg->Dout()/2.0 << "\t" << _cfg->Dout()/2.0 << "\t" << _cfg->H()
+        << std::endl;
+    
+    BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
+      C3d << p->c()(0) << "\t" << p->c()(1) << "\t"<< p->c()(2) << "\t" 
+          << p->v()(0) << "\t" << p->v()(1) << "\t"<< p->v()(2) << "\t"
+          << p->rad() << std::endl;
+    };
+    
+    C3d << "\t"<< std::endl;
+    C3d.close();
+    */ 
+    //================================================
   }
 }
