@@ -97,3 +97,7 @@ std::shared_ptr<particle> force::part2() {
   return _part2;
 };
 
+double force::deltaN() {
+  return (_part1->c() - _part2->c()).norm() - _part1->rad() + _part2->rad();
+};
+

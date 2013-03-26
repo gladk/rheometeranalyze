@@ -197,7 +197,7 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
         };
         
         if (_particleAll[forceRowNumbTMP]->particleReal(pid1) and _particleAll[forceRowNumbTMP]->particleReal(pid2)){
-          std::shared_ptr<force> tmpForce ( new force (_particleAll[forceRowNumbTMP]->getP(pid1), _particleAll[forceRowNumbTMP]->getP(pid1), forceRowNumbTMP, pos1, pos2, val));
+          std::shared_ptr<force> tmpForce ( new force (_particleAll[forceRowNumbTMP]->getP(pid1), _particleAll[forceRowNumbTMP]->getP(pid2), forceRowNumbTMP, pos1, pos2, val));
           _forceRow[forceRowNumbTMP]->addF(tmpForce);
           loadSnap->addForce(tmpForce);
         }

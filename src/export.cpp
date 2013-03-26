@@ -428,6 +428,7 @@ void exportclass::Utwente()  {
     BOOST_FOREACH(std::shared_ptr<force> f, forces) {
       Fstat << timeTmp << "\t" << f->pid1() << "\t" << f->pid2() << "\t"
             << f->cP()(0) << "\t" << f->cP()(1) << "\t" << f->cP()(2) << "\t" 
+            << f->deltaN()
             << std::endl;
     }
     

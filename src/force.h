@@ -80,6 +80,7 @@ class force {
     Eigen::Vector3f dg() {return _dg;}
     Eigen::Vector3f cP() {return _cP;}
     void set_dist(double dist) {_dist=dist;};
+    double deltaN();
     void set_height(double height) {_height=height;};
     double dist() { return _dist;};
     double height() { return _height;};
