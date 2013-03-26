@@ -73,6 +73,8 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     if (vm.count("utwente")) {
       cout << "UTwente-files will be created" << std::endl;
       setUtwente = true;
+    } else {
+      cout << "UTwente-files will NOT be created" << std::endl;
     }
 
     if (vm.count("config")) {

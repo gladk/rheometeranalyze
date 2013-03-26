@@ -79,7 +79,8 @@ configopt::configopt(const std::string &filename) {
       std::cerr<<"The direcrory " << _FOutput<< " created."<<std::endl;
     }
   }
-  
+  _utwente = false;
+  _vtk = false;
 };
 
 void configopt::_maxColumnCheck(int col, int addN) {
