@@ -77,19 +77,3 @@ class particle {
     bool disabled() { return _disable; }
     Eigen::Matrix3f kinEnergie();
 };
-
-class particleRow {
-  private: 
-    std::vector <std::shared_ptr<particle> > _allPart;
-    std::shared_ptr<particle> _tmpP;
-    long long _realPartNum;
-  public:
-    particleRow(long long);
-    void addP(std::shared_ptr<particle> );
-    long long elementsNum();
-    long long arraySize() {return _allPart.size();};
-    bool particleReal(long long);
-    std::shared_ptr<particle> getP(long long);
-    void disable(long long);
-    void enable(long long);
-};

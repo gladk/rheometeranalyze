@@ -23,6 +23,7 @@
 
 #include "bandShearZone.h"
 #include "forceRow.h"
+#include "particleRow.h"
 
 class bandRow {
   private:
