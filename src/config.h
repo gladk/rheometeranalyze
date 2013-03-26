@@ -35,7 +35,7 @@ class configopt {
   private:
     Eigen::Vector3f _c, _o;   // Center point and origin
     double _Din, _Dout, _H;   // Internal and outer diameters
-    int _SecRadial, _SecZ;    // Numer of sections, in which the rheometer will
+    int _SecRadial, _SecZ;    // Number of sections, in which the rheometer will
                               // be divided in radial- and Z-direction 
     Eigen::Vector3f _g;       // Gravity direction
       

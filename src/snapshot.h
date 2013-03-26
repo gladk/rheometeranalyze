@@ -48,4 +48,6 @@ class snapshot {
     fs::path getForceFile();
     void addParticle(std::shared_ptr<particle> particleTmp);
     void addForce(std::shared_ptr<force> forceTmp);
+    std::vector <std::shared_ptr<particle> > particles();
+    std::vector <std::shared_ptr<force> > forces();
 };

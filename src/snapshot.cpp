@@ -60,3 +60,11 @@ void snapshot::addParticle(std::shared_ptr<particle> particleTmp) {
 void snapshot::addForce(std::shared_ptr<force> forceTmp) {
   _forces.push_back(forceTmp);
 };
+
+std::vector <std::shared_ptr<particle> >  snapshot::particles() {
+  return _particles;
+};
+
+std::vector <std::shared_ptr<force> >  snapshot::forces() {
+  return _forces;
+};

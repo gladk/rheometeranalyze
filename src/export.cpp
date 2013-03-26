@@ -20,6 +20,7 @@
 */
 
 #include "export.h"
+#include <boost/foreach.hpp>
 
 exportclass::exportclass(std::shared_ptr<configopt> cfg, std::shared_ptr <bandRow> bandAll) {
   _cfg = cfg;
@@ -378,11 +379,29 @@ void exportclass::gnuplotSchearRate() {
 };
 
 void exportclass::Utwente()  {
-  //ofstream c3d (_fileNameG1.c_str());
   std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+  unsigned int leadingZerosLen = static_cast <unsigned int> (log10 (snapshots->size()) + 1);
+  
   for(unsigned int i=0; i<snapshots->size(); i++) {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
     
+    stringstream ss;
+    ss << setw(leadingZerosLen) << setfill('0') << i;
     
+    std::string _fileNameC3d;
+    _fileNameC3d = _cfg->FOutput();
+    _fileNameC3d += "/c3d.";
+    _fileNameC3d += ss.str();
+    
+    ofstream C3d (_fileNameC3d.c_str());
+    std::vector <std::shared_ptr<particle> > particles = snapshotCur->particles();
+    C3d<<particles.size()<< "\t"<<snapshotCur->timeStep()*_cfg->dT()<< "\t"<<-_cfg->Dout()/2.0<< "\t"<<-_cfg->Dout()/2.0<< "\t0.0\t"<<_cfg->Dout()/2.0<< "\t"<<_cfg->Dout()/2.0<< "\t"<< _cfg->H()<< std::endl;
+    
+    BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
+      //C3d<<p.size()<< "\t"<< std::endl;
+    };
+    
+    C3d << "\t"<< std::endl;
+    C3d.close();
   }
 }
