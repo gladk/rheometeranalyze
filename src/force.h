@@ -81,7 +81,8 @@ class force {
     Eigen::Vector3f cP() {return _cP;};
     Eigen::Vector3f nVec();
     void set_dist(double dist) {_dist=dist;};
-    double deltaN();
+    double deltaN();                                        // Overlap
+    double valN();                                          // Normal force
     void set_height(double height) {_height=height;};
     double dist() { return _dist;};
     double height() { return _height;};

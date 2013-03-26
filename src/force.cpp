@@ -101,6 +101,11 @@ double force::deltaN() {
   return (_part1->c() - _part2->c()).norm() - _part1->rad() + _part2->rad();
 };
 
+double force::valN() {
+  double valN = this->nVec().dot(_val);
+  return fabs(valN);
+};
+
 Eigen::Vector3f force::nVec() {
   Eigen::Vector3f nVec;
   nVec = _part1->c() - _part2->c();
