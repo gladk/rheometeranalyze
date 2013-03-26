@@ -71,14 +71,15 @@ class force {
     std::shared_ptr<particle> part1();
     std::shared_ptr<particle> part2();
     unsigned int  fileId() {return _fileId;};
-    Eigen::Vector3f pos1() {return _pos1;}
-    Eigen::Vector3f pos2() {return _pos2;}
-    Eigen::Vector3f val() {return _val;}
-    Eigen::Vector3f dr() {return _axisMatrix.row(0);}
-    Eigen::Vector3f dz() {return _axisMatrix.row(1);}
-    Eigen::Vector3f df() {return _axisMatrix.row(2);}
-    Eigen::Vector3f dg() {return _dg;}
-    Eigen::Vector3f cP() {return _cP;}
+    Eigen::Vector3f pos1() {return _pos1;};
+    Eigen::Vector3f pos2() {return _pos2;};
+    Eigen::Vector3f val() {return _val;};
+    Eigen::Vector3f dr() {return _axisMatrix.row(0);};
+    Eigen::Vector3f dz() {return _axisMatrix.row(1);};
+    Eigen::Vector3f df() {return _axisMatrix.row(2);};
+    Eigen::Vector3f dg() {return _dg;};
+    Eigen::Vector3f cP() {return _cP;};
+    Eigen::Vector3f nVec();
     void set_dist(double dist) {_dist=dist;};
     double deltaN();
     void set_height(double height) {_height=height;};

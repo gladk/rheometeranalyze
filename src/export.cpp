@@ -428,7 +428,11 @@ void exportclass::Utwente()  {
     BOOST_FOREACH(std::shared_ptr<force> f, forces) {
       Fstat << timeTmp << "\t" << f->pid1() << "\t" << f->pid2() << "\t"
             << f->cP()(0) << "\t" << f->cP()(1) << "\t" << f->cP()(2) << "\t" 
-            << f->deltaN()
+            << f->deltaN() << "\t"
+            << " 0.0 " << "\t"                                      //Theta, should be fixed.
+            << f->val().norm() << "\t" <<  " 0.0 " << "\t"          //Normal and tangential components of the force
+            << f->nVec()(0) << "\t" << f->nVec()(1) << "\t" << f->nVec()(2) << "\t" 
+            << " 0.0 " << "\t" << " 0.0 " << "\t" << " 0.0 " << "\t" 
             << std::endl;
     }
     
