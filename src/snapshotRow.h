@@ -30,5 +30,5 @@ class snapshotRow {
     void addSnapshot(std::shared_ptr<snapshot> snapshotTmp){_snapshotRow.push_back(snapshotTmp);};
     unsigned int size(){  return _snapshotRow.size();};
     std::shared_ptr<snapshot> getSnapshot(unsigned int i);
-    
+    void sortRow();
 };

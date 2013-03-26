@@ -29,4 +29,13 @@ std::shared_ptr<snapshot> snapshotRow::getSnapshot(unsigned int i) {
     std::cerr<<"Illegal access to snapshotRow."<<std::endl;
     exit (EXIT_FAILURE);
   }
-}
+};
+
+bool snp_ptr_less( std::shared_ptr<snapshot> lhs, std::shared_ptr<snapshot> rhs ) {
+    return lhs->timeStep() < rhs->timeStep();
+};
+
+void snapshotRow::sortRow() {
+  std::sort( _snapshotRow.begin(), _snapshotRow.end(), & snp_ptr_less );
+};
+

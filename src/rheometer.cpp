@@ -137,9 +137,9 @@ void rheometer::loadParticles() {
     this->loadForces(snapshotCur);
   
   }
+  snapshots->sortRow();
   std::cerr<<"The total number of added particles is "<<_particleNum<<std::endl;
   std::cerr<<"The total number of added forces is "<<_forceNum<<std::endl;
-  
 };
 
 
