@@ -27,10 +27,15 @@ gX = 0.0
 gY = 0.0
 gZ = -1.0
 
+;delta time
+dT = 0.00005
 
 [Particle]
 ;number of atoms string
 nAt = 4
+
+;number of timestep string (particles)
+nPSt = 2
 
 ;begin of data string
 nDat = 10
@@ -65,6 +70,9 @@ tC = 1
 [Force]
 ;number of forces string
 nFt = 4
+
+;number of timestep string (forces)
+nFSt = 2
 
 ;begin of data string
 nDat = 6
