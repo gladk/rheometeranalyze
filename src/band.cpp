@@ -52,6 +52,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _I = 0.0;
   _densAVG = 0.0;
   _eta = 0.0;
+  _vZylavg = _vZylavg.Zero();
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
@@ -87,10 +88,12 @@ void band::calculateValues (int numSnapshots) {
   std::vector<double> angVelTmpV;
   std::vector<double> radTMPV;
   std::vector<double> densTMP;
+  std::vector<Eigen::Vector3f> velZylTMP;
   
   for(unsigned long long p=0; p<_allPart.size(); p++) {
     if (not(_allPart[p]->disabled())) {
       angVelTmpV.push_back(_allPart[p]->realAngular());
+      velZylTMP.push_back(_allPart[p]->vZyl());
       radTMPV.push_back(_allPart[p]->rad());
       densTMP.push_back(_allPart[p]->density());
       _volPart  += _allPart[p]->vol();
@@ -115,6 +118,8 @@ void band::calculateValues (int numSnapshots) {
     _volFraction  = _volPart/_vol/numSnapshots;
     _contactNumAVG = (double)_allForces.size()/i;
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
+    
+    _vZylavg = std::accumulate(velZylTMP.begin(), velZylTMP.end(), Eigen::Vector3f(0,0,0)) / velZylTMP.size();
     
     double vAVGsq_sum = std::inner_product(angVelTmpV.begin(), angVelTmpV.end(), angVelTmpV.begin(), 0.0);
     _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);

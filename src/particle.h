@@ -60,6 +60,7 @@ class particle {
     double realAngular();    //_v.dot(df)
     Eigen::Vector3f c() {return _c;}
     Eigen::Vector3f v() {return _v;}
+    Eigen::Vector3f vZyl();
     Eigen::Vector3f o() {return _o;}
     Eigen::Vector3f dr() {return _axisMatrix.row(0);}
     Eigen::Vector3f dz() {return _axisMatrix.row(1);}

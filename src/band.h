@@ -43,8 +43,9 @@ class band {
     double _tau, _tauavg, _tauLocalAvg, _vol, _volPart;   // Results, Tau, Vol, Vol of particles
     double _p, _pavg, _pLocalAvg;                         // Results, Press (trace), hydrostatic stress
     double _dLocalAvg;                                    // Results, Deviatoric stress, SigmaDev
-    double _muLocalAVG, _muGlobAVG;                        // Results, mu calculated
+    double _muLocalAVG, _muGlobAVG;                       // Results, mu calculated
     double _vavg, _vavgStDev;                             // Results, angular velocity of particles, standard deviation
+    Eigen::Vector3f _vZylavg;                             // Results, average velocity of particles in zylindrical coordinates
     double _scherRate;                                    // Results, scherrate
     double _volFraction;                                  // Volume fraction
     double _contactNumAVG;                                // Contact number per particle, AVG
@@ -90,4 +91,5 @@ class band {
     double I() { return _I;}
     double density() { return _densAVG;}
     double eta() { return _eta;}
+    Eigen::Vector3f vZyl() { return _vZylavg;}
 };

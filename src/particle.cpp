@@ -82,3 +82,8 @@ Eigen::Matrix3f particle::kinEnergie() {
   if (not(_calculateVel)) { calculateVel();};
   return _m*_vZylindrical*_vZylindrical.transpose();
 };
+
+Eigen::Vector3f particle::vZyl() {
+  if (not(_calculateVel)) { calculateVel();};
+  return _vZylindrical;
+};
