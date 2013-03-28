@@ -16,7 +16,7 @@ oZ = 1.0
 ;internal and outer diameters and height of the rheometer
 Din = 0.0294
 Dout = 0.22
-H = 0.038
+H = 0.035
 
 ;number of sections, in which the rheometer will be divided in radial- and Z-direction 
 SecRadial = 20
