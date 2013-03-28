@@ -162,7 +162,7 @@ void bandRow::calculateValues () {
       
       _shearRateTmpA = (_bandAll[i]->vZyl()(2) - _bandAll[i-1]->vZyl()(2))/
                        (_bandAll[i]->midLinedR() - _bandAll[i-1]->midLinedR() -
-                       _bandAll[i]->vZyl()(2)/_bandAll[i]->midLinedR());
+                       _bandAll[i-1]->vZyl()(2)/_bandAll[i-1]->midLinedR());
       
       if (i>_cfg->SecRadial()) {
         _shearRateTmpB = (_bandAll[i]->vZyl()(2) - _bandAll[i-_cfg->SecRadial()]->vZyl()(2))/
