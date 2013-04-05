@@ -155,9 +155,10 @@ void bandRow::calculateValues () {
   }
 
   // Scherrate
-  for(unsigned int i=1; i<_bandAll.size(); i++) {
-    if ((_bandAll[i+1]->idR() > _bandAll[i-1]->idR()) and 
-       ((_bandAll[i+1]->idZ() == _bandAll[i-1]->idZ())) {
+  for(unsigned int i=1; i<_bandAll.size()-1; i++) {
+    if (
+       (_bandAll[i+1]->idR() > _bandAll[i-1]->idR()) and 
+       (_bandAll[i+1]->idZ() == _bandAll[i-1]->idZ())) {
       double _shearRateTmp, _shearRateTmpA, _shearRateTmpB;
       //Calculate Scherrate
       

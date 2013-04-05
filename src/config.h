@@ -61,6 +61,7 @@ class configopt {
     int _fAt;                 // Number of forces string
     int _nFSt;                // Number of timestep string (forces)
     int _fDat;                // Begin of force string
+    int _tF;                  // Type of particles, which will be calculated (Forces). -1 means calculating of all particles
     int _cPos1;               // Column of Pos1
     int _cPos2;               // Column of Pos2
     int _cPos1ID;             // Column of particle 1 id
@@ -107,6 +108,7 @@ class configopt {
     // Force
     int fAt(){return _fAt;};
     int nFSt(){return _nFSt;};
+    int tF(){return _tF;};
     int fDat(){return _fDat;};
     int cPos1(){return _cPos1;};
     int cPos2(){return _cPos2;};

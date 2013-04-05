@@ -69,6 +69,7 @@ configopt::configopt(const std::string &filename) {
   _cPos1ID = pt.get<int>("Force.cPos1ID"); _maxColumnCheckForce(_cPos1ID, 0);
   _cPos2ID = pt.get<int>("Force.cPos2ID"); _maxColumnCheckForce(_cPos2ID, 0);
   _cForc = pt.get<int>("Force.cForc"); _maxColumnCheckForce(_cForc, 2);
+  _tF = pt.get<int>("Force.tF");
   
   
   //Files
