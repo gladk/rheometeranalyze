@@ -166,9 +166,9 @@ void bandRow::calculateValues () {
                        (_bandAll[i+1]->midLinedR() - _bandAll[i-1]->midLinedR() -
                        _bandAll[i]->vZyl()(2)/_bandAll[i]->midLinedR());
       
-      if (i>_cfg->SecRadial()) {
-        _shearRateTmpB = (_bandAll[i]->vZyl()(2) - _bandAll[i-_cfg->SecRadial()]->vZyl()(2))/
-                         (_bandAll[i]->midLinedZ() - _bandAll[i-_cfg->SecRadial()]->midLinedZ());
+      if (i>_cfg->SecRadial() and (i+_cfg->SecRadial())<_bandAll.size()) {
+        _shearRateTmpB = (_bandAll[i+_cfg->SecRadial()]->vZyl()(2) - _bandAll[i-_cfg->SecRadial()]->vZyl()(2))/
+                         (_bandAll[i+_cfg->SecRadial()]->midLinedZ() - _bandAll[i-_cfg->SecRadial()]->midLinedZ());
       } else {
         _shearRateTmpB = 0.0;
       }
