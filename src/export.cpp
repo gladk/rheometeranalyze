@@ -168,6 +168,10 @@ void exportclass::VTK() {
   bandMu->SetNumberOfComponents(1);
   bandMu->SetName("bandMu");
   
+  vtkSmartPointer<vtkDoubleArray> bandVelLinDf = vtkSmartPointer<vtkDoubleArray>::New();
+  bandVelLinDf->SetNumberOfComponents(1);
+  bandVelLinDf->SetName("bandVelLinDf");
+  
   
   vtkSmartPointer<vtkUnstructuredGrid> spheresUg = vtkSmartPointer<vtkUnstructuredGrid>::New();
   
@@ -218,6 +222,7 @@ void exportclass::VTK() {
         bandScherRate->InsertNextValue(bandTMP->scherRate());
         bandLocMu->InsertNextValue(bandTMP->muLocalAVG());
         bandGlobMu->InsertNextValue(bandTMP->muGlobAVG());
+        bandVelLinDf->InsertNextValue(bandTMP->vDf());
         
         spheresCells->InsertNextCell(1,pid);
       }
@@ -254,6 +259,7 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandLocSigmDev);
     spheresUg->GetPointData()->AddArray(bandLocMu);
     spheresUg->GetPointData()->AddArray(bandGlobMu);
+    spheresUg->GetPointData()->AddArray(bandVelLinDf);
     
   }
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();

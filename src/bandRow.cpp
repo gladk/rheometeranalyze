@@ -156,13 +156,14 @@ void bandRow::calculateValues () {
 
   // Scherrate
   for(unsigned int i=1; i<_bandAll.size(); i++) {
-    if (_bandAll[i]->idR() > _bandAll[i-1]->idR()) {
+    if ((_bandAll[i+1]->idR() > _bandAll[i-1]->idR()) and 
+       ((_bandAll[i+1]->idZ() == _bandAll[i-1]->idZ())) {
       double _shearRateTmp, _shearRateTmpA, _shearRateTmpB;
       //Calculate Scherrate
       
-      _shearRateTmpA = (_bandAll[i]->vZyl()(2) - _bandAll[i-1]->vZyl()(2))/
-                       (_bandAll[i]->midLinedR() - _bandAll[i-1]->midLinedR() -
-                       _bandAll[i-1]->vZyl()(2)/_bandAll[i-1]->midLinedR());
+      _shearRateTmpA = (_bandAll[i+1]->vZyl()(2) - _bandAll[i-1]->vZyl()(2))/
+                       (_bandAll[i+1]->midLinedR() - _bandAll[i-1]->midLinedR() -
+                       _bandAll[i]->vZyl()(2)/_bandAll[i]->midLinedR());
       
       if (i>_cfg->SecRadial()) {
         _shearRateTmpB = (_bandAll[i]->vZyl()(2) - _bandAll[i-_cfg->SecRadial()]->vZyl()(2))/

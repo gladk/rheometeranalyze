@@ -92,4 +92,5 @@ class band {
     double density() { return _densAVG;}
     double eta() { return _eta;}
     Eigen::Vector3f vZyl() { return _vZylavg;}
+    double vDf() { return _vZylavg(2);}
 };
