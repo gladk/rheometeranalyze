@@ -14,7 +14,7 @@ oY = 0.0
 oZ = 1.0
 
 ;internal and outer diameters and height of the rheometer
-Din = 0.0294
+Din = 0.0270
 Dout = 0.22
 H = 0.035
 
@@ -65,7 +65,7 @@ cR = 19
 cD = 27
 
 ;type of particle, which will be calculated. -1 means calculating of all particles
-tC = 1
+tC = -1
 
 [Force]
 ;number of forces string
@@ -92,6 +92,8 @@ cPos2ID = 8
 ;column Forc
 cForc = 10
 
+;type of particle, which will be calculated for forces. -1 means calculating of all particles
+tF = 1
 
 
 
