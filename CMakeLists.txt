@@ -16,7 +16,7 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 #===========================================================
 # Add possibility to use local boost installation (e.g. -DLocalBoost=1.46.1)
 
-FIND_PACKAGE(Boost ${LocalBoost} COMPONENTS program_options filesystem system regex REQUIRED)
+FIND_PACKAGE(Boost ${LocalBoost} COMPONENTS program_options filesystem system regex iostreams REQUIRED)
 INCLUDE_DIRECTORIES (${Boost_INCLUDE_DIRS})
 
 FIND_PACKAGE(Eigen3 REQUIRED)

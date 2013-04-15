@@ -396,16 +396,12 @@ void exportclass::gnuplotSchearRate() {
     }
     myfile5 << std::endl;
     
+    double omega0 = _bandRow->getBand(_cfg->SecRadial()-1,0)->omega(); 
     for(unsigned int r=0; r<_cfg->SecRadial(); r++) {
       myfile5 << (_bandRow->getBand(r,0))->midLinedR()<<"\t";
       for(unsigned int h=0; h<_cfg->SecZ(); h++) {
-        double linV = _bandRow->getBand(r,h)->vDf();
-        double omega = _bandRow->getBand(0,h)->omega(); 
-        double R = _bandRow->getBand(r,h)->midLinedR(); 
-        //double valT = linV/(2*M_PI*R);
-        double valT = linV;
-        
-
+        double omega = _bandRow->getBand(r,h)->omega(); 
+        double valT = omega/omega0;
         myfile5 << (valT)<<"\t";
       }
       myfile5 << std::endl;
