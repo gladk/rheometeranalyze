@@ -25,27 +25,15 @@
 exportclass::exportclass(std::shared_ptr<configopt> cfg, std::shared_ptr <bandRow> bandAll) {
   _cfg = cfg;
   _bandRow = bandAll;
-  
-  
-  _fileNameVTU =  _cfg->FOutput();
-  _fileNameVTU += "/output.vtu";
-  
-  _fileNameG1 =  _cfg->FOutput();
-  _fileNameG1 += "/gnuplot_shearrate.txt";
-  
-  _fileNameG2 =  _cfg->FOutput();
-  _fileNameG2 += "/gnuplot_scherrate2.txt";
-  
-  _fileNameG3 =  _cfg->FOutput();
-  _fileNameG3 += "/gnuplot_vel1_c.txt";
-  
-  _fileNameG4 =  _cfg->FOutput();
-  _fileNameG4 += "/gnuplot_shearZone.txt";
-  
-  
 };
 
 void exportclass::VTK() {
+  ofstream fileVTK;
+  std::string _fileNameVTU;
+
+  _fileNameVTU =  _cfg->FOutput();
+  _fileNameVTU += "/output.vtu";
+
   
   //Export Particles
   vtkSmartPointer<vtkPoints>  spheresPos = vtkSmartPointer<vtkPoints>::New();
@@ -271,9 +259,27 @@ void exportclass::VTK() {
 };
 
 void exportclass::gnuplotSchearRate() {  
+  
+  std::string _fileNameG1, _fileNameG2, _fileNameG3, _fileNameG4, _fileNameG5;
+  _fileNameG1 =  _cfg->FOutput();
+  _fileNameG1 += "/gnuplot_shearrate.txt";
+  
+  _fileNameG2 =  _cfg->FOutput();
+  _fileNameG2 += "/gnuplot_scherrate2.txt";
+  
+  _fileNameG3 =  _cfg->FOutput();
+  _fileNameG3 += "/gnuplot_vel1_c.txt";
+  
+  _fileNameG4 =  _cfg->FOutput();
+  _fileNameG4 += "/gnuplot_shearZone.txt";
+  
+  _fileNameG5 =  _cfg->FOutput();
+  _fileNameG5 += "/gnuplot_vel2.txt";
+  
   ofstream myfile1 (_fileNameG1.c_str());
   ofstream myfile11 (_fileNameG2.c_str());
   ofstream myfile4 (_fileNameG4.c_str());
+  ofstream myfile5 (_fileNameG5.c_str());
   
   //HACK==================================
   std::string myfile001_name = _fileNameG2; myfile001_name += "_001"; ofstream myfile001 (myfile001_name.c_str());
@@ -382,6 +388,23 @@ void exportclass::gnuplotSchearRate() {
     }
   }  
   myfile2.close();
+  
+  if (myfile5.is_open()) {
+    myfile5 << "R\t";
+    for(unsigned int h=0; h<_cfg->SecZ(); h++) {
+      myfile5 << "H="<<(_bandRow->getBand(0,h))->midLinedZ()<<"\t";
+    }
+    myfile5 << std::endl;
+    
+    for(unsigned int r=0; r<_cfg->SecRadial(); r++) {
+      myfile5 << (_bandRow->getBand(r,0))->midLinedR()<<"\t";
+      for(unsigned int h=0; h<_cfg->SecZ(); h++) {
+        myfile5 << (_bandRow->getBand(r,h))->vDf()<<"\t";
+      }
+      myfile5 << std::endl;
+    }
+  }
+  myfile5.close();
 };
 
 void exportclass::Utwente()  {
