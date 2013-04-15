@@ -390,7 +390,7 @@ void exportclass::gnuplotSchearRate() {
   myfile2.close();
   
   if (myfile5.is_open()) {
-    myfile5 << "R\t";
+    myfile5 << "#R\t";
     for(unsigned int h=0; h<_cfg->SecZ(); h++) {
       myfile5 << "H="<<(_bandRow->getBand(0,h))->midLinedZ()<<"\t";
     }
@@ -399,7 +399,14 @@ void exportclass::gnuplotSchearRate() {
     for(unsigned int r=0; r<_cfg->SecRadial(); r++) {
       myfile5 << (_bandRow->getBand(r,0))->midLinedR()<<"\t";
       for(unsigned int h=0; h<_cfg->SecZ(); h++) {
-        myfile5 << (_bandRow->getBand(r,h))->vDf()<<"\t";
+        double linV = _bandRow->getBand(r,h)->vDf();
+        double omega = _bandRow->getBand(0,h)->omega(); 
+        double R = _bandRow->getBand(r,h)->midLinedR(); 
+        //double valT = linV/(2*M_PI*R);
+        double valT = linV;
+        
+
+        myfile5 << (valT)<<"\t";
       }
       myfile5 << std::endl;
     }
