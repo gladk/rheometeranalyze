@@ -206,7 +206,7 @@ void exportclass::VTK() {
         bandVolFraction->InsertNextValue(bandTMP->volFraction());
         bandContactNumAVG->InsertNextValue(bandTMP->contactNumAVG());
         bandScherRate->InsertNextValue(bandTMP->scherRate());
-        bandGlobMu->InsertNextValue(bandTMP->muGlobAVG());
+        bandGlobMu->InsertNextValue(bandTMP->muAVG());
         bandVelLinDf->InsertNextValue(bandTMP->vDf());
         
         spheresCells->InsertNextCell(1,pid);
@@ -293,15 +293,13 @@ void exportclass::gnuplotSchearRate() {
     for(unsigned int b=0; b<_bandRow->size(); b++) {
       std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
       if (bandTMP->partNumb()>0) {
-        double p = bandTMP->localPress();
-        double SigmD = bandTMP->dLocalAvg();
-        double mu = bandTMP->muLocalAVG();
-        
+        double p = bandTMP->PressAVG();
+        double mu = bandTMP->muAVG();
         
         bandTMP->midLinedZ();
         
         if (bandTMP->scherRate() > 0.0) {
-          myfile1 << p << "\t"<< SigmD << "\t"<< mu << std::endl;
+          myfile1 << p << "\t"<< p << "\t"<< mu << std::endl;
           myfile11 << bandTMP->press() << "\t"<< bandTMP->tau() << "\t"<< bandTMP->scherRate() << "\t"<< bandTMP->I()  << "\t"<< bandTMP->eta() << "\t"<< bandTMP->midLinedR() <<  "\t"<< bandTMP->midLinedZ() << std::endl;
         }
 
