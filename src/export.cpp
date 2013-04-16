@@ -443,14 +443,14 @@ void exportclass::Utwente()  {
     
     ofstream C3d (_fileNameC3d.c_str());
     std::vector <std::shared_ptr<particle> > particles = snapshotCur->particles();
-    C3d << particles.size() << "\t" << timeTmp
-        << "\t" << -_cfg->Dout()/2.0 << "\t"<<-_cfg->Dout()/2.0 << "\t0.0\t"
-        << _cfg->Dout()/2.0 << "\t" << _cfg->Dout()/2.0 << "\t" << _cfg->H()
+    C3d << particles.size() << " " << timeTmp
+        << " " << -_cfg->Dout()/2.0 << " "<<-_cfg->Dout()/2.0 << " 0.0 "
+        << _cfg->Dout()/2.0 << " " << _cfg->Dout()/2.0 << " " << _cfg->H()
         << std::endl;
     
     BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
-      C3d << p->c()(0) << "\t" << p->c()(1) << "\t"<< p->c()(2) << "\t" 
-          << p->v()(0) << "\t" << p->v()(1) << "\t"<< p->v()(2) << "\t"
+      C3d << p->c()(0) << " " << p->c()(1) << " "<< p->c()(2) << " " 
+          << p->v()(0) << " " << p->v()(1) << " "<< p->v()(2) << " "
           << p->rad() << std::endl;
     };
     
@@ -471,13 +471,13 @@ void exportclass::Utwente()  {
     
     
     BOOST_FOREACH(std::shared_ptr<force> f, forces) {
-      Fstat << timeTmp << "\t" << f->pid1() << "\t" << f->pid2() << "\t"
-            << f->cP()(0) << "\t" << f->cP()(1) << "\t" << f->cP()(2) << "\t" 
-            << f->deltaN() << "\t"
-            << "0.0" << "\t"                                      //Theta, should be fixed.
-            << f->valN() << "\t" <<  "0.0" << "\t"          //Normal and tangential components of the force
-            << f->nVec()(0) << "\t" << f->nVec()(1) << "\t" << f->nVec()(2) << "\t" 
-            << "0.0" << "\t" << "0.0" << "\t" << "0.0" << "\t" 
+      Fstat << timeTmp << " " << f->pid1() << " " << f->pid2() << " "
+            << f->cP()(0) << " " << f->cP()(1) << " " << f->cP()(2) << " " 
+            << f->deltaN() << " "
+            << "0.0" << " "                                      //Theta, should be fixed.
+            << f->valN() << " " <<  "0.0" << " "          //Normal and tangential components of the force
+            << f->nVec()(0) << " " << f->nVec()(1) << " " << f->nVec()(2) << " " 
+            << "0.0" << " " << "0.0" << " " << "0.0" << " " 
             << std::endl;
     }
     

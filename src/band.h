@@ -62,6 +62,7 @@ class band {
     void calculateValues(int numSnapshots);
     double TauAVG() {return _tauavg;};
     double PressAVG() {return _pavg;};
+    Eigen::Matrix3f TensorAVG() {return _globalStressTensorAVG;};
     double vol() {return _vol;};
     double volFraction() {return _volFraction;};
     double radAvg() {return _radAvg;};

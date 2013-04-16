@@ -125,7 +125,7 @@ void band::calculateValues (int numSnapshots) {
     _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);
     
     _tauavg = sqrt(_globalStressTensorAVG(2)*_globalStressTensorAVG(2) + _globalStressTensorAVG(7)*_globalStressTensorAVG(7));
-    _pavg = sqrt(_globalStressTensorAVG(0)*_globalStressTensorAVG(0) + _globalStressTensorAVG(4)*_globalStressTensorAVG(4));
+    _pavg = ((_globalStressTensorAVG(0)) + (_globalStressTensorAVG(4)) + (_globalStressTensorAVG(8)))/3.0;
     
     _radAvg = std::accumulate(radTMPV.begin(), radTMPV.end(), 0.0) / radTMPV.size();
     _densAVG = std::accumulate(densTMP.begin(), densTMP.end(), 0.0) / densTMP.size();
