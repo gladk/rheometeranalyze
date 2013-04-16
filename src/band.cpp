@@ -32,22 +32,19 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _dZmax = dZmax;
   _partNumb = 0;
   _forceNumb = 0;
-  _tau = 0.0; _tauavg = 0.0; _tauLocalAvg = 0.0;
-  _p = 0.0; _pavg = 0.0; _pLocalAvg = 0.0;
+  _tau = 0.0; _tauavg = 0.0;
+  _p = 0.0; _pavg = 0.0;
   _vavg = 0.0;
   _vavgStDev = 0.0;
-  _dLocalAvg = 0.0;
   _vol = M_PI*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin);
   _volPart = 0.0;
   _volFraction = 0.0;
   _contactNumAVG = 0.0;
   std::vector <std::shared_ptr<particle> > _allPart;
   std::vector <std::shared_ptr<force> > _allForces;
-  _localStressTensorAVG = _localStressTensorAVG.Zero();
-  _globalStressTensorAVG = _globalStressTensorAVG.Zero();
+  _stressTensorAVG = _stressTensorAVG.Zero();
   _scherRate = 0.0;
-  _muLocalAVG = 0.0;
-  _muGlobAVG = 0.0;
+  _muAVG = 0.0;
   _radAvg = 0.0;
   _I = 0.0;
   _densAVG = 0.0;
@@ -79,7 +76,6 @@ void band::calculateValues (int numSnapshots) {
   Eigen::Matrix3f _globalStressTensorParticles = Eigen::Matrix3f::Zero();
   
   for(unsigned long long f=0; f<_allForces.size(); f++) {
-    _localStressTensorAVG += _allForces[f]->localStressTensor();
     _globalStressTensorForces += _allForces[f]->potEnergie();
   }
   
@@ -104,7 +100,7 @@ void band::calculateValues (int numSnapshots) {
   
   if (i>0) {
     
-    _globalStressTensorAVG = (_globalStressTensorParticles + _globalStressTensorForces)/_vol/numSnapshots;
+    _stressTensorAVG = (_globalStressTensorParticles + _globalStressTensorForces)/_vol/numSnapshots;
     
     /*
     [S_rr  S_rz  S_rf]
@@ -124,28 +120,13 @@ void band::calculateValues (int numSnapshots) {
     double vAVGsq_sum = std::inner_product(angVelTmpV.begin(), angVelTmpV.end(), angVelTmpV.begin(), 0.0);
     _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);
     
-    _tauavg = sqrt(_globalStressTensorAVG(2)*_globalStressTensorAVG(2) + _globalStressTensorAVG(7)*_globalStressTensorAVG(7));
-    _pavg = ((_globalStressTensorAVG(0)) + (_globalStressTensorAVG(4)) + (_globalStressTensorAVG(8)))/3.0;
+    _tauavg = sqrt(_stressTensorAVG(2)*_stressTensorAVG(2) + _stressTensorAVG(7)*_stressTensorAVG(7));
+    _pavg = ((_stressTensorAVG(0)) + (_stressTensorAVG(4)) + (_stressTensorAVG(8)))/3.0;
     
     _radAvg = std::accumulate(radTMPV.begin(), radTMPV.end(), 0.0) / radTMPV.size();
     _densAVG = std::accumulate(densTMP.begin(), densTMP.end(), 0.0) / densTMP.size();
     
-    
-    _localStressTensorAVG = _localStressTensorAVG/_vol/numSnapshots;
-    _pLocalAvg = _localStressTensorAVG.trace()/3.0;                     // Pressure, Luding 2008, constitutive, p.5
-
-    double SMax = _localStressTensorAVG.diagonal().maxCoeff();
-    double SMin = _localStressTensorAVG.diagonal().minCoeff();
-    double SNul = _localStressTensorAVG.trace() - 
-                  _localStressTensorAVG.diagonal().maxCoeff() - 
-                  _localStressTensorAVG.diagonal().minCoeff();
-
-    _dLocalAvg = sqrt( (SMax-SMin)*(SMax-SMin) +                        // SigmaD, Luding 2008, constitutive, p.5
-                       (SMax-SNul)*(SMax-SNul) + 
-                       (SNul-SMin)*(SNul-SMin) ) / sqrt(6);
-                       
-    _muLocalAVG = _dLocalAvg/_pLocalAvg;
-    _muGlobAVG = _tauavg/_pavg;
+    _muAVG = _tauavg/_pavg;
   }
 };
 

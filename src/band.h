@@ -37,13 +37,11 @@ class band {
     std::vector <std::shared_ptr<particle> > _allPart;    // Vector of particles;
     std::vector <std::shared_ptr<force> > _allForces;     // Vector of forces;
     
-    Eigen::Matrix3f _localStressTensorAVG;
-    Eigen::Matrix3f _globalStressTensorAVG;
+    Eigen::Matrix3f _stressTensorAVG;
     
-    double _tau, _tauavg, _tauLocalAvg, _vol, _volPart;   // Results, Tau, Vol, Vol of particles
-    double _p, _pavg, _pLocalAvg;                         // Results, Press (trace), hydrostatic stress
-    double _dLocalAvg;                                    // Results, Deviatoric stress, SigmaDev
-    double _muLocalAVG, _muGlobAVG;                       // Results, mu calculated
+    double _tau, _tauavg, _vol, _volPart;                 // Results, Tau, Vol, Vol of particles
+    double _p, _pavg;                                     // Results, Press (trace), hydrostatic stress
+    double  _muAVG;                                       // Results, mu calculated
     double _vavg, _vavgStDev;                             // Results, angular velocity of particles, standard deviation
     Eigen::Vector3f _vZylavg;                             // Results, average velocity of particles in zylindrical coordinates
     double _scherRate;                                    // Results, scherrate
@@ -62,7 +60,7 @@ class band {
     void calculateValues(int numSnapshots);
     double TauAVG() {return _tauavg;};
     double PressAVG() {return _pavg;};
-    Eigen::Matrix3f TensorAVG() {return _globalStressTensorAVG;};
+    Eigen::Matrix3f TensorAVG() {return _stressTensorAVG;};
     double vol() {return _vol;};
     double volFraction() {return _volFraction;};
     double radAvg() {return _radAvg;};
@@ -80,10 +78,7 @@ class band {
     int idR() {return _idR;}
     double tau() {return _tauavg;}
     double press() {return _pavg;}
-    double localPress() {return _pLocalAvg;}                            //Trace, Press
-    double dLocalAvg() {return _dLocalAvg;}                             //Deviatoric, SigmaD
-    double muLocalAVG() {return _muLocalAVG;}                           //Mu Local
-    double muGlobAVG() {return _muGlobAVG;}                             //Mu Global
+    double muAVG() {return _muAVG;}                            
     double omega() {return _vavg;}
     double omegaStDev() {return _vavgStDev;}
     void set_scherRate(double );

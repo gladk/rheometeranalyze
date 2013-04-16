@@ -33,9 +33,7 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
   _disable = false;
   _calculateStressTensor = false;
   _cP = (pos1-pos2)/2.0 + pos1;
-  _axisMatrix = _axisMatrix.Zero();
-  _globalStressTensor = _globalStressTensor.Zero();
-  _localStressTensor = _localStressTensor.Zero();
+  _stressTensor = _stressTensor.Zero();
   _radLen = ((pos2-pos1)/2.0).norm();
 };
 
@@ -51,42 +49,18 @@ force::force() {
   _dist = -1; _height = -1;
   _disable = false;
   _calculateStressTensor = false;
-  _axisMatrix = _axisMatrix.Zero();
-  _globalStressTensor = _globalStressTensor.Zero();
-  _localStressTensor = _localStressTensor.Zero();
+  _stressTensor = _stressTensor.Zero();
   _radLen = 0.0;
 };
 
-Eigen::Matrix3f force::localStressTensor() {
-  if (not(_calculateStressTensor)) {calculateStressTensor();};
-  return _localStressTensor*_radLen;
-};
-
-void force::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
-  _axisMatrix = _axisMatrix.Zero();
-  dr.normalize(); dz.normalize(); df.normalize();
-  _axisMatrix << dr, dz, df;
-  _axisMatrix.transposeInPlace();
-};
-
 void force::calculateStressTensor() {
-  Eigen::Matrix3f forceMatrix; forceMatrix << _val, _val, _val;
-  forceMatrix.transposeInPlace();
-  _globalStressTensor = _axisMatrix.cwiseProduct(forceMatrix);
-  
-  Eigen::Vector3f lpc; lpc = (_cP - _pos1); lpc.normalize();
-  _localStressTensor = _val*lpc.transpose();
-  
-  _valZylindrical = Eigen::Vector3f(_val.dot(this->dr()), _val.dot(this->dz()), _val.dot(this->df()));
-  Eigen::Vector3f branchV = (_pos2-_pos1)/2.0;
-  _cPZylindrical = Eigen::Vector3f(branchV.dot(this->dr()), branchV.dot(this->dz()), branchV.dot(this->df()));
   
   _calculateStressTensor  =  true;
 };
 
 Eigen::Matrix3f force::potEnergie() {
   if (not(_calculateStressTensor)) {calculateStressTensor();};
-  return _valZylindrical*_cPZylindrical.transpose();
+  return _stressTensor;
 };
 
 std::shared_ptr<particle> force::part1() {

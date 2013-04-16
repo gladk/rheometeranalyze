@@ -38,15 +38,7 @@ class force {
     
     unsigned int _fileId;         // File number of the particle
     
-    Eigen::Matrix3f _axisMatrix;  // [drX, drY, drZ]
-                                  // [dzX, dzY, dzZ]
-                                  // [dfX, dfY, dfZ]
-    
-    Eigen::Matrix3f _globalStressTensor;  // [drX, drY, drZ]
-                                          // [dzX, dzY, dzZ]
-                                          // [dfX, dfY, dfZ]
-    
-    Eigen::Matrix3f _localStressTensor;
+    Eigen::Matrix3f _stressTensor;
     
     Eigen::Vector3f _dg;          // Gravity-vector
     int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
@@ -74,9 +66,6 @@ class force {
     Eigen::Vector3f pos1() {return _pos1;};
     Eigen::Vector3f pos2() {return _pos2;};
     Eigen::Vector3f val() {return _val;};
-    Eigen::Vector3f dr() {return _axisMatrix.row(0);};
-    Eigen::Vector3f dz() {return _axisMatrix.row(1);};
-    Eigen::Vector3f df() {return _axisMatrix.row(2);};
     Eigen::Vector3f dg() {return _dg;};
     Eigen::Vector3f cP() {return _cP;};
     Eigen::Vector3f nVec();
@@ -91,8 +80,6 @@ class force {
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }
-    void set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df);
     void calculateStressTensor();
-    Eigen::Matrix3f localStressTensor();
     Eigen::Matrix3f potEnergie();
 };

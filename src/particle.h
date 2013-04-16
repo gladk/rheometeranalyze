@@ -72,7 +72,6 @@ class particle {
     double height() { return _height;};
     double vol() { return 4.0/3.0*M_PI*_rad*_rad*_rad;};
     void set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df);
-    
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }

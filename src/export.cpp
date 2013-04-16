@@ -111,21 +111,9 @@ void exportclass::VTK() {
   bandTensor->SetNumberOfComponents(9);
   bandTensor->SetName("bandTensor");
   
-  vtkSmartPointer<vtkDoubleArray> bandLocalPress = vtkSmartPointer<vtkDoubleArray>::New();
-  bandLocalPress->SetNumberOfComponents(1);
-  bandLocalPress->SetName("bandLocPress");
-  
-  vtkSmartPointer<vtkDoubleArray> bandLocSigmDev = vtkSmartPointer<vtkDoubleArray>::New();
-  bandLocSigmDev->SetNumberOfComponents(1);
-  bandLocSigmDev->SetName("bandLocSigmDev");
-  
-  vtkSmartPointer<vtkDoubleArray> bandLocMu = vtkSmartPointer<vtkDoubleArray>::New();
-  bandLocMu->SetNumberOfComponents(1);
-  bandLocMu->SetName("bandLocMu");
-  
   vtkSmartPointer<vtkDoubleArray> bandGlobMu = vtkSmartPointer<vtkDoubleArray>::New();
   bandGlobMu->SetNumberOfComponents(1);
-  bandGlobMu->SetName("bandGlobMu");
+  bandGlobMu->SetName("bandMu");
   
   vtkSmartPointer<vtkDoubleArray> bandOmega = vtkSmartPointer<vtkDoubleArray>::New();
   bandOmega->SetNumberOfComponents(1);
@@ -211,8 +199,6 @@ void exportclass::VTK() {
         bandN->InsertNextValue(bandTMP->id());
         bandTau->InsertNextValue(bandTMP->tau());
         bandPress->InsertNextValue(bandTMP->press());
-        bandLocalPress->InsertNextValue(bandTMP->localPress());
-        bandLocSigmDev->InsertNextValue(bandTMP->dLocalAvg());
         bandOmega->InsertNextValue(bandTMP->omega());
         bandPartNum->InsertNextValue(bandTMP->partNumb());
         bandPartNumAVG->InsertNextValue(bandTMP->partNumb()/bandTMP->vol());
@@ -220,7 +206,6 @@ void exportclass::VTK() {
         bandVolFraction->InsertNextValue(bandTMP->volFraction());
         bandContactNumAVG->InsertNextValue(bandTMP->contactNumAVG());
         bandScherRate->InsertNextValue(bandTMP->scherRate());
-        bandLocMu->InsertNextValue(bandTMP->muLocalAVG());
         bandGlobMu->InsertNextValue(bandTMP->muGlobAVG());
         bandVelLinDf->InsertNextValue(bandTMP->vDf());
         
@@ -248,7 +233,6 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandN);
     spheresUg->GetPointData()->AddArray(bandTau);
     spheresUg->GetPointData()->AddArray(bandPress);
-    spheresUg->GetPointData()->AddArray(bandLocalPress);
     spheresUg->GetPointData()->AddArray(bandOmega);
     spheresUg->GetPointData()->AddArray(bandPartNum);
     spheresUg->GetPointData()->AddArray(bandPartNumAVG);
@@ -256,8 +240,6 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandVolFraction);
     spheresUg->GetPointData()->AddArray(bandContactNumAVG);
     spheresUg->GetPointData()->AddArray(bandScherRate);
-    spheresUg->GetPointData()->AddArray(bandLocSigmDev);
-    spheresUg->GetPointData()->AddArray(bandLocMu);
     spheresUg->GetPointData()->AddArray(bandGlobMu);
     spheresUg->GetPointData()->AddArray(bandVelLinDf);
     spheresUg->GetPointData()->AddArray(bandTensor);
