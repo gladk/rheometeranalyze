@@ -107,6 +107,10 @@ void exportclass::VTK() {
   bandPress->SetNumberOfComponents(1);
   bandPress->SetName("bandGlobPress");
   
+  vtkSmartPointer<vtkDoubleArray> bandTensor = vtkSmartPointer<vtkDoubleArray>::New();
+  bandTensor->SetNumberOfComponents(9);
+  bandTensor->SetName("bandTensor");
+  
   vtkSmartPointer<vtkDoubleArray> bandLocalPress = vtkSmartPointer<vtkDoubleArray>::New();
   bandLocalPress->SetNumberOfComponents(1);
   bandLocalPress->SetName("bandLocPress");
@@ -194,6 +198,14 @@ void exportclass::VTK() {
         double df[3] = {partTemp->df()[0], partTemp->df()[1], partTemp->df()[2]};
         vectorDf->InsertNextTupleValue(df);
         
+        Eigen::Matrix3f tensorM = bandTMP->TensorAVG();
+        
+        double tensor[9] = {tensorM(0), tensorM(1), tensorM(2), 
+                            tensorM(3), tensorM(4), tensorM(5), 
+                            tensorM(6), tensorM(7), tensorM(8)};
+        
+        bandTensor->InsertNextTupleValue(tensor);
+        
         bandR->InsertNextValue(bandTMP->idR());
         bandZ->InsertNextValue(bandTMP->idZ());
         bandN->InsertNextValue(bandTMP->id());
@@ -248,6 +260,7 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandLocMu);
     spheresUg->GetPointData()->AddArray(bandGlobMu);
     spheresUg->GetPointData()->AddArray(bandVelLinDf);
+    spheresUg->GetPointData()->AddArray(bandTensor);
     
   }
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
