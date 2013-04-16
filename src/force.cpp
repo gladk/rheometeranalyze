@@ -54,7 +54,8 @@ force::force() {
 };
 
 void force::calculateStressTensor() {
-  
+  Eigen::Vector3f l = (_cP-_pos1);
+  _stressTensor =  _val*l.transpose();
   _calculateStressTensor  =  true;
 };
 
