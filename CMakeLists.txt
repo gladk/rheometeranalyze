@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cMake")
 
 INCLUDE(FindOpenMP)
+INCLUDE(GNUInstallDirs)
 #===========================================================
 IF(NOT(CMAKE_CXX_FLAGS))
   #If flags are not set, add all usefull flags
