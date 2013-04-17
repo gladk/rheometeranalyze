@@ -38,6 +38,9 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _velMatrix = _velMatrix.Zero();
   _stressTensor = _stressTensor.Zero();
   _calculateVel = false;
+  _press = 0.0;
+  _tau = 0.0;
+  _contacts = 0;
 };
 
 particle::particle() {
@@ -57,6 +60,9 @@ particle::particle() {
   _velMatrix = _velMatrix.Zero();
   _stressTensor = _stressTensor.Zero();
   _calculateVel = false;
+  _press = 0.0;
+  _tau = 0.0;
+  _contacts = 0;
 };
 
 void particle::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
@@ -76,6 +82,7 @@ void particle::calculateVel() {
 };
 
 void particle::addStress(Eigen::Matrix3f addStressTensor) {
+  _contacts +=1;
   _stressTensor += addStressTensor;
 };
 
@@ -83,10 +90,29 @@ Eigen::Matrix3f particle::stressTensor() {
   return _stressTensor;
 };
 
+Eigen::Matrix3f particle::stressTensorAVG() {
+  if (_contacts>0) {
+    return _stressTensor/this->vol();
+  } else {
+    return _stressTensor.Zero();
+  }
+};
+
 double particle::realAngular() {
   if (not(_calculateVel)) { calculateVel();};
   return _vZylindrical(2)/_dist;
 };
+
+double particle::stressPress() {
+  Eigen::Matrix3f stressTMP = this->kinEnergie() + this->stressTensor();
+  return stressTMP.trace()/3.0;
+};
+
+double particle::stressTau() {
+  Eigen::Matrix3f stressTMP = this->stressTensor();
+  return sqrt(stressTMP(1)*stressTMP(1) + stressTMP(2)*stressTMP(2) + stressTMP(5)*stressTMP(5));;
+};
+
 
 Eigen::Matrix3f particle::kinEnergie() {
   if (not(_calculateVel)) { calculateVel();};

@@ -81,6 +81,8 @@ void band::calculateValues (int numSnapshots) {
   std::vector<double> densTMP;
   std::vector<Eigen::Vector3f> velZylTMP;
   
+  _tauavg = 0.0;
+  _pavg = 0.0;
   for(unsigned long long p=0; p<_allPart.size(); p++) {
     if (not(_allPart[p]->disabled())) {
       angVelTmpV.push_back(_allPart[p]->realAngular());
@@ -116,7 +118,7 @@ void band::calculateValues (int numSnapshots) {
     _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);
     
     _tauavg = sqrt(_stressTensorAVG(1)*_stressTensorAVG(1) + _stressTensorAVG(2)*_stressTensorAVG(2) + _stressTensorAVG(5)*_stressTensorAVG(5));
-    _pavg = (_stressTensorAVG(0) + _stressTensorAVG(4) + _stressTensorAVG(8) )/3.0;
+    _pavg = _stressTensorAVG.trace()/3.0;
     
     _radAvg = std::accumulate(radTMPV.begin(), radTMPV.end(), 0.0) / radTMPV.size();
     _densAVG = std::accumulate(densTMP.begin(), densTMP.end(), 0.0) / densTMP.size();

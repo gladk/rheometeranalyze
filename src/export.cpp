@@ -111,6 +111,10 @@ void exportclass::VTK() {
   bandTensor->SetNumberOfComponents(9);
   bandTensor->SetName("bandTensor");
   
+  vtkSmartPointer<vtkDoubleArray> partTensor = vtkSmartPointer<vtkDoubleArray>::New();
+  partTensor->SetNumberOfComponents(9);
+  partTensor->SetName("partTensor");
+  
   vtkSmartPointer<vtkDoubleArray> bandMu = vtkSmartPointer<vtkDoubleArray>::New();
   bandMu->SetNumberOfComponents(1);
   bandMu->SetName("bandMu");
@@ -189,6 +193,14 @@ void exportclass::VTK() {
         
         bandTensor->InsertNextTupleValue(tensor);
         
+        tensorM = partTemp->stressTensorAVG();
+        
+        double  tensor2[9] = {tensorM(0), tensorM(1), tensorM(2), 
+                            tensorM(3), tensorM(4), tensorM(5), 
+                            tensorM(6), tensorM(7), tensorM(8)};
+        
+        partTensor->InsertNextTupleValue(tensor2);
+        
         bandR->InsertNextValue(bandTMP->idR());
         bandZ->InsertNextValue(bandTMP->idZ());
         bandN->InsertNextValue(bandTMP->id());
@@ -238,6 +250,7 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandMu);
     spheresUg->GetPointData()->AddArray(bandVelLinDf);
     spheresUg->GetPointData()->AddArray(bandTensor);
+    spheresUg->GetPointData()->AddArray(partTensor);
     
   }
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();

@@ -49,6 +49,8 @@ class particle {
     Eigen::Vector3f _vZylindrical;// Linear velocity in Zylindrical coordinates (dR, dZ, dF)
     
     Eigen::Matrix3f _stressTensor;
+    double _press, _tau;
+    int _contacts;
 
   public:
     particle(unsigned long long, int, unsigned int, double, double, double, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
@@ -80,4 +82,7 @@ class particle {
     Eigen::Matrix3f kinEnergie();
     void addStress(Eigen::Matrix3f addStressTensor);
     Eigen::Matrix3f stressTensor();
+    Eigen::Matrix3f stressTensorAVG();
+    double stressPress();
+    double stressTau();
 };
