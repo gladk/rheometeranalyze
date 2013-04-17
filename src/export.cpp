@@ -101,19 +101,19 @@ void exportclass::VTK() {
   
   vtkSmartPointer<vtkDoubleArray> bandTau = vtkSmartPointer<vtkDoubleArray>::New();
   bandTau->SetNumberOfComponents(1);
-  bandTau->SetName("bandGlobTau");
+  bandTau->SetName("bandTau");
   
   vtkSmartPointer<vtkDoubleArray> bandPress = vtkSmartPointer<vtkDoubleArray>::New();
   bandPress->SetNumberOfComponents(1);
-  bandPress->SetName("bandGlobPress");
+  bandPress->SetName("bandPress");
   
   vtkSmartPointer<vtkDoubleArray> bandTensor = vtkSmartPointer<vtkDoubleArray>::New();
   bandTensor->SetNumberOfComponents(9);
   bandTensor->SetName("bandTensor");
   
-  vtkSmartPointer<vtkDoubleArray> bandGlobMu = vtkSmartPointer<vtkDoubleArray>::New();
-  bandGlobMu->SetNumberOfComponents(1);
-  bandGlobMu->SetName("bandMu");
+  vtkSmartPointer<vtkDoubleArray> bandMu = vtkSmartPointer<vtkDoubleArray>::New();
+  bandMu->SetNumberOfComponents(1);
+  bandMu->SetName("bandMu");
   
   vtkSmartPointer<vtkDoubleArray> bandOmega = vtkSmartPointer<vtkDoubleArray>::New();
   bandOmega->SetNumberOfComponents(1);
@@ -142,11 +142,6 @@ void exportclass::VTK() {
   vtkSmartPointer<vtkDoubleArray> bandContactNumAVG = vtkSmartPointer<vtkDoubleArray>::New();
   bandContactNumAVG->SetNumberOfComponents(1);
   bandContactNumAVG->SetName("bandContactNumAVG");
-  
-  
-  vtkSmartPointer<vtkDoubleArray> bandMu = vtkSmartPointer<vtkDoubleArray>::New();
-  bandMu->SetNumberOfComponents(1);
-  bandMu->SetName("bandMu");
   
   vtkSmartPointer<vtkDoubleArray> bandVelLinDf = vtkSmartPointer<vtkDoubleArray>::New();
   bandVelLinDf->SetNumberOfComponents(1);
@@ -206,7 +201,7 @@ void exportclass::VTK() {
         bandVolFraction->InsertNextValue(bandTMP->volFraction());
         bandContactNumAVG->InsertNextValue(bandTMP->contactNumAVG());
         bandScherRate->InsertNextValue(bandTMP->scherRate());
-        bandGlobMu->InsertNextValue(bandTMP->muAVG());
+        bandMu->InsertNextValue(bandTMP->muAVG());
         bandVelLinDf->InsertNextValue(bandTMP->vDf());
         
         spheresCells->InsertNextCell(1,pid);
@@ -240,7 +235,7 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandVolFraction);
     spheresUg->GetPointData()->AddArray(bandContactNumAVG);
     spheresUg->GetPointData()->AddArray(bandScherRate);
-    spheresUg->GetPointData()->AddArray(bandGlobMu);
+    spheresUg->GetPointData()->AddArray(bandMu);
     spheresUg->GetPointData()->AddArray(bandVelLinDf);
     spheresUg->GetPointData()->AddArray(bandTensor);
     

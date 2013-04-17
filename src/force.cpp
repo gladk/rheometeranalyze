@@ -35,6 +35,7 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
   _cP = (pos1-pos2)/2.0 + pos1;
   _stressTensor = _stressTensor.Zero();
   _radLen = ((pos2-pos1)/2.0).norm();
+  this->calculateStressTensor();
 };
 
 force::force() {
@@ -54,8 +55,10 @@ force::force() {
 };
 
 void force::calculateStressTensor() {
-  Eigen::Vector3f l = (_cP-_pos1)*2.0;
+  Eigen::Vector3f l = (_cP-_pos1);
   _stressTensor =  _val*l.transpose();
+  _part1->addStress(_stressTensor);
+  _part2->addStress(_stressTensor);
   _calculateStressTensor  =  true;
 };
 

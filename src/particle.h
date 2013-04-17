@@ -47,6 +47,8 @@ class particle {
     bool _disable;                // Disable particle, if it is out of region
     bool _calculateVel;           // Whether the velocity matrix was calculated
     Eigen::Vector3f _vZylindrical;// Linear velocity in Zylindrical coordinates (dR, dZ, dF)
+    
+    Eigen::Matrix3f _stressTensor;
 
   public:
     particle(unsigned long long, int, unsigned int, double, double, double, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
@@ -76,4 +78,6 @@ class particle {
     void enable() {_disable=false;};
     bool disabled() { return _disable; }
     Eigen::Matrix3f kinEnergie();
+    void addStress(Eigen::Matrix3f addStressTensor);
+    Eigen::Matrix3f stressTensor();
 };

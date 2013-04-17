@@ -36,6 +36,7 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
   _velMatrix = _velMatrix.Zero();
+  _stressTensor = _stressTensor.Zero();
   _calculateVel = false;
 };
 
@@ -54,6 +55,7 @@ particle::particle() {
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
   _velMatrix = _velMatrix.Zero();
+  _stressTensor = _stressTensor.Zero();
   _calculateVel = false;
 };
 
@@ -71,6 +73,14 @@ void particle::calculateVel() {
   velTempMatrix.transposeInPlace();
   _velMatrix = _axisMatrix.cwiseProduct(velTempMatrix);
   _calculateVel = true;
+};
+
+void particle::addStress(Eigen::Matrix3f addStressTensor) {
+  _stressTensor += addStressTensor;
+};
+
+Eigen::Matrix3f particle::stressTensor() {
+  return _stressTensor;
 };
 
 double particle::realAngular() {

@@ -72,12 +72,7 @@ void band::calculateValues (int numSnapshots) {
   _volPart = 0.0;
   _volFraction  = 0.0;
   
-  Eigen::Matrix3f _globalStressTensorForces = Eigen::Matrix3f::Zero(); 
-  Eigen::Matrix3f _globalStressTensorParticles = Eigen::Matrix3f::Zero();
-  
-  for(unsigned long long f=0; f<_allForces.size(); f++) {
-    _globalStressTensorForces += _allForces[f]->potEnergie();
-  }
+  Eigen::Matrix3f _totalStressTensor = Eigen::Matrix3f::Zero();
   
   
   unsigned long long i = 0;
@@ -93,14 +88,14 @@ void band::calculateValues (int numSnapshots) {
       radTMPV.push_back(_allPart[p]->rad());
       densTMP.push_back(_allPart[p]->density());
       _volPart  += _allPart[p]->vol();
-      _globalStressTensorParticles += _allPart[p]->kinEnergie();
+      _totalStressTensor += _allPart[p]->kinEnergie() + _allPart[p]->stressTensor();
       i++;
     }
   }
   
   if (i>0) {
     
-    _stressTensorAVG = (_globalStressTensorParticles + _globalStressTensorForces)/_vol/numSnapshots;
+    _stressTensorAVG = (_totalStressTensor )/_vol/numSnapshots;
     
     /*
     [S_rr  S_rz  S_rf]
@@ -120,13 +115,17 @@ void band::calculateValues (int numSnapshots) {
     double vAVGsq_sum = std::inner_product(angVelTmpV.begin(), angVelTmpV.end(), angVelTmpV.begin(), 0.0);
     _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);
     
-    _tauavg = sqrt(_stressTensorAVG(2)*_stressTensorAVG(2) + _stressTensorAVG(7)*_stressTensorAVG(7));
-    _pavg = ((_stressTensorAVG(0)) + (_stressTensorAVG(4)) + (_stressTensorAVG(8)))/3.0;
+    _tauavg = sqrt(_stressTensorAVG(1)*_stressTensorAVG(1) + _stressTensorAVG(2)*_stressTensorAVG(2) + _stressTensorAVG(5)*_stressTensorAVG(5));
+    _pavg = (_stressTensorAVG(0) + _stressTensorAVG(4) + _stressTensorAVG(8) )/3.0;
     
     _radAvg = std::accumulate(radTMPV.begin(), radTMPV.end(), 0.0) / radTMPV.size();
     _densAVG = std::accumulate(densTMP.begin(), densTMP.end(), 0.0) / densTMP.size();
     
-    _muAVG = _tauavg/_pavg;
+    if (_pavg!= 0.0) {
+      _muAVG = _tauavg/_pavg;
+    } else {
+      _muAVG = 0.0;
+    }
   }
 };
 
