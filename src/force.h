@@ -33,10 +33,8 @@ class force {
     std::shared_ptr<particle> _part1;     // Pointer into particle1
     std::shared_ptr<particle> _part2;     // Pointer into particle2
 
-    unsigned int _fileId;         // File number of the particle
-    
-    Eigen::Matrix3f _stressTensor;
-    
+    unsigned int _fileId;           // File number of the particle
+     
     Eigen::Vector3f _dg;          // Gravity-vector
     int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
     
@@ -58,6 +56,8 @@ class force {
     unsigned int  fileId() {return _fileId;};
     Eigen::Vector3f pos1() {return _part1->c();};
     Eigen::Vector3f pos2() {return _part2->c();};
+    Eigen::Vector3f pos1Z() {return _part1->posZyl();};
+    Eigen::Vector3f pos2Z() {return _part2->posZyl();};
     Eigen::Vector3f val() {return _val;};
     Eigen::Vector3f dg() {return _dg;};
     Eigen::Vector3f cP() {return _cP;};
@@ -69,9 +69,9 @@ class force {
     void set_dg(Eigen::Vector3f dg) {_dg=dg;};
     void set_band(int bR, int bZ, int bN) {_bandR=bR; _bandZ=bZ; _bandN=bN;};
     void set_cPZ(Eigen::Vector3f cPZ) {_cPZ = cPZ;};
+    void set_valZ(Eigen::Vector3f valZ) {_valZ = valZ;};
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }
     void calculateStressTensor();
-    Eigen::Matrix3f potEnergie();
 };

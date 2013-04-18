@@ -116,11 +116,15 @@ void bandRow::fillBands (){
       
       
       Eigen::Vector3f OP = forceTemp->cP() - O;   //Vector from center to contact point
-        
-      Eigen::Vector3f OPtrans = rotateCCh*OP;
-      Eigen::Vector3f cyl_coords = cart_to_cyl(OPtrans);
-      
+
+      Eigen::Vector3f cyl_coords = cart_to_cyl(rotateCCh*OP);
       forceTemp->set_cPZ(cyl_coords);
+      
+      
+      Eigen::Vector3f cyl_val = cart_to_cyl(rotateCCh*forceTemp->val());
+      forceTemp->set_valZ(cyl_val);
+      
+      
       forceTemp->set_dg(_cfg->get_g());
       
       //Define band
@@ -128,6 +132,7 @@ void bandRow::fillBands (){
       int bZ = getBandZ(forceTemp->height());
       
       if (bR>=0 and bZ>=0) {
+        
         int bN = bZ*(_cfg->SecRadial()) + bR;
         forceTemp->set_band(bR, bZ, bN);
         _bandAll[bN]->addForce(forceTemp);

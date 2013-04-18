@@ -39,7 +39,6 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
   _disable = false;
   _calculateStressTensor = false;
   _cP = (pos1-pos2)/2.0 + pos1;
-  _stressTensor = _stressTensor.Zero();
   this->calculateStressTensor();
 };
 
@@ -52,22 +51,34 @@ force::force() {
   _bandR = -1; _bandZ=-1; _bandN=-1;
   _disable = false;
   _calculateStressTensor = false;
-  _stressTensor = _stressTensor.Zero();
 };
 
 void force::calculateStressTensor() {
-  Eigen::Vector3f l = (this->pos1()-this->pos2())/2.0;
+  Eigen::Vector3f l;
+  Eigen::Matrix3f _stressTensor;
+  
+  // Cartesian coordinates
+  
+  l = (this->pos1()-this->pos2())/2.0;
   _stressTensor =  _val*l.transpose();
   _part1->addStress(_stressTensor);
+  
   l = (this->pos2()-this->pos1())/2.0;
   _stressTensor =  (-_val)*l.transpose();
   _part2->addStress(_stressTensor);
+  
+  
+  // Cylindrical coordinates
+  /*
+  l = (this->pos1Z()-this->pos2Z())/2.0;
+  _stressTensor =  _valZ*l.transpose();
+  _part1->addStress(_stressTensor);
+  
+  l = (this->pos2Z()-this->pos1Z())/2.0;
+  _stressTensor =  (-_valZ)*l.transpose();
+  _part2->addStress(_stressTensor);
+  */
   _calculateStressTensor  =  true;
-};
-
-Eigen::Matrix3f force::potEnergie() {
-  if (not(_calculateStressTensor)) {calculateStressTensor();};
-  return _stressTensor;
 };
 
 std::shared_ptr<particle> force::part1() {
