@@ -40,3 +40,30 @@ Eigen::Vector3f cart_to_cyl(Eigen::Vector3f cart) {
     return Eigen::Vector3f::Zero();
   }
 };
+
+Eigen::Matrix3f cart_to_cyl(Eigen::Matrix3f cart, double phi) {
+  double const& axx = cart(0);
+  double const& axy = cart(1);
+  double const& axz = cart(2);
+  double const& ayx = cart(3);
+  double const& ayy = cart(4);
+  double const& ayz = cart(5);
+  double const& azx = cart(6);
+  double const& azy = cart(7);
+  double const& azz = cart(8);
+  
+  double const& arr = axx * cos(phi) * cos(phi) + (axy + ayz ) * cos(phi) * sin (phi) + ayy * sin(phi) * sin (phi);
+  double const& arf = axy * cos(phi) * cos(phi) - (axx - ayy ) * cos(phi) * sin (phi) - ayx * sin(phi) * sin (phi);
+  double const& arz = axz * cos(phi) + ayz * sin(phi);
+  double const& afr = ayx * cos(phi) * cos(phi) - (axx - ayy ) * cos(phi) * sin (phi) - axy * sin(phi) * sin (phi);
+  double const& aff = ayy * cos(phi) * cos(phi) - (axy + ayx ) * cos(phi) * sin (phi) + axx * sin(phi) * sin (phi);
+  double const& afz = ayz * cos(phi) - axz * sin (phi);
+  double const& azr = azx * cos(phi) + azy * sin (phi);
+  double const& azf = azy * cos(phi) + azx * sin (phi);
+  
+  Eigen::Matrix3f tmpMatrix;
+                  tmpMatrix << arr, arz, arf,
+                               azr, azz, azf,
+                               afr, afz, aff;
+  return tmpMatrix;
+}

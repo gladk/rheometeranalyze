@@ -23,4 +23,23 @@
 
 #include <Eigen/Dense>
 
-Eigen::Vector3f cart_to_cyl(Eigen::Vector3f cart);    //Returns (rho, z, phi)
+// http://en.wikipedia.org/wiki/Cylindrical_coordinate_system#Cartesian_coordinates
+Eigen::Vector3f cart_to_cyl(Eigen::Vector3f cart);                //Returns (rho, z, phi)
+
+
+
+/*
+  @book{schade2007strömungslehre,
+  title={Str{\"o}mungslehre},
+  author={Schade, H. and Kunz, E.},
+  isbn={9783110189728},
+  series={De Gruyter Lehrbuch},
+  url={http://books.google.de/books?id=CbboC1qhMsUC},
+  year={2007},
+  publisher={Walter De Gruyter Incorporated}
+  }
+* Seite 517
+*/ 
+Eigen::Matrix3f cart_to_cyl(Eigen::Matrix3f cart, double phi);    //Returns (rho-rho  rho-z  rho-phi)
+                                                                  //        (z-rho    z-z    z-phi  )
+                                                                  //        (phi-rho  phi-z  phi-phi)

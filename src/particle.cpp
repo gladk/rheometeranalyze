@@ -20,6 +20,7 @@
 */
 
 #include "particle.h"
+#include "math_custom.h"
 #include <iostream>
 
 particle::particle(unsigned long long id, int type, unsigned int fileid, double rad, double mass, double dens, Eigen::Vector3f c, Eigen::Vector3f v, Eigen::Vector3f o) {
@@ -83,7 +84,7 @@ void particle::calculateVel() {
 
 void particle::addStress(Eigen::Matrix3f addStressTensor) {
   _contacts +=1;
-  _stressTensor += addStressTensor;
+  _stressTensor += cart_to_cyl(addStressTensor, _posZyl(2));
 };
 
 Eigen::Matrix3f particle::stressTensor() {

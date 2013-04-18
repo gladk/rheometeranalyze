@@ -47,7 +47,7 @@ class particle {
     Eigen::Vector3f _posZyl;      // Position in zylindrical coordinates (dR, dZ, dF)
     
     
-    Eigen::Matrix3f _stressTensor;
+    Eigen::Matrix3f _stressTensor;// Stress tensor in cylindrical coordinates 
     double _press, _tau;
     int _contacts;
 
