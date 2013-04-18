@@ -66,14 +66,6 @@ particle::particle() {
   _contacts = 0;
 };
 
-void particle::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
-  _axisMatrix = _axisMatrix.Zero();
-  dr.normalize(); dz.normalize(); df.normalize();
-  _axisMatrix << dr, dz, df;
-  _axisMatrix.transposeInPlace();
-  if (not(_calculateVel)) { calculateVel();}
-};
-
 void particle::calculateVel() {
   Eigen::Matrix3f velTempMatrix; velTempMatrix << _v, _v, _v;
   _vZylindrical = Eigen::Vector3f(_v.dot(this->dr()), _v.dot(this->dz()), _v.dot(this->df()));
@@ -123,4 +115,8 @@ Eigen::Matrix3f particle::kinEnergie() {
 Eigen::Vector3f particle::vZyl() {
   if (not(_calculateVel)) { calculateVel();};
   return _vZylindrical;
+};
+
+void particle::setPosZyl(Eigen::Vector3f zyl) {
+  _posZyl = zyl;
 };

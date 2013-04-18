@@ -65,16 +65,16 @@ class particle {
     Eigen::Vector3f v() {return _v;}
     Eigen::Vector3f vZyl();
     Eigen::Vector3f o() {return _o;}
+    void set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df);
     Eigen::Vector3f dr() {return _axisMatrix.row(0);}
     Eigen::Vector3f dz() {return _axisMatrix.row(1);}
     Eigen::Vector3f df() {return _axisMatrix.row(2);}
     Eigen::Vector3f posZyl() {return _posZyl;}
-    void setPosZyl(Eigen::Vector3f zyl) {_posZyl = zyl;}
+    void setPosZyl(Eigen::Vector3f zyl);
     void calculateVel();
     double dist() { return _posZyl(0);};
     double height() { return _posZyl(1);};
     double vol() { return 4.0/3.0*M_PI*_rad*_rad*_rad;};
-    void set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df);
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }

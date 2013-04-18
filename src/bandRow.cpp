@@ -77,8 +77,6 @@ void bandRow::fillBands (){
         Eigen::Vector3f cyl_coords = cart_to_cyl(OP);
         partTemp->setPosZyl(cyl_coords);
         
-        //partTemp->set_axis(OP, OP, OP);          //dr, dz, df
-        
         //Define band
         int bR = getBandR(partTemp->dist());
         int bZ = getBandZ(partTemp->height());

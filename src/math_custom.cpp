@@ -21,7 +21,6 @@
 
 #include "math_custom.h"
 
-// http://en.wikipedia.org/wiki/Cylindrical_coordinate_system#Cartesian_coordinates
 Eigen::Vector3f cart_to_cyl(Eigen::Vector3f cart) {
   double const& x = cart(0);
   double const& y = cart(1);
@@ -57,5 +56,34 @@ Eigen::Matrix3f cart_to_cyl(Eigen::Matrix3f cart, double phi) {
                   tmpMatrix << arr, arz, arf,
                                azr, azz, azf,
                                afr, afz, aff;
+  return tmpMatrix;
+}
+
+
+Eigen::Matrix3f get_axes(Eigen::Vector3f X, double phi) {
+  double const& x = X(0);
+  double const& y = X(1);
+  double const& z = X(2);
+  
+  
+  
+  double const& arx = x * cos(phi);
+  double const& ary = y * sin(phi);
+  double const& arz = 0.0;
+  
+  double const& azx = 0.0;
+  double const& azy = 0.0;
+  double const& azz = z;
+  
+  double const& afx = x/sqrt(x*x +y*y + z*z);
+  double const& afy = y/sqrt(x*x +y*y + z*z;
+  double const& afz = z/sqrt(x*x +y*y + z*z;
+  
+  
+  Eigen::Matrix3f tmpMatrix;
+  /*
+                  tmpMatrix << arr, arz, arf,
+                               azr, azz, azf,
+                               afr, afz, aff;*/
   return tmpMatrix;
 }
