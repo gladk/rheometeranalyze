@@ -126,6 +126,7 @@ void bandRow::fillBands (){
       
       
       forceTemp->set_dg(_cfg->get_g());
+      forceTemp->calculateStressTensor();
       
       //Define band
       int bR = getBandR(forceTemp->dist());
