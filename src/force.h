@@ -27,29 +27,22 @@
 
 class force {
   private:
-    Eigen::Vector3f _pos1, _pos2, _val;   // Pos1, Pos2 and force value
-    Eigen::Vector3f _valZylindrical;      // Force Values in Zylindrical coordinates (dR, dZ, dF)
-    Eigen::Vector3f _cPZylindrical;       // Branch-Vector in Zylindrical coordinates (dR, dZ, dF)
+    Eigen::Vector3f _val, _valZ;   // Force values in cartesian and Zylindrical coordinates (dR, dZ, dF)
+    Eigen::Vector3f _cP,  _cPZ;    // Contact Point
+    
     std::shared_ptr<particle> _part1;     // Pointer into particle1
     std::shared_ptr<particle> _part2;     // Pointer into particle2
 
-    double _dist;                 // Distance from axis
-    double _height;               // Height on Z-axis
-    
     unsigned int _fileId;         // File number of the particle
     
     Eigen::Matrix3f _stressTensor;
     
     Eigen::Vector3f _dg;          // Gravity-vector
     int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
-    Eigen::Vector3f _cP;          // Contact Point
+    
     
     bool _disable;                // Disable force, if it is out of region
     bool _calculateStressTensor;  // Whether the StressTensor was calculated
-    
-    double _radLen;              // Length of the vector from center to contact point
-    
-    
     
 
   public:
@@ -63,20 +56,19 @@ class force {
     std::shared_ptr<particle> part1();
     std::shared_ptr<particle> part2();
     unsigned int  fileId() {return _fileId;};
-    Eigen::Vector3f pos1() {return _pos1;};
-    Eigen::Vector3f pos2() {return _pos2;};
+    Eigen::Vector3f pos1() {return _part1->c();};
+    Eigen::Vector3f pos2() {return _part2->c();};
     Eigen::Vector3f val() {return _val;};
     Eigen::Vector3f dg() {return _dg;};
     Eigen::Vector3f cP() {return _cP;};
     Eigen::Vector3f nVec();
-    void set_dist(double dist) {_dist=dist;};
     double deltaN();                                        // Overlap
     double valN();                                          // Normal force
-    void set_height(double height) {_height=height;};
-    double dist() { return _dist;};
-    double height() { return _height;};
+    double dist() { return _cPZ(0);};
+    double height() { return _cPZ(1);};
     void set_dg(Eigen::Vector3f dg) {_dg=dg;};
     void set_band(int bR, int bZ, int bN) {_bandR=bR; _bandZ=bZ; _bandN=bN;};
+    void set_cPZ(Eigen::Vector3f cPZ) {_cPZ = cPZ;};
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }

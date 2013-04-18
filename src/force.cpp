@@ -20,45 +20,46 @@
 */
 
 #include "force.h"
+#include <iostream>
 
 force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, unsigned int fileId, Eigen::Vector3f pos1, Eigen::Vector3f pos2, Eigen::Vector3f val) {
   _part1 = part1;
   _part2 = part2;
-  _pos1 = pos1;
-  _pos2 = pos2;
+  
+  if (pos1 != part1->c() or pos2 != part2->c()) {
+    std::cerr<<"Particle positions in force and particle files are not the same1!"<<std::endl;
+    std::cerr<<part1->id()<< "pid1, "<<part2->id()<< "pid2"<<std::endl<<std::endl;
+  }
+
+  _valZ = Eigen::Vector3f::Zero();
+  _cPZ = Eigen::Vector3f::Zero();
   _val = val;
   _fileId = fileId;
   _bandR = -1; _bandZ=-1; _bandN=-1;
-  _dist = -1; _height = -1;
   _disable = false;
   _calculateStressTensor = false;
   _cP = (pos1-pos2)/2.0 + pos1;
   _stressTensor = _stressTensor.Zero();
-  _radLen = ((pos2-pos1)/2.0).norm();
   this->calculateStressTensor();
 };
 
 force::force() {
   _fileId = -1;
-  _pos1 = Eigen::Vector3f::Zero();
-  _pos2 = Eigen::Vector3f::Zero();
   _val = Eigen::Vector3f::Zero();
   _cP = Eigen::Vector3f::Zero();
-  _valZylindrical = Eigen::Vector3f::Zero();
-  _cPZylindrical = Eigen::Vector3f::Zero();
+  _valZ = Eigen::Vector3f::Zero();
+  _cPZ = Eigen::Vector3f::Zero();
   _bandR = -1; _bandZ=-1; _bandN=-1;
-  _dist = -1; _height = -1;
   _disable = false;
   _calculateStressTensor = false;
   _stressTensor = _stressTensor.Zero();
-  _radLen = 0.0;
 };
 
 void force::calculateStressTensor() {
-  Eigen::Vector3f l = (_pos1-_pos2)/2.0;
+  Eigen::Vector3f l = (this->pos1()-this->pos2())/2.0;
   _stressTensor =  _val*l.transpose();
   _part1->addStress(_stressTensor);
-  l = (_pos2-_pos1)/2.0;
+  l = (this->pos2()-this->pos1())/2.0;
   _stressTensor =  (-_val)*l.transpose();
   _part2->addStress(_stressTensor);
   _calculateStressTensor  =  true;

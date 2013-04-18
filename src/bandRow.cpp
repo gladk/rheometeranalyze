@@ -113,20 +113,19 @@ void bandRow::fillBands (){
     //Put forces
     for (int z = 0; z<_fRow[i]->arraySize(); z++) {
       std::shared_ptr<force> forceTemp = _fRow[i]->getF(z);
-      Eigen::Vector3f OP = forceTemp->cP() - O;   //Vector from center to point
-      Eigen::Vector3f OPV = Z.cross(OP);          //Vector, temporal
-      OPV.normalize();
-      Eigen::Vector3f OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
       
-      OPV1.normalize();
-      double dist = OP.dot(-OPV1);
-      forceTemp->set_dist(dist);
-      double height = OP.dot(Z);
-      forceTemp->set_height(height);
+      
+      Eigen::Vector3f OP = forceTemp->cP() - O;   //Vector from center to contact point
+        
+      Eigen::Vector3f OPtrans = rotateCCh*OP;
+      Eigen::Vector3f cyl_coords = cart_to_cyl(OPtrans);
+      
+      forceTemp->set_cPZ(cyl_coords);
       forceTemp->set_dg(_cfg->get_g());
+      
       //Define band
-      int bR = getBandR(dist);
-      int bZ = getBandZ(height);
+      int bR = getBandR(forceTemp->dist());
+      int bZ = getBandZ(forceTemp->height());
       
       if (bR>=0 and bZ>=0) {
         int bN = bZ*(_cfg->SecRadial()) + bR;

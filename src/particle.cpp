@@ -76,7 +76,8 @@ void particle::calculateVel() {
 
 void particle::addStress(Eigen::Matrix3f addStressTensor) {
   _contacts +=1;
-  _stressTensor += cart_to_cyl(addStressTensor, _posZyl(2));
+  //_stressTensor += cart_to_cyl(addStressTensor, _posZyl(2));
+  _stressTensor += addStressTensor;
 };
 
 Eigen::Matrix3f particle::stressTensor() {
