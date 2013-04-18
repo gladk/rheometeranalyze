@@ -61,8 +61,11 @@ void bandRow::fillBands (){
   }
   
   
-  Eigen::Quaternion<float> rotateCC;   // Rotate coordinate system
-  rotateCC = rotateCC.setFromTwoVectors(Eigen::Vector3f(0.0,0.0,1.0), Z);
+  Eigen::Quaternion<float> rotateCCh;   // Rotate coordinate system, hin
+  Eigen::Quaternion<float> rotateCCz;   // Rotate coordinate system, zurueck
+  
+  rotateCCh = rotateCCh.setFromTwoVectors(Eigen::Vector3f(0.0,0.0,1.0), Z);
+  rotateCCz = rotateCCz.setFromTwoVectors(Z, Eigen::Vector3f(0.0,0.0,1.0));
   
   //Put particles into band
   long long particleRemoved = 0;
@@ -73,9 +76,19 @@ void bandRow::fillBands (){
         std::shared_ptr<particle> partTemp = _pRow[i]->getP(z);
         Eigen::Vector3f OP = partTemp->c() - O;     //Vector from center to point
         
-        OP = rotateCC*OP;
-        Eigen::Vector3f cyl_coords = cart_to_cyl(OP);
+        Eigen::Vector3f OPtrans = rotateCCh*OP;
+        Eigen::Vector3f cyl_coords = cart_to_cyl(OPtrans);
         partTemp->setPosZyl(cyl_coords);
+        
+        double const& rho = cyl_coords(0);
+        double const& z = cyl_coords(1);
+        double const& phi = cyl_coords(2);
+        
+        Eigen::Vector3f dr = Eigen::Vector3f(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
+        Eigen::Vector3f df = Eigen::Vector3f(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
+        Eigen::Vector3f dz = Eigen::Vector3f(0.0, 0.0, z); dz = rotateCCz*dz;
+        
+        partTemp->set_axis(dr, dz, df);          //dr, dz, df
         
         //Define band
         int bR = getBandR(partTemp->dist());

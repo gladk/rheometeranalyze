@@ -76,8 +76,8 @@ Eigen::Matrix3f get_axes(Eigen::Vector3f X, double phi) {
   double const& azz = z;
   
   double const& afx = x/sqrt(x*x +y*y + z*z);
-  double const& afy = y/sqrt(x*x +y*y + z*z;
-  double const& afz = z/sqrt(x*x +y*y + z*z;
+  double const& afy = y/sqrt(x*x +y*y + z*z);
+  double const& afz = z/sqrt(x*x +y*y + z*z);
   
   
   Eigen::Matrix3f tmpMatrix;

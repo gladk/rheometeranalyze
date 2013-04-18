@@ -120,3 +120,11 @@ Eigen::Vector3f particle::vZyl() {
 void particle::setPosZyl(Eigen::Vector3f zyl) {
   _posZyl = zyl;
 };
+
+void particle::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
+  _axisMatrix = _axisMatrix.Zero();
+  dr.normalize(); dz.normalize(); df.normalize();
+  _axisMatrix << dr, dz, df;
+  _axisMatrix.transposeInPlace();
+  if (not(_calculateVel)) { calculateVel();}
+};
