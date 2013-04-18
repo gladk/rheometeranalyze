@@ -124,6 +124,16 @@ void bandRow::fillBands (){
       Eigen::Vector3f cyl_val = cart_to_cyl(rotateCCh*forceTemp->val());
       forceTemp->set_valZ(cyl_val);
       
+      double const& rho = cyl_coords(0);
+      double const& zz = cyl_coords(1);
+      double const& phi = cyl_coords(2);
+        
+      Eigen::Vector3f dr = Eigen::Vector3f(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
+      Eigen::Vector3f df = Eigen::Vector3f(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
+      Eigen::Vector3f dz = Eigen::Vector3f(0.0, 0.0, zz); dz = rotateCCz*dz;
+        
+      forceTemp->set_axis(dr, dz, df);          //dr, dz, df
+        
       
       forceTemp->set_dg(_cfg->get_g());
       forceTemp->calculateStressTensor();

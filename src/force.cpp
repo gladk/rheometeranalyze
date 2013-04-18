@@ -39,7 +39,7 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
   _disable = false;
   _calculateStressTensor = false;
   _cP = (pos1-pos2)/2.0 + pos1;
-  this->calculateStressTensor();
+  _axisMatrix = _axisMatrix.Zero();
 };
 
 force::force() {
@@ -53,20 +53,43 @@ force::force() {
   _calculateStressTensor = false;
 };
 
+void force::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
+  _axisMatrix = _axisMatrix.Zero();
+  dr.normalize(); dz.normalize(); df.normalize();
+  _axisMatrix << dr, dz, df;
+  _axisMatrix.transposeInPlace();
+};
+
 void force::calculateStressTensor() {
   Eigen::Vector3f l;
   Eigen::Matrix3f _stressTensor;
   
   // Cartesian coordinates
-  
+ /* 
   l = (this->pos1()-this->pos2())/2.0;
   _stressTensor =  _val*l.transpose();
   _part1->addStress(_stressTensor);
+  */
+
+  l = (this->pos1()-this->pos2())/2.0;
+
+  Eigen::Matrix3f valTempMatrix; valTempMatrix << _val, _val, _val;
+  valTempMatrix.transposeInPlace();
+  valTempMatrix = _axisMatrix.cwiseProduct(valTempMatrix);
   
+  Eigen::Matrix3f lTempMatrix; lTempMatrix << l, l, l;
+  lTempMatrix.transposeInPlace();
+  lTempMatrix = _axisMatrix.cwiseProduct(lTempMatrix);
+  _stressTensor = lTempMatrix.cwiseProduct(valTempMatrix);
+  
+  _part1->addStress(_stressTensor);
+  _part2->addStress(_stressTensor);
+
+  /*
   l = (this->pos2()-this->pos1())/2.0;
   _stressTensor =  (-_val)*l.transpose();
   _part2->addStress(_stressTensor);
-  
+  */
   
   // Cylindrical coordinates
   /*

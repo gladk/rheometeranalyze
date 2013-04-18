@@ -37,7 +37,11 @@ class force {
      
     Eigen::Vector3f _dg;          // Gravity-vector
     int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
-    
+
+    Eigen::Matrix3f _axisMatrix;  // [drX, drY, drZ]
+                                  // [dzX, dzY, dzZ]
+                                  // [dfX, dfY, dfZ]
+
     
     bool _disable;                // Disable force, if it is out of region
     bool _calculateStressTensor;  // Whether the StressTensor was calculated
@@ -46,6 +50,7 @@ class force {
   public:
     force(std::shared_ptr<particle>, std::shared_ptr<particle>, unsigned  int, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
     force();
+    void set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df);
     int bandR() {return _bandR;};
     int bandZ() {return _bandZ;};
     int bandN() {return _bandN;};
