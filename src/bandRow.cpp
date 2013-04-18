@@ -60,23 +60,24 @@ void bandRow::fillBands (){
     }
   }
   
+  
+  Eigen::Quaternion<float> rotateCC;   // Rotate coordinate system
+  rotateCC = rotateCC.setFromTwoVectors(Eigen::Vector3f(0.0,0.0,1.0), Z);
+  
   //Put particles into band
   long long particleRemoved = 0;
-  //Put particles
+  
   for (unsigned int i = 0; i < _pRow.size(); i++)  {
     for (int z = 0; z<_pRow[i]->arraySize(); z++) {
       if (_pRow[i]->particleReal(z)) {
         std::shared_ptr<particle> partTemp = _pRow[i]->getP(z);
         Eigen::Vector3f OP = partTemp->c() - O;     //Vector from center to point
-        Eigen::Vector3f OPV = Z.cross(OP);          //Vector, temporal
-        OPV.normalize();
-        Eigen::Vector3f OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
         
-        OPV1.normalize();
-        Eigen::Vector3f cyl_coords = cart_to_cyl(Eigen::Vector3f(OP(0), OP(1), OP.dot(Z)));
+        OP = rotateCC*OP;
+        Eigen::Vector3f cyl_coords = cart_to_cyl(OP);
         partTemp->setPosZyl(cyl_coords);
         
-        partTemp->set_axis(-OPV1, Z, OPV);          //dr, dz, df
+        //partTemp->set_axis(OP, OP, OP);          //dr, dz, df
         
         //Define band
         int bR = getBandR(partTemp->dist());
