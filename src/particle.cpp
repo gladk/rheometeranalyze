@@ -32,11 +32,11 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _o = o;
   _m = mass;
   _d = dens;
-  _dist = -1; _height = -1;
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
   _velMatrix = _velMatrix.Zero();
   _stressTensor = _stressTensor.Zero();
+  _posZyl = _posZyl.Zero();
   _calculateVel = false;
   _press = 0.0;
   _tau = 0.0;
@@ -54,11 +54,11 @@ particle::particle() {
   _v = Eigen::Vector3f::Zero();
   _o = Eigen::Vector3f::Zero();
   _vZylindrical = Eigen::Vector3f::Zero();
-  _dist = -1; _height = -1;
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
   _velMatrix = _velMatrix.Zero();
   _stressTensor = _stressTensor.Zero();
+  _posZyl = _posZyl.Zero();
   _calculateVel = false;
   _press = 0.0;
   _tau = 0.0;
@@ -100,7 +100,7 @@ Eigen::Matrix3f particle::stressTensorAVG() {
 
 double particle::realAngular() {
   if (not(_calculateVel)) { calculateVel();};
-  return _vZylindrical(2)/_dist;
+  return _vZylindrical(2)/_posZyl(0);
 };
 
 double particle::stressPress() {

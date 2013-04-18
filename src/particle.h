@@ -32,9 +32,6 @@ class particle {
     double _rad;                  // Particle radius
     double _m;                    // Mass of the particle
     double _d;                    // Density of the particle
-
-    double _dist;                 // Distance from axis
-    double _height;               // Height on Z-axis
     
     Eigen::Matrix3f _axisMatrix;  // [drX, drY, drZ]
                                   // [dzX, dzY, dzZ]
@@ -46,7 +43,9 @@ class particle {
                                   
     bool _disable;                // Disable particle, if it is out of region
     bool _calculateVel;           // Whether the velocity matrix was calculated
-    Eigen::Vector3f _vZylindrical;// Linear velocity in Zylindrical coordinates (dR, dZ, dF)
+    Eigen::Vector3f _vZylindrical;// Linear velocity in zylindrical coordinates (dR, dZ, dF)
+    Eigen::Vector3f _posZyl;      // Position in zylindrical coordinates (dR, dZ, dF)
+    
     
     Eigen::Matrix3f _stressTensor;
     double _press, _tau;
@@ -69,11 +68,11 @@ class particle {
     Eigen::Vector3f dr() {return _axisMatrix.row(0);}
     Eigen::Vector3f dz() {return _axisMatrix.row(1);}
     Eigen::Vector3f df() {return _axisMatrix.row(2);}
-    void set_dist(double dist) {_dist=dist;};
+    Eigen::Vector3f posZyl() {return _posZyl;}
+    void setPosZyl(Eigen::Vector3f zyl) {_posZyl = zyl;}
     void calculateVel();
-    void set_height(double height) {_height=height;};
-    double dist() { return _dist;};
-    double height() { return _height;};
+    double dist() { return _posZyl(0);};
+    double height() { return _posZyl(1);};
     double vol() { return 4.0/3.0*M_PI*_rad*_rad*_rad;};
     void set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df);
     void disable() {_disable=true;};

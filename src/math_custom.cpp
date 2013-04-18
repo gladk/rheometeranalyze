@@ -30,11 +30,11 @@ Eigen::Vector3f cart_to_cyl(Eigen::Vector3f cart) {
   double rho = sqrt(x*x + y*y);
   
   if (x == 0.0 and y == 0.0) {
-    return Eigen::Vector3f(rho, 0.0, z);
+    return Eigen::Vector3f(rho, z, 0.0);
   } else if (x >= 0) {
-    return Eigen::Vector3f(rho, (asin(y/rho)), z);
+    return Eigen::Vector3f(rho, z, (asin(y/rho)));
   } else if (x < 0) {
-    return Eigen::Vector3f(rho, (-asin(y/rho) + M_PI), z);
+    return Eigen::Vector3f(rho, z, (-asin(y/rho) + M_PI));
   } else {
     exit (EXIT_FAILURE);
     return Eigen::Vector3f::Zero();

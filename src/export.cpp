@@ -50,14 +50,6 @@ void exportclass::VTK() {
   vtkSmartPointer<vtkDoubleArray> density = vtkSmartPointer<vtkDoubleArray>::New();
   density->SetNumberOfComponents(1);
   density->SetName("density");
-
-  vtkSmartPointer<vtkDoubleArray> dist = vtkSmartPointer<vtkDoubleArray>::New();
-  dist->SetNumberOfComponents(1);
-  dist->SetName("dist");
-
-  vtkSmartPointer<vtkDoubleArray> height = vtkSmartPointer<vtkDoubleArray>::New();
-  height->SetNumberOfComponents(1);
-  height->SetName("height");
   
   vtkSmartPointer<vtkIntArray> spheresId = vtkSmartPointer<vtkIntArray>::New();
   spheresId->SetNumberOfComponents(1);
@@ -86,6 +78,10 @@ void exportclass::VTK() {
   vtkSmartPointer<vtkDoubleArray> vectorDf = vtkSmartPointer<vtkDoubleArray>::New();
   vectorDf->SetNumberOfComponents(3);
   vectorDf->SetName("vector_df");
+  
+  vtkSmartPointer<vtkDoubleArray> posZyl = vtkSmartPointer<vtkDoubleArray>::New();
+  posZyl->SetNumberOfComponents(3);
+  posZyl->SetName("posZyl");
   
   vtkSmartPointer<vtkIntArray> bandR = vtkSmartPointer<vtkIntArray>::New();
   bandR->SetNumberOfComponents(1);
@@ -165,8 +161,6 @@ void exportclass::VTK() {
         radii->InsertNextValue(partTemp->rad());
         mass->InsertNextValue(partTemp->mass());
         density->InsertNextValue(partTemp->density());
-        dist->InsertNextValue(partTemp->dist());
-        height->InsertNextValue(partTemp->height());
         spheresId->InsertNextValue(partTemp->id());
         spheresType->InsertNextValue(partTemp->type());
         
@@ -184,6 +178,9 @@ void exportclass::VTK() {
         
         double df[3] = {partTemp->df()[0], partTemp->df()[1], partTemp->df()[2]};
         vectorDf->InsertNextTupleValue(df);
+        
+        double posZ[3] = {partTemp->posZyl()(0), partTemp->posZyl()(1), partTemp->posZyl()(2)};
+        posZyl->InsertNextTupleValue(posZ);
         
         Eigen::Matrix3f tensorM = bandTMP->TensorAVG();
         
@@ -226,8 +223,6 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(radii);
     spheresUg->GetPointData()->AddArray(mass);
     spheresUg->GetPointData()->AddArray(density);
-    spheresUg->GetPointData()->AddArray(dist);
-    spheresUg->GetPointData()->AddArray(height);
     spheresUg->GetPointData()->AddArray(spheresId);
     spheresUg->GetPointData()->AddArray(spheresType);
     spheresUg->GetPointData()->AddArray(spheresVelL);
@@ -251,6 +246,7 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandVelLinDf);
     spheresUg->GetPointData()->AddArray(bandTensor);
     spheresUg->GetPointData()->AddArray(partTensor);
+    spheresUg->GetPointData()->AddArray(posZyl);
     
   }
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();

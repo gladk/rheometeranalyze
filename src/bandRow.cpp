@@ -21,6 +21,7 @@
 
 #include "main.h"
 #include "bandRow.h"
+#include "math_custom.h"
 
 
 
@@ -72,15 +73,15 @@ void bandRow::fillBands (){
         Eigen::Vector3f OPV1 = Z.cross(OPV);        //Vector for projection, Vector Dr
         
         OPV1.normalize();
-        double dist = OP.dot(-OPV1);
-        partTemp->set_dist(dist);
-        double height = OP.dot(Z);
-        partTemp->set_height(height);
-        partTemp->set_axis(-OPV1, Z, OPV);          //dr, dz, dv
+        Eigen::Vector3f cyl_coords = cart_to_cyl(Eigen::Vector3f(OP(0), OP(1), OP.dot(Z)));
+        partTemp->setPosZyl(cyl_coords);
+        
+        partTemp->set_axis(-OPV1, Z, OPV);          //dr, dz, df
         
         //Define band
-        int bR = getBandR(dist);
-        int bZ = getBandZ(height);
+        int bR = getBandR(partTemp->dist());
+        int bZ = getBandZ(partTemp->height());
+        
         
         if (bR>=0 and bZ>=0) {
           int bN = bZ*(_cfg->SecRadial()) + bR;

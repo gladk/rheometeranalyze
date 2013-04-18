@@ -23,4 +23,4 @@
 
 #include <Eigen/Dense>
 
-Eigen::Vector3f cart_to_cyl(Eigen::Vector3f cart);    //Returns (rho, phi, z)
+Eigen::Vector3f cart_to_cyl(Eigen::Vector3f cart);    //Returns (rho, z, phi)
