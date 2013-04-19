@@ -77,10 +77,27 @@ void force::calculateStressTensor() {
   valTempMatrix.transposeInPlace();
   valTempMatrix = _axisMatrix.cwiseProduct(valTempMatrix);
   
+  Eigen::Vector3f FZ = Eigen::Vector3f(valTempMatrix.row(0).sum(),
+                                       valTempMatrix.row(1).sum(),
+                                       valTempMatrix.row(2).sum());
+  
   Eigen::Matrix3f lTempMatrix; lTempMatrix << l, l, l;
   lTempMatrix.transposeInPlace();
   lTempMatrix = _axisMatrix.cwiseProduct(lTempMatrix);
-  _stressTensor = lTempMatrix.cwiseProduct(valTempMatrix);
+ 
+  Eigen::Vector3f lZ = Eigen::Vector3f(lTempMatrix.row(0).sum(),
+                                       lTempMatrix.row(1).sum(),
+                                       lTempMatrix.row(2).sum());
+
+  
+  Eigen::Matrix3f _stressTensorTMP = FZ*lZ.transpose();
+  /*
+  _stressTensor << _stressTensorTMP.row(0).norm(), 0.0, 0.0,
+                   0.0, _stressTensorTMP.row(1).norm(), 0.0,
+                   0.0, 0.0, _stressTensorTMP.row(2).norm();
+  */
+  
+  _stressTensor = _stressTensorTMP;
   
   _part1->addStress(_stressTensor);
   _part2->addStress(_stressTensor);
