@@ -27,8 +27,9 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
   _part2 = part2;
   
   if (pos1 != part1->c() or pos2 != part2->c()) {
-    std::cerr<<"Particle positions in force and particle files are not the same1!"<<std::endl;
-    std::cerr<<part1->id()<< "pid1, "<<part2->id()<< "pid2"<<std::endl<<std::endl;
+    std::cerr<<"Particle positions in force and particle files are not the same!"<<std::endl;
+    std::cerr<<"pid1 "<<part1->id()<<": ("<<pos1[0]<<" "<<pos1[1]<<" "<<pos1[2]<< ") != (" << part1->c()[0]<<" "<<part1->c()[1]<<" "<<part1->c()[2]<<std::endl;
+    std::cerr<<"pid2 "<<part2->id()<<": ("<<pos2[0]<<" "<<pos2[1]<<" "<<pos2[2]<< ") != (" << part2->c()[0]<<" "<<part2->c()[1]<<" "<<part2->c()[2]<<");   "<<std::endl;
   }
 
   _valZ = Eigen::Vector3f::Zero();
@@ -65,11 +66,6 @@ void force::calculateStressTensor() {
   Eigen::Matrix3f _stressTensor;
   
   // Cartesian coordinates
- /* 
-  l = (this->pos1()-this->pos2())/2.0;
-  _stressTensor =  _val*l.transpose();
-  _part1->addStress(_stressTensor);
-  */
 
   l = (this->pos1()-this->pos2())/2.0;
 
@@ -91,33 +87,12 @@ void force::calculateStressTensor() {
 
   
   Eigen::Matrix3f _stressTensorTMP = FZ*lZ.transpose();
-  /*
-  _stressTensor << _stressTensorTMP.row(0).norm(), 0.0, 0.0,
-                   0.0, _stressTensorTMP.row(1).norm(), 0.0,
-                   0.0, 0.0, _stressTensorTMP.row(2).norm();
-  */
   
   _stressTensor = _stressTensorTMP;
   
   _part1->addStress(_stressTensor);
   _part2->addStress(_stressTensor);
 
-  /*
-  l = (this->pos2()-this->pos1())/2.0;
-  _stressTensor =  (-_val)*l.transpose();
-  _part2->addStress(_stressTensor);
-  */
-  
-  // Cylindrical coordinates
-  /*
-  l = (this->pos1Z()-this->pos2Z())/2.0;
-  _stressTensor =  _valZ*l.transpose();
-  _part1->addStress(_stressTensor);
-  
-  l = (this->pos2Z()-this->pos1Z())/2.0;
-  _stressTensor =  (-_valZ)*l.transpose();
-  _part2->addStress(_stressTensor);
-  */
   _calculateStressTensor  =  true;
 };
 

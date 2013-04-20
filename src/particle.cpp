@@ -107,7 +107,6 @@ double particle::stressTau() {
   return sqrt(stressTMP(1)*stressTMP(1) + stressTMP(2)*stressTMP(2) + stressTMP(5)*stressTMP(5));;
 };
 
-
 Eigen::Matrix3f particle::kinEnergie() {
   if (not(_calculateVel)) { calculateVel();};
   return _m*_vZylindrical*_vZylindrical.transpose();
