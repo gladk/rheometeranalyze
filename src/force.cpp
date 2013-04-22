@@ -27,12 +27,9 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
   _part2 = part2;
   
   if (pos1 != part1->c() or pos2 != part2->c()) {
-    //Check the difference, if it is more than 0.1%, warn:
-    if (((pos1.norm()-part1->c().norm())/part1->c().norm()*100.0 > 0.1) or ((pos2.norm()-part2->c().norm())/part2->c().norm()*100.0 > 0.1)) {
-      std::cerr<<"Particle positions in force and particle files are not the same!"<<std::endl;
-      std::cerr<<"pid1 "<<part1->id()<<": ("<<pos1[0]<<" "<<pos1[1]<<" "<<pos1[2]<< ") != (" << part1->c()[0]<<" "<<part1->c()[1]<<" "<<part1->c()[2]<<std::endl;
-      std::cerr<<"pid2 "<<part2->id()<<": ("<<pos2[0]<<" "<<pos2[1]<<" "<<pos2[2]<< ") != (" << part2->c()[0]<<" "<<part2->c()[1]<<" "<<part2->c()[2]<<");   "<<std::endl;
-    }
+    std::cerr<<"Particle positions in force and particle files are not the same!"<<std::endl;
+    std::cerr<<"pid1 "<<part1->id()<<": ("<<pos1[0]<<" "<<pos1[1]<<" "<<pos1[2]<< ") != (" << part1->c()[0]<<" "<<part1->c()[1]<<" "<<part1->c()[2]<<std::endl;
+    std::cerr<<"pid2 "<<part2->id()<<": ("<<pos2[0]<<" "<<pos2[1]<<" "<<pos2[2]<< ") != (" << part2->c()[0]<<" "<<part2->c()[1]<<" "<<part2->c()[2]<<");   "<<std::endl;
   }
 
   _valZ = Eigen::Vector3d::Zero();
