@@ -21,6 +21,7 @@
 
 #include "band.h"
 #include <iostream>
+#include <numeric>
 
 band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, double dZmax) {
   _id = id;

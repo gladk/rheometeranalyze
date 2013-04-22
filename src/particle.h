@@ -23,6 +23,7 @@
 
 #include <Eigen/Dense>
 #include <memory>
+#include <vector>
 
 class particle {
   private:
