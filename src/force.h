@@ -27,18 +27,18 @@
 
 class force {
   private:
-    Eigen::Vector3f _val, _valZ;   // Force values in cartesian and Zylindrical coordinates (dR, dZ, dF)
-    Eigen::Vector3f _cP,  _cPZ;    // Contact Point
+    Eigen::Vector3d _val, _valZ;   // Force values in cartesian and Zylindrical coordinates (dR, dZ, dF)
+    Eigen::Vector3d _cP,  _cPZ;    // Contact Point
     
     std::shared_ptr<particle> _part1;     // Pointer into particle1
     std::shared_ptr<particle> _part2;     // Pointer into particle2
 
     unsigned int _fileId;           // File number of the particle
      
-    Eigen::Vector3f _dg;          // Gravity-vector
+    Eigen::Vector3d _dg;          // Gravity-vector
     int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
 
-    Eigen::Matrix3f _axisMatrix;  // [drX, drY, drZ]
+    Eigen::Matrix3d _axisMatrix;  // [drX, drY, drZ]
                                   // [dzX, dzY, dzZ]
                                   // [dfX, dfY, dfZ]
 
@@ -48,9 +48,9 @@ class force {
     
 
   public:
-    force(std::shared_ptr<particle>, std::shared_ptr<particle>, unsigned  int, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
+    force(std::shared_ptr<particle>, std::shared_ptr<particle>, unsigned  int, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
     force();
-    void set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df);
+    void set_axis(Eigen::Vector3d dr, Eigen::Vector3d dz, Eigen::Vector3d df);
     int bandR() {return _bandR;};
     int bandZ() {return _bandZ;};
     int bandN() {return _bandN;};
@@ -59,22 +59,22 @@ class force {
     std::shared_ptr<particle> part1();
     std::shared_ptr<particle> part2();
     unsigned int  fileId() {return _fileId;};
-    Eigen::Vector3f pos1() {return _part1->c();};
-    Eigen::Vector3f pos2() {return _part2->c();};
-    Eigen::Vector3f pos1Z() {return _part1->posZyl();};
-    Eigen::Vector3f pos2Z() {return _part2->posZyl();};
-    Eigen::Vector3f val() {return _val;};
-    Eigen::Vector3f dg() {return _dg;};
-    Eigen::Vector3f cP() {return _cP;};
-    Eigen::Vector3f nVec();
+    Eigen::Vector3d pos1() {return _part1->c();};
+    Eigen::Vector3d pos2() {return _part2->c();};
+    Eigen::Vector3d pos1Z() {return _part1->posZyl();};
+    Eigen::Vector3d pos2Z() {return _part2->posZyl();};
+    Eigen::Vector3d val() {return _val;};
+    Eigen::Vector3d dg() {return _dg;};
+    Eigen::Vector3d cP() {return _cP;};
+    Eigen::Vector3d nVec();
     double deltaN();                                        // Overlap
     double valN();                                          // Normal force
     double dist() { return _cPZ(0);};
     double height() { return _cPZ(1);};
-    void set_dg(Eigen::Vector3f dg) {_dg=dg;};
+    void set_dg(Eigen::Vector3d dg) {_dg=dg;};
     void set_band(int bR, int bZ, int bN) {_bandR=bR; _bandZ=bZ; _bandN=bN;};
-    void set_cPZ(Eigen::Vector3f cPZ) {_cPZ = cPZ;};
-    void set_valZ(Eigen::Vector3f valZ) {_valZ = valZ;};
+    void set_cPZ(Eigen::Vector3d cPZ) {_cPZ = cPZ;};
+    void set_valZ(Eigen::Vector3d valZ) {_valZ = valZ;};
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }

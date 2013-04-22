@@ -37,13 +37,13 @@ class band {
     std::vector <std::shared_ptr<particle> > _allPart;    // Vector of particles;
     std::vector <std::shared_ptr<force> > _allForces;     // Vector of forces;
     
-    Eigen::Matrix3f _stressTensorAVG;
+    Eigen::Matrix3d _stressTensorAVG;
     
     double _tau, _tauavg, _vol, _volPart;                 // Results, Tau, Vol, Vol of particles
     double _p, _pavg;                                     // Results, Press (trace), hydrostatic stress
     double  _muAVG;                                       // Results, mu calculated
     double _vavg, _vavgStDev;                             // Results, angular velocity of particles, standard deviation
-    Eigen::Vector3f _vZylavg;                             // Results, average velocity of particles in zylindrical coordinates
+    Eigen::Vector3d _vZylavg;                             // Results, average velocity of particles in zylindrical coordinates
     double _scherRate;                                    // Results, scherrate
     double _volFraction;                                  // Volume fraction
     double _contactNumAVG;                                // Contact number per particle, AVG
@@ -60,7 +60,7 @@ class band {
     void calculateValues(int numSnapshots);
     double TauAVG() {return _tauavg;};
     double PressAVG() {return _pavg;};
-    Eigen::Matrix3f TensorAVG() {return _stressTensorAVG;};
+    Eigen::Matrix3d TensorAVG() {return _stressTensorAVG;};
     double vol() {return _vol;};
     double volFraction() {return _volFraction;};
     double radAvg() {return _radAvg;};
@@ -87,6 +87,6 @@ class band {
     double I() { return _I;}
     double density() { return _densAVG;}
     double eta() { return _eta;}
-    Eigen::Vector3f vZyl() { return _vZylavg;}
+    Eigen::Vector3d vZyl() { return _vZylavg;}
     double vDf() { return _vZylavg(2);}
 };

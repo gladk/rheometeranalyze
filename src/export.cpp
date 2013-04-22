@@ -182,7 +182,7 @@ void exportclass::VTK() {
         double posZ[3] = {partTemp->posZyl()(0), partTemp->posZyl()(1), partTemp->posZyl()(2)};
         posZyl->InsertNextTupleValue(posZ);
         
-        Eigen::Matrix3f tensorM = bandTMP->TensorAVG();
+        Eigen::Matrix3d tensorM = bandTMP->TensorAVG();
         
         double tensor[9] = {tensorM(0), tensorM(1), tensorM(2), 
                             tensorM(3), tensorM(4), tensorM(5), 

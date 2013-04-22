@@ -24,7 +24,7 @@
 #include <Eigen/Dense>
 
 // http://en.wikipedia.org/wiki/Cylindrical_coordinate_system#Cartesian_coordinates
-Eigen::Vector3f cart_to_cyl(Eigen::Vector3f cart);                //Returns (rho, z, phi)
+Eigen::Vector3d cart_to_cyl(Eigen::Vector3d cart);                //Returns (rho, z, phi)
 
 /*
   @book{schade2007strömungslehre,
@@ -38,12 +38,12 @@ Eigen::Vector3f cart_to_cyl(Eigen::Vector3f cart);                //Returns (rho
   }
 * Seite 517
 */ 
-Eigen::Matrix3f cart_to_cyl(Eigen::Matrix3f cart, double phi);    //Returns (rho-rho  rho-z  rho-phi)
+Eigen::Matrix3d cart_to_cyl(Eigen::Matrix3d cart, double phi);    //Returns (rho-rho  rho-z  rho-phi)
                                                                   //        (z-rho    z-z    z-phi  )
                                                                   //        (phi-rho  phi-z  phi-phi)
 
 
 // http://en.wikipedia.org/wiki/Del_in_cylindrical_and_spherical_coordinates
-Eigen::Matrix3f get_axes(Eigen::Vector3f X, double phi);          //Returns [drX, drY, drZ]
+Eigen::Matrix3d get_axes(Eigen::Vector3d X, double phi);          //Returns [drX, drY, drZ]
                                                                          // [dzX, dzY, dzZ]
                                                                          // [dfX, dfY, dfZ]

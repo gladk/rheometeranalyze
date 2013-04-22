@@ -29,8 +29,8 @@ configopt::configopt(const std::string &filename) {
   _maxC = -1;
   _maxCF = -1;
   
-  _c = Eigen::Vector3f(pt.get<double>("Rheometer.cX"), pt.get<double>("Rheometer.cY"), pt.get<double>("Rheometer.cZ"));
-  _o = Eigen::Vector3f(pt.get<double>("Rheometer.oX"), pt.get<double>("Rheometer.oY"), pt.get<double>("Rheometer.oZ"));
+  _c = Eigen::Vector3d(pt.get<double>("Rheometer.cX"), pt.get<double>("Rheometer.cY"), pt.get<double>("Rheometer.cZ"));
+  _o = Eigen::Vector3d(pt.get<double>("Rheometer.oX"), pt.get<double>("Rheometer.oY"), pt.get<double>("Rheometer.oZ"));
   _o.normalize();
 
   _Din = pt.get<double>("Rheometer.Din");
@@ -42,7 +42,7 @@ configopt::configopt(const std::string &filename) {
   
   _dT = pt.get<double>("Rheometer.dT");
   
-  _g = Eigen::Vector3f(pt.get<double>("Rheometer.gX"), pt.get<double>("Rheometer.gY"), pt.get<double>("Rheometer.gZ"));
+  _g = Eigen::Vector3d(pt.get<double>("Rheometer.gX"), pt.get<double>("Rheometer.gY"), pt.get<double>("Rheometer.gZ"));
   _g.normalize();
 
   _nAt = pt.get<int>("Particle.nAt");

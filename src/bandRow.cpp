@@ -43,8 +43,8 @@ bandRow::bandRow (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<pa
     
 void bandRow::fillBands (){
   //Fill bands with particles
-  Eigen::Vector3f O = _cfg->get_c();
-  Eigen::Vector3f Z = _cfg->get_o();
+  Eigen::Vector3d O = _cfg->get_c();
+  Eigen::Vector3d Z = _cfg->get_o();
   
   //Prepare band-vector
   int i=0;
@@ -61,11 +61,11 @@ void bandRow::fillBands (){
   }
   
   
-  Eigen::Quaternion<float> rotateCCh;   // Rotate coordinate system, hin
-  Eigen::Quaternion<float> rotateCCz;   // Rotate coordinate system, zurueck
+  Eigen::Quaternion<double> rotateCCh;   // Rotate coordinate system, hin
+  Eigen::Quaternion<double> rotateCCz;   // Rotate coordinate system, zurueck
   
-  rotateCCh = rotateCCh.setFromTwoVectors(Eigen::Vector3f(0.0,0.0,1.0), Z);
-  rotateCCz = rotateCCz.setFromTwoVectors(Z, Eigen::Vector3f(0.0,0.0,1.0));
+  rotateCCh = rotateCCh.setFromTwoVectors(Eigen::Vector3d(0.0,0.0,1.0), Z);
+  rotateCCz = rotateCCz.setFromTwoVectors(Z, Eigen::Vector3d(0.0,0.0,1.0));
   
   //Put particles into band
   long long particleRemoved = 0;
@@ -74,19 +74,19 @@ void bandRow::fillBands (){
     for (int z = 0; z<_pRow[i]->arraySize(); z++) {
       if (_pRow[i]->particleReal(z)) {
         std::shared_ptr<particle> partTemp = _pRow[i]->getP(z);
-        Eigen::Vector3f OP = partTemp->c() - O;     //Vector from center to point
+        Eigen::Vector3d OP = partTemp->c() - O;     //Vector from center to point
         
-        Eigen::Vector3f OPtrans = rotateCCh*OP;
-        Eigen::Vector3f cyl_coords = cart_to_cyl(OPtrans);
+        Eigen::Vector3d OPtrans = rotateCCh*OP;
+        Eigen::Vector3d cyl_coords = cart_to_cyl(OPtrans);
         partTemp->setPosZyl(cyl_coords);
         
         double const& rho = cyl_coords(0);
         double const& z = cyl_coords(1);
         double const& phi = cyl_coords(2);
         
-        Eigen::Vector3f dr = Eigen::Vector3f(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
-        Eigen::Vector3f df = Eigen::Vector3f(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
-        Eigen::Vector3f dz = Eigen::Vector3f(0.0, 0.0, z); dz = rotateCCz*dz;
+        Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
+        Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
+        Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCCz*dz;
         
         partTemp->set_axis(dr, dz, df);          //dr, dz, df
         
@@ -115,22 +115,22 @@ void bandRow::fillBands (){
       std::shared_ptr<force> forceTemp = _fRow[i]->getF(z);
       
       
-      Eigen::Vector3f OP = forceTemp->cP() - O;   //Vector from center to contact point
+      Eigen::Vector3d OP = forceTemp->cP() - O;   //Vector from center to contact point
 
-      Eigen::Vector3f cyl_coords = cart_to_cyl(rotateCCh*OP);
+      Eigen::Vector3d cyl_coords = cart_to_cyl(rotateCCh*OP);
       forceTemp->set_cPZ(cyl_coords);
       
       
-      Eigen::Vector3f cyl_val = cart_to_cyl(rotateCCh*forceTemp->val());
+      Eigen::Vector3d cyl_val = cart_to_cyl(rotateCCh*forceTemp->val());
       forceTemp->set_valZ(cyl_val);
       
       double const& rho = cyl_coords(0);
       double const& zz = cyl_coords(1);
       double const& phi = cyl_coords(2);
         
-      Eigen::Vector3f dr = Eigen::Vector3f(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
-      Eigen::Vector3f df = Eigen::Vector3f(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
-      Eigen::Vector3f dz = Eigen::Vector3f(0.0, 0.0, zz); dz = rotateCCz*dz;
+      Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
+      Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
+      Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, zz); dz = rotateCCz*dz;
         
       forceTemp->set_axis(dr, dz, df);          //dr, dz, df
         

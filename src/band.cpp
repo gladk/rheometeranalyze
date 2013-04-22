@@ -72,14 +72,14 @@ void band::calculateValues (int numSnapshots) {
   _volPart = 0.0;
   _volFraction  = 0.0;
   
-  Eigen::Matrix3f _totalStressTensor = Eigen::Matrix3f::Zero();
+  Eigen::Matrix3d _totalStressTensor = Eigen::Matrix3d::Zero();
   
   
   unsigned long long i = 0;
   std::vector<double> angVelTmpV;
   std::vector<double> radTMPV;
   std::vector<double> densTMP;
-  std::vector<Eigen::Vector3f> velZylTMP;
+  std::vector<Eigen::Vector3d> velZylTMP;
   
   _tauavg = 0.0;
   _pavg = 0.0;
@@ -112,7 +112,7 @@ void band::calculateValues (int numSnapshots) {
     _contactNumAVG = (double)_allForces.size()/i;
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
     
-    _vZylavg = std::accumulate(velZylTMP.begin(), velZylTMP.end(), Eigen::Vector3f(0,0,0)) / velZylTMP.size();
+    _vZylavg = std::accumulate(velZylTMP.begin(), velZylTMP.end(), Eigen::Vector3d(0,0,0)) / velZylTMP.size();
     
     double vAVGsq_sum = std::inner_product(angVelTmpV.begin(), angVelTmpV.end(), angVelTmpV.begin(), 0.0);
     _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);

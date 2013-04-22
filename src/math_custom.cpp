@@ -21,18 +21,18 @@
 
 #include "math_custom.h"
 
-Eigen::Vector3f cart_to_cyl(Eigen::Vector3f cart) {
+Eigen::Vector3d cart_to_cyl(Eigen::Vector3d cart) {
   double const& x = cart(0);
   double const& y = cart(1);
   double const& z = cart(2);
   
   double rho = sqrt(x*x + y*y);
   
-  return Eigen::Vector3f(rho, z, (atan2(y,x)));
+  return Eigen::Vector3d(rho, z, (atan2(y,x)));
 
 };
 
-Eigen::Matrix3f cart_to_cyl(Eigen::Matrix3f cart, double phi) {
+Eigen::Matrix3d cart_to_cyl(Eigen::Matrix3d cart, double phi) {
   double const& axx = cart(0);
   double const& axy = cart(1);
   double const& axz = cart(2);
@@ -52,7 +52,7 @@ Eigen::Matrix3f cart_to_cyl(Eigen::Matrix3f cart, double phi) {
   double const& azr = azx * cos(phi) + azy * sin (phi);
   double const& azf = azy * cos(phi) + azx * sin (phi);
   
-  Eigen::Matrix3f tmpMatrix;
+  Eigen::Matrix3d tmpMatrix;
                   tmpMatrix << arr, arz, arf,
                                azr, azz, azf,
                                afr, afz, aff;
@@ -60,7 +60,7 @@ Eigen::Matrix3f cart_to_cyl(Eigen::Matrix3f cart, double phi) {
 }
 
 
-Eigen::Matrix3f get_axes(Eigen::Vector3f X, double phi) {
+Eigen::Matrix3d get_axes(Eigen::Vector3d X, double phi) {
   double const& x = X(0);
   double const& y = X(1);
   double const& z = X(2);
@@ -80,7 +80,7 @@ Eigen::Matrix3f get_axes(Eigen::Vector3f X, double phi) {
   double const& afz = z/sqrt(x*x +y*y + z*z);
   
   
-  Eigen::Matrix3f tmpMatrix;
+  Eigen::Matrix3d tmpMatrix;
   /*
                   tmpMatrix << arr, arz, arf,
                                azr, azz, azf,

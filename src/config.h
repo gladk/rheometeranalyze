@@ -33,11 +33,11 @@
 
 class configopt {
   private:
-    Eigen::Vector3f _c, _o;   // Center point and origin
+    Eigen::Vector3d _c, _o;   // Center point and origin
     double _Din, _Dout, _H;   // Internal and outer diameters
     int _SecRadial, _SecZ;    // Number of sections, in which the rheometer will
                               // be divided in radial- and Z-direction 
-    Eigen::Vector3f _g;       // Gravity direction
+    Eigen::Vector3d _g;       // Gravity direction
       
     double _dT;               // Delta time
     int _nAt;                 // Number of atom string
@@ -75,14 +75,14 @@ class configopt {
     bool  _utwente;            // True, if UTwente-files will be created
   public:
     configopt(const std::string &);
-    Eigen::Vector3f get_c(){return _c;};
-    Eigen::Vector3f get_o(){return _o;};
+    Eigen::Vector3d get_c(){return _c;};
+    Eigen::Vector3d get_o(){return _o;};
     double Din(){return _Din;};
     double Dout(){return _Dout;};
     double H(){return _H;};
     int SecRadial(){return _SecRadial;};
     int SecZ(){return _SecZ;};
-    Eigen::Vector3f get_g(){return _g;};
+    Eigen::Vector3d get_g(){return _g;};
     int nAt(){return _nAt;};
     int nPSt(){return _nPSt;};
     int nDat(){return _nDat;};

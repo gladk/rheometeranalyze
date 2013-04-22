@@ -22,7 +22,7 @@
 #include "force.h"
 #include <iostream>
 
-force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, unsigned int fileId, Eigen::Vector3f pos1, Eigen::Vector3f pos2, Eigen::Vector3f val) {
+force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, unsigned int fileId, Eigen::Vector3d pos1, Eigen::Vector3d pos2, Eigen::Vector3d val) {
   _part1 = part1;
   _part2 = part2;
   
@@ -35,8 +35,8 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
     }
   }
 
-  _valZ = Eigen::Vector3f::Zero();
-  _cPZ = Eigen::Vector3f::Zero();
+  _valZ = Eigen::Vector3d::Zero();
+  _cPZ = Eigen::Vector3d::Zero();
   _val = val;
   _fileId = fileId;
   _bandR = -1; _bandZ=-1; _bandN=-1;
@@ -48,16 +48,16 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
 
 force::force() {
   _fileId = -1;
-  _val = Eigen::Vector3f::Zero();
-  _cP = Eigen::Vector3f::Zero();
-  _valZ = Eigen::Vector3f::Zero();
-  _cPZ = Eigen::Vector3f::Zero();
+  _val = Eigen::Vector3d::Zero();
+  _cP = Eigen::Vector3d::Zero();
+  _valZ = Eigen::Vector3d::Zero();
+  _cPZ = Eigen::Vector3d::Zero();
   _bandR = -1; _bandZ=-1; _bandN=-1;
   _disable = false;
   _calculateStressTensor = false;
 };
 
-void force::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
+void force::set_axis(Eigen::Vector3d dr, Eigen::Vector3d dz, Eigen::Vector3d df) {
   _axisMatrix = _axisMatrix.Zero();
   dr.normalize(); dz.normalize(); df.normalize();
   _axisMatrix << dr, dz, df;
@@ -65,31 +65,31 @@ void force::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df)
 };
 
 void force::calculateStressTensor() {
-  Eigen::Vector3f l;
-  Eigen::Matrix3f _stressTensor;
+  Eigen::Vector3d l;
+  Eigen::Matrix3d _stressTensor;
   
   // Cartesian coordinates
 
   l = (this->pos1()-this->pos2())/2.0;
 
-  Eigen::Matrix3f valTempMatrix; valTempMatrix << _val, _val, _val;
+  Eigen::Matrix3d valTempMatrix; valTempMatrix << _val, _val, _val;
   valTempMatrix.transposeInPlace();
   valTempMatrix = _axisMatrix.cwiseProduct(valTempMatrix);
   
-  Eigen::Vector3f FZ = Eigen::Vector3f(valTempMatrix.row(0).sum(),
+  Eigen::Vector3d FZ = Eigen::Vector3d(valTempMatrix.row(0).sum(),
                                        valTempMatrix.row(1).sum(),
                                        valTempMatrix.row(2).sum());
   
-  Eigen::Matrix3f lTempMatrix; lTempMatrix << l, l, l;
+  Eigen::Matrix3d lTempMatrix; lTempMatrix << l, l, l;
   lTempMatrix.transposeInPlace();
   lTempMatrix = _axisMatrix.cwiseProduct(lTempMatrix);
  
-  Eigen::Vector3f lZ = Eigen::Vector3f(lTempMatrix.row(0).sum(),
+  Eigen::Vector3d lZ = Eigen::Vector3d(lTempMatrix.row(0).sum(),
                                        lTempMatrix.row(1).sum(),
                                        lTempMatrix.row(2).sum());
 
   
-  Eigen::Matrix3f _stressTensorTMP = FZ*lZ.transpose();
+  Eigen::Matrix3d _stressTensorTMP = FZ*lZ.transpose();
   
   _stressTensor = _stressTensorTMP;
   
@@ -116,8 +116,8 @@ double force::valN() {
   return fabs(valN);
 };
 
-Eigen::Vector3f force::nVec() {
-  Eigen::Vector3f nVec;
+Eigen::Vector3d force::nVec() {
+  Eigen::Vector3d nVec;
   nVec = _part1->c() - _part2->c();
   nVec.normalize();
   return nVec;

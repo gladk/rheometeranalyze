@@ -26,33 +26,33 @@
 
 class particle {
   private:
-    Eigen::Vector3f _c, _v, _o;   // Center of mass, linear velocity, angular velocity of the particle
+    Eigen::Vector3d _c, _v, _o;   // Center of mass, linear velocity, angular velocity of the particle
     unsigned long long _id; int _type;     // Particle id, type
     unsigned int _fileId;         // File number of the particle
     double _rad;                  // Particle radius
     double _m;                    // Mass of the particle
     double _d;                    // Density of the particle
     
-    Eigen::Matrix3f _axisMatrix;  // [drX, drY, drZ]
+    Eigen::Matrix3d _axisMatrix;  // [drX, drY, drZ]
                                   // [dzX, dzY, dzZ]
                                   // [dfX, dfY, dfZ]
 
-    Eigen::Matrix3f _velMatrix;   // [drX, drY, drZ]
+    Eigen::Matrix3d _velMatrix;   // [drX, drY, drZ]
                                   // [dzX, dzY, dzZ]
                                   // [dfX, dfY, dfZ]
                                   
     bool _disable;                // Disable particle, if it is out of region
     bool _calculateVel;           // Whether the velocity matrix was calculated
-    Eigen::Vector3f _vZylindrical;// Linear velocity in zylindrical coordinates (dR, dZ, dF)
-    Eigen::Vector3f _posZyl;      // Position in zylindrical coordinates (dR, dZ, dF)
+    Eigen::Vector3d _vZylindrical;// Linear velocity in zylindrical coordinates (dR, dZ, dF)
+    Eigen::Vector3d _posZyl;      // Position in zylindrical coordinates (dR, dZ, dF)
     
     
-    Eigen::Matrix3f _stressTensor;// Stress tensor in cylindrical coordinates 
+    Eigen::Matrix3d _stressTensor;// Stress tensor in cylindrical coordinates 
     double _press, _tau;
     int _contacts;
 
   public:
-    particle(unsigned long long, int, unsigned int, double, double, double, Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f);
+    particle(unsigned long long, int, unsigned int, double, double, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
     particle();
     unsigned long long id() {return _id;};
     int type() {return _type;};
@@ -61,16 +61,16 @@ class particle {
     double density() {return _d;};
     unsigned int  fileId() {return _fileId;};
     double realAngular();    //_v.dot(df)
-    Eigen::Vector3f c() {return _c;}
-    Eigen::Vector3f v() {return _v;}
-    Eigen::Vector3f vZyl();
-    Eigen::Vector3f o() {return _o;}
-    void set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df);
-    Eigen::Vector3f dr() {return _axisMatrix.row(0);}
-    Eigen::Vector3f dz() {return _axisMatrix.row(1);}
-    Eigen::Vector3f df() {return _axisMatrix.row(2);}
-    Eigen::Vector3f posZyl() {return _posZyl;}
-    void setPosZyl(Eigen::Vector3f zyl);
+    Eigen::Vector3d c() {return _c;}
+    Eigen::Vector3d v() {return _v;}
+    Eigen::Vector3d vZyl();
+    Eigen::Vector3d o() {return _o;}
+    void set_axis(Eigen::Vector3d dr, Eigen::Vector3d dz, Eigen::Vector3d df);
+    Eigen::Vector3d dr() {return _axisMatrix.row(0);}
+    Eigen::Vector3d dz() {return _axisMatrix.row(1);}
+    Eigen::Vector3d df() {return _axisMatrix.row(2);}
+    Eigen::Vector3d posZyl() {return _posZyl;}
+    void setPosZyl(Eigen::Vector3d zyl);
     void calculateVel();
     double dist() { return _posZyl(0);};
     double height() { return _posZyl(1);};
@@ -78,10 +78,10 @@ class particle {
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }
-    Eigen::Matrix3f kinEnergie();
-    void addStress(Eigen::Matrix3f addStressTensor);
-    Eigen::Matrix3f stressTensor();
-    Eigen::Matrix3f stressTensorAVG();
+    Eigen::Matrix3d kinEnergie();
+    void addStress(Eigen::Matrix3d addStressTensor);
+    Eigen::Matrix3d stressTensor();
+    Eigen::Matrix3d stressTensorAVG();
     double stressPress();
     double stressTau();
 };

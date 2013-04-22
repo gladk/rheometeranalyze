@@ -23,7 +23,7 @@
 #include "math_custom.h"
 #include <iostream>
 
-particle::particle(unsigned long long id, int type, unsigned int fileid, double rad, double mass, double dens, Eigen::Vector3f c, Eigen::Vector3f v, Eigen::Vector3f o) {
+particle::particle(unsigned long long id, int type, unsigned int fileid, double rad, double mass, double dens, Eigen::Vector3d c, Eigen::Vector3d v, Eigen::Vector3d o) {
   _id = id;
   _type = type;
   _rad = rad;
@@ -51,10 +51,10 @@ particle::particle() {
   _d = -1;
   _m = -1;
   _fileId = -1;
-  _c = Eigen::Vector3f::Zero();
-  _v = Eigen::Vector3f::Zero();
-  _o = Eigen::Vector3f::Zero();
-  _vZylindrical = Eigen::Vector3f::Zero();
+  _c = Eigen::Vector3d::Zero();
+  _v = Eigen::Vector3d::Zero();
+  _o = Eigen::Vector3d::Zero();
+  _vZylindrical = Eigen::Vector3d::Zero();
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
   _velMatrix = _velMatrix.Zero();
@@ -67,24 +67,24 @@ particle::particle() {
 };
 
 void particle::calculateVel() {
-  Eigen::Matrix3f velTempMatrix; velTempMatrix << _v, _v, _v;
-  _vZylindrical = Eigen::Vector3f(_v.dot(this->dr()), _v.dot(this->dz()), _v.dot(this->df()));
+  Eigen::Matrix3d velTempMatrix; velTempMatrix << _v, _v, _v;
+  _vZylindrical = Eigen::Vector3d(_v.dot(this->dr()), _v.dot(this->dz()), _v.dot(this->df()));
   velTempMatrix.transposeInPlace();
   _velMatrix = _axisMatrix.cwiseProduct(velTempMatrix);
   _calculateVel = true;
 };
 
-void particle::addStress(Eigen::Matrix3f addStressTensor) {
+void particle::addStress(Eigen::Matrix3d addStressTensor) {
   _contacts +=1;
   //_stressTensor += cart_to_cyl(addStressTensor, _posZyl(2));
   _stressTensor += addStressTensor;
 };
 
-Eigen::Matrix3f particle::stressTensor() {
+Eigen::Matrix3d particle::stressTensor() {
   return _stressTensor;
 };
 
-Eigen::Matrix3f particle::stressTensorAVG() {
+Eigen::Matrix3d particle::stressTensorAVG() {
   if (_contacts>0) {
     return _stressTensor/this->vol();
   } else {
@@ -98,30 +98,30 @@ double particle::realAngular() {
 };
 
 double particle::stressPress() {
-  Eigen::Matrix3f stressTMP = this->kinEnergie() + this->stressTensor();
+  Eigen::Matrix3d stressTMP = this->kinEnergie() + this->stressTensor();
   return stressTMP.trace()/3.0;
 };
 
 double particle::stressTau() {
-  Eigen::Matrix3f stressTMP = this->stressTensor();
+  Eigen::Matrix3d stressTMP = this->stressTensor();
   return sqrt(stressTMP(1)*stressTMP(1) + stressTMP(2)*stressTMP(2) + stressTMP(5)*stressTMP(5));;
 };
 
-Eigen::Matrix3f particle::kinEnergie() {
+Eigen::Matrix3d particle::kinEnergie() {
   if (not(_calculateVel)) { calculateVel();};
   return _m*_vZylindrical*_vZylindrical.transpose();
 };
 
-Eigen::Vector3f particle::vZyl() {
+Eigen::Vector3d particle::vZyl() {
   if (not(_calculateVel)) { calculateVel();};
   return _vZylindrical;
 };
 
-void particle::setPosZyl(Eigen::Vector3f zyl) {
+void particle::setPosZyl(Eigen::Vector3d zyl) {
   _posZyl = zyl;
 };
 
-void particle::set_axis(Eigen::Vector3f dr, Eigen::Vector3f dz, Eigen::Vector3f df) {
+void particle::set_axis(Eigen::Vector3d dr, Eigen::Vector3d dz, Eigen::Vector3d df) {
   _axisMatrix = _axisMatrix.Zero();
   dr.normalize(); dz.normalize(); df.normalize();
   _axisMatrix << dr, dz, df;
