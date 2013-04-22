@@ -22,7 +22,6 @@
 #include "main.h"
 #include "forceRow.h"
 
-
 forceRow::forceRow() {
   std::vector <std::shared_ptr<force> > _allForce;
   _realForceNum = 0;

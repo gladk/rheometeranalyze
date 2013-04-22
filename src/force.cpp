@@ -92,6 +92,9 @@ void force::calculateStressTensor() {
   
   _part1->addStress(_stressTensor);
   _part2->addStress(_stressTensor);
+  
+  _part1->addParticleContact(_part2);
+  _part2->addParticleContact(_part1);
 
   _calculateStressTensor  =  true;
 };
