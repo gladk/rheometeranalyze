@@ -130,6 +130,10 @@ void particle::set_axis(Eigen::Vector3d dr, Eigen::Vector3d dz, Eigen::Vector3d 
 };
 
 void particle::addParticleContact(std::shared_ptr<particle> addParticle) {
+  if (_id==addParticle->id()) {
+    std::cerr << "The Force between particles "<<_id<< " and "<< addParticle->id() << " has been added 2 times! Exiting..."<<std::endl; 
+    exit (EXIT_FAILURE);
+  }
   for (unsigned int i = 0; i < _contactParticles.size(); i++) {
     if (_contactParticles[i]->id()==addParticle->id()) {
       std::cerr << "The Force between particles "<<_contactParticles[i]->id()<< " and "<< addParticle->id() << " has been added 2 times! Exiting..."<<std::endl; 
