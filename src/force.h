@@ -36,7 +36,6 @@ class force {
     unsigned int _fileId;           // File number of the particle
      
     Eigen::Vector3d _dg;          // Gravity-vector
-    int _bandR, _bandZ, _bandN;   // Sections in R-Z directions, section id
 
     Eigen::Matrix3d _axisMatrix;  // [drX, drY, drZ]
                                   // [dzX, dzY, dzZ]
@@ -49,9 +48,6 @@ class force {
     force(std::shared_ptr<particle>, std::shared_ptr<particle>, unsigned  int, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
     force();
     void set_axis(Eigen::Vector3d dr, Eigen::Vector3d dz, Eigen::Vector3d df);
-    int bandR() {return _bandR;};
-    int bandZ() {return _bandZ;};
-    int bandN() {return _bandN;};
     unsigned long long  pid1() {return _part1->id();};
     unsigned long long  pid2() {return _part2->id();};
     std::shared_ptr<particle> part1();
@@ -70,7 +66,6 @@ class force {
     double dist() { return _cPZ(0);};
     double height() { return _cPZ(1);};
     void set_dg(Eigen::Vector3d dg) {_dg=dg;};
-    void set_band(int bR, int bZ, int bN) {_bandR=bR; _bandZ=bZ; _bandN=bN;};
     void set_cPZ(Eigen::Vector3d cPZ) {_cPZ = cPZ;};
     void set_valZ(Eigen::Vector3d valZ) {_valZ = valZ;};
     void calculateStressTensor();
