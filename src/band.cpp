@@ -32,7 +32,6 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _dZmin = dZmin;
   _dZmax = dZmax;
   _partNumb = 0;
-  _forceNumb = 0;
   _tau = 0.0; _tauavg = 0.0;
   _p = 0.0; _pavg = 0.0;
   _vavg = 0.0;
@@ -42,7 +41,6 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _volFraction = 0.0;
   _contactNumAVG = 0.0;
   std::vector <std::shared_ptr<particle> > _allPart;
-  std::vector <std::shared_ptr<force> > _allForces;
   _stressTensorAVG = _stressTensorAVG.Zero();
   _scherRate = 0.0;
   _muAVG = 0.0;
@@ -56,11 +54,6 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
   _allPart.push_back(tmpPart);
   _partNumb ++;
-};
-
-void band::addForce(std::shared_ptr<force> tmpForc) {
-  _allForces.push_back(tmpForc);
-  _forceNumb ++;
 };
 
 void band::set_scherRate(double scherRate) {
@@ -110,7 +103,8 @@ void band::calculateValues (int numSnapshots) {
     */ 
     
     _volFraction  = _volPart/_vol/numSnapshots;
-    _contactNumAVG = (double)_allForces.size()/i;
+    //_contactNumAVG = (double)_allForces.size()/i;
+    _contactNumAVG = 0.0;
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
     
     _vZylavg = std::accumulate(velZylTMP.begin(), velZylTMP.end(), Eigen::Vector3d(0,0,0)) / velZylTMP.size();

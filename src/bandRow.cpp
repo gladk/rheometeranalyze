@@ -133,28 +133,10 @@ void bandRow::fillBands (){
       Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, zz); dz = rotateCCz*dz;
         
       forceTemp->set_axis(dr, dz, df);          //dr, dz, df
-        
-      
       forceTemp->set_dg(_cfg->get_g());
       forceTemp->calculateStressTensor();
-      
-      //Define band
-      int bR = getBandR(forceTemp->dist());
-      int bZ = getBandZ(forceTemp->height());
-      
-      if (bR>=0 and bZ>=0) {
-        
-        int bN = bZ*(_cfg->SecRadial()) + bR;
-        forceTemp->set_band(bR, bZ, bN);
-        _bandAll[bN]->addForce(forceTemp);
-      } else {
-        _fRow[i]->disable(z);    //Disable and remove forces, if they are out of bands
-        forceRemoved ++;
-      }
     }
   }
-  std::cerr<<forceRemoved<<" forces removed"<<std::endl;
-  
 };
 
 
