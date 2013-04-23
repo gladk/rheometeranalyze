@@ -35,7 +35,6 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _d = dens;
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
-  _velMatrix = _velMatrix.Zero();
   _stressTensor = _stressTensor.Zero();
   _posZyl = _posZyl.Zero();
   _calculateVel = false;
@@ -56,20 +55,11 @@ particle::particle() {
   _vZylindrical = Eigen::Vector3d::Zero();
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
-  _velMatrix = _velMatrix.Zero();
   _stressTensor = _stressTensor.Zero();
   _posZyl = _posZyl.Zero();
   _calculateVel = false;
   _press = 0.0;
   _tau = 0.0;
-};
-
-void particle::calculateVel() {
-  Eigen::Matrix3d velTempMatrix; velTempMatrix << _v, _v, _v;
-  _vZylindrical = Eigen::Vector3d(_v.dot(this->dr()), _v.dot(this->dz()), _v.dot(this->df()));
-  velTempMatrix.transposeInPlace();
-  _velMatrix = _axisMatrix.cwiseProduct(velTempMatrix);
-  _calculateVel = true;
 };
 
 void particle::addStress(Eigen::Matrix3d addStressTensor) {
@@ -89,7 +79,10 @@ Eigen::Matrix3d particle::stressTensorAVG() {
 };
 
 double particle::realAngular() {
-  if (not(_calculateVel)) { calculateVel();};
+  if (not(_calculateVel)) { 
+    std::cerr << "Zylindrical velocities are not set yet! Exiting..."<<std::endl; 
+    exit (EXIT_FAILURE);
+  };
   return _vZylindrical(2)/_posZyl(0);
 };
 
@@ -104,25 +97,44 @@ double particle::stressTau() {
 };
 
 Eigen::Matrix3d particle::kinEnergie() {
-  if (not(_calculateVel)) { calculateVel();};
+  if (not(_calculateVel)) { 
+    std::cerr << "Zylindrical velocities are not set yet! Exiting..."<<std::endl; 
+    exit (EXIT_FAILURE);
+  };
   return _m*_vZylindrical*_vZylindrical.transpose();
 };
 
 Eigen::Vector3d particle::vZyl() {
-  if (not(_calculateVel)) { calculateVel();};
+  if (not(_calculateVel)) { 
+    std::cerr << "Zylindrical velocities are not set yet! Exiting..."<<std::endl; 
+    exit (EXIT_FAILURE);
+  };
   return _vZylindrical;
 };
 
-void particle::setPosZyl(Eigen::Vector3d zyl) {
+void particle::setPosZyl(Eigen::Vector3d zyl, Eigen::Quaternion<double> rotateCCz) {
   _posZyl = zyl;
-};
-
-void particle::set_axis(Eigen::Vector3d dr, Eigen::Vector3d dz, Eigen::Vector3d df) {
-  _axisMatrix = _axisMatrix.Zero();
+  
+  double const& rho = zyl(0);
+  double const& z = zyl(1);
+  double const& phi = zyl(2);
+  
+  Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
+  Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
+  Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCCz*dz;
+  
   dr.normalize(); dz.normalize(); df.normalize();
   _axisMatrix << dr, dz, df;
   _axisMatrix.transposeInPlace();
-  if (not(_calculateVel)) { calculateVel();}
+  
+  Eigen::Matrix3d valTempMatrix; valTempMatrix << _v, _v, _v;
+  valTempMatrix.transposeInPlace();
+  valTempMatrix = _axisMatrix.cwiseProduct(valTempMatrix);
+  
+  _vZylindrical = Eigen::Vector3d(valTempMatrix.row(0).sum(),
+                                  valTempMatrix.row(1).sum(),
+                                  valTempMatrix.row(2).sum());
+  _calculateVel = true;
 };
 
 void particle::addParticleContact(std::shared_ptr<particle> addParticle) {

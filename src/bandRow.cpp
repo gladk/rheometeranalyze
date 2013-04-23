@@ -78,22 +78,11 @@ void bandRow::fillBands (){
         
         Eigen::Vector3d OPtrans = rotateCCh*OP;
         Eigen::Vector3d cyl_coords = cart_to_cyl(OPtrans);
-        partTemp->setPosZyl(cyl_coords);
-        
-        //double const& rho = cyl_coords(0);
-        double const& z = cyl_coords(1);
-        double const& phi = cyl_coords(2);
-        
-        Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
-        Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
-        Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCCz*dz;
-        
-        partTemp->set_axis(dr, dz, df);          //dr, dz, df
+        partTemp->setPosZyl(cyl_coords, rotateCCz);
         
         //Define band
         int bR = getBandR(partTemp->dist());
         int bZ = getBandZ(partTemp->height());
-        
         
         if (bR>=0 and bZ>=0) {
           int bN = bZ*(_cfg->SecRadial()) + bR;

@@ -38,14 +38,11 @@ class particle {
                                   // [dzX, dzY, dzZ]
                                   // [dfX, dfY, dfZ]
 
-    Eigen::Matrix3d _velMatrix;   // [drX, drY, drZ]
-                                  // [dzX, dzY, dzZ]
-                                  // [dfX, dfY, dfZ]
-                                  
+    
     bool _disable;                // Disable particle, if it is out of region
     bool _calculateVel;           // Whether the velocity matrix was calculated
     Eigen::Vector3d _vZylindrical;// Linear velocity in zylindrical coordinates (dR, dZ, dF)
-    Eigen::Vector3d _posZyl;      // Position in zylindrical coordinates (dR, dZ, dF)
+    Eigen::Vector3d _posZyl;      // Position in zylindrical coordinates (Rho, Z, phi)
     std::vector <std::shared_ptr<particle> > _contactParticles;   // Vector, where all contacting particles (pointers) are saved
     
     
@@ -66,12 +63,11 @@ class particle {
     Eigen::Vector3d v() {return _v;}
     Eigen::Vector3d vZyl();
     Eigen::Vector3d o() {return _o;}
-    void set_axis(Eigen::Vector3d dr, Eigen::Vector3d dz, Eigen::Vector3d df);
     Eigen::Vector3d dr() {return _axisMatrix.row(0);}
     Eigen::Vector3d dz() {return _axisMatrix.row(1);}
     Eigen::Vector3d df() {return _axisMatrix.row(2);}
     Eigen::Vector3d posZyl() {return _posZyl;}
-    void setPosZyl(Eigen::Vector3d zyl);
+    void setPosZyl(Eigen::Vector3d zyl, Eigen::Quaternion<double> rotateCCz);
     void calculateVel();
     double dist() { return _posZyl(0);};
     double height() { return _posZyl(1);};
