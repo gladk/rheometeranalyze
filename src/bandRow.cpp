@@ -80,7 +80,7 @@ void bandRow::fillBands (){
         Eigen::Vector3d cyl_coords = cart_to_cyl(OPtrans);
         partTemp->setPosZyl(cyl_coords);
         
-        double const& rho = cyl_coords(0);
+        //double const& rho = cyl_coords(0);
         double const& z = cyl_coords(1);
         double const& phi = cyl_coords(2);
         
@@ -110,8 +110,8 @@ void bandRow::fillBands (){
  // Calculate stresses
   for (unsigned int i = 0; i < _fRow.size(); i++)  {
     //Put forces
-    for (int z = 0; z<_fRow[i]->arraySize(); z++) {
-      std::shared_ptr<force> forceTemp = _fRow[i]->getF(z);
+    for (int j = 0; j<_fRow[i]->arraySize(); j++) {
+      std::shared_ptr<force> forceTemp = _fRow[i]->getF(j);
       
       
       Eigen::Vector3d OP = forceTemp->cP() - O;   //Vector from center to contact point
@@ -123,13 +123,13 @@ void bandRow::fillBands (){
       Eigen::Vector3d cyl_val = cart_to_cyl(rotateCCh*forceTemp->val());
       forceTemp->set_valZ(cyl_val);
       
-      double const& rho = cyl_coords(0);
-      double const& zz = cyl_coords(1);
+      //double const& rho = cyl_coords(0);
+      double const& z = cyl_coords(1);
       double const& phi = cyl_coords(2);
         
       Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
       Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
-      Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, zz); dz = rotateCCz*dz;
+      Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCCz*dz;
         
       forceTemp->set_axis(dr, dz, df);          //dr, dz, df
       forceTemp->set_dg(_cfg->get_g());

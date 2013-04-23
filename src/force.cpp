@@ -64,7 +64,9 @@ void force::calculateStressTensor() {
   // Cartesian coordinates
 
   l = (this->pos1()-this->pos2())/2.0;
-
+  
+  // Set Forces into the matrix
+  
   Eigen::Matrix3d valTempMatrix; valTempMatrix << _val, _val, _val;
   valTempMatrix.transposeInPlace();
   valTempMatrix = _axisMatrix.cwiseProduct(valTempMatrix);
@@ -73,22 +75,25 @@ void force::calculateStressTensor() {
                                        valTempMatrix.row(1).sum(),
                                        valTempMatrix.row(2).sum());
   
+  // Set branch-vector into the matrix
   Eigen::Matrix3d lTempMatrix; lTempMatrix << l, l, l;
   lTempMatrix.transposeInPlace();
   lTempMatrix = _axisMatrix.cwiseProduct(lTempMatrix);
- 
+  
   Eigen::Vector3d lZ = Eigen::Vector3d(lTempMatrix.row(0).sum(),
                                        lTempMatrix.row(1).sum(),
                                        lTempMatrix.row(2).sum());
 
-  
+  // Calculate the stress tensor
   Eigen::Matrix3d _stressTensorTMP = FZ*lZ.transpose();
   
   _stressTensor = _stressTensorTMP;
   
+  // Set the stress tensor into the particles
   _part1->addStress(_stressTensor);
   _part2->addStress(_stressTensor);
   
+  // Add force into the particles
   _part1->addParticleContact(_part2);
   _part2->addParticleContact(_part1);
 
