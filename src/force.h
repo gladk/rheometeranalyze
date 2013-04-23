@@ -64,6 +64,6 @@ class force {
     double dist() { return _cPZ(0);};
     double height() { return _cPZ(1);};
     void set_dg(Eigen::Vector3d dg) {_dg=dg;};
-    void set_cPZ(Eigen::Vector3d cPZ, Eigen::Quaternion<double> rotateCCz);
+    void setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateCC);
     void calculateStressTensor();
 };

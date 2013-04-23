@@ -85,7 +85,7 @@ void bandRow::fillBands (){
           int bN = bZ*(_cfg->SecRadial()) + bR;
           _bandAll[bN]->addParticle(partTemp);
         } else {
-          _pRow[i]->disable(z);    //Disable and remove particle, if they are out of bands
+          _pRow[i]->disable(z);    // Disable and remove particle, if they are out of bands
           particleRemoved ++;
         }
       }
@@ -93,15 +93,14 @@ void bandRow::fillBands (){
   }
   std::cerr<<particleRemoved<<" particles removed"<<std::endl;
   
- // Calculate stresses
+  // Calculate stresses
   for (unsigned int i = 0; i < _fRow.size(); i++)  {
     for (int j = 0; j<_fRow[i]->arraySize(); j++) {
       std::shared_ptr<force> forceTemp = _fRow[i]->getF(j);
       
-      Eigen::Vector3d OP = forceTemp->cP() - O;   //Vector from center to contact point
-      Eigen::Vector3d cyl_coords = cart_to_cyl(rotateCCh*OP);
       forceTemp->set_dg(_cfg->get_g());
-      forceTemp->set_cPZ(cyl_coords, rotateCCh);
+      Eigen::Vector3d OP = forceTemp->cP() - O;   // Vector from center to contact point
+      forceTemp->setLocalCoord(OP, rotateCCh);
     }
   }
 };

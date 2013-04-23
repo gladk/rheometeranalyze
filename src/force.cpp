@@ -20,6 +20,7 @@
 */
 
 #include "force.h"
+#include "math_custom.h"
 #include <iostream>
 
 force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, unsigned int fileId, Eigen::Vector3d pos1, Eigen::Vector3d pos2, Eigen::Vector3d val) {
@@ -114,16 +115,16 @@ Eigen::Vector3d force::nVec() {
   return nVec;
 };
 
-void force::set_cPZ(Eigen::Vector3d cPZ, Eigen::Quaternion<double> rotateCCz) {
-  _cPZ = cPZ;
+void force::setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateCC) {
+  _cPZ = cart_to_cyl(rotateCC*loc);
   
-  double const& rho = cPZ(0);
-  double const& z = cPZ(1);
-  double const& phi = cPZ(2);
+  double const& rho = _cPZ(0);
+  double const& z = _cPZ(1);
+  double const& phi = _cPZ(2);
   
-  Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
-  Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
-  Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCCz*dz;
+  Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCC*dr;
+  Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCC*df;
+  Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCC*dz;
   
   dr.normalize(); dz.normalize(); df.normalize();
   _axisMatrix << dr, dz, df;
