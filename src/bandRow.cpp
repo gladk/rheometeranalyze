@@ -107,8 +107,7 @@ void bandRow::fillBands (){
   }
   std::cerr<<particleRemoved<<" particles removed"<<std::endl;
   
- long long forceRemoved = 0;
- //Put forces into band
+ // Calculate stresses
   for (unsigned int i = 0; i < _fRow.size(); i++)  {
     //Put forces
     for (int z = 0; z<_fRow[i]->arraySize(); z++) {

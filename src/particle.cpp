@@ -41,7 +41,6 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _calculateVel = false;
   _press = 0.0;
   _tau = 0.0;
-  _contacts = 0;
 };
 
 particle::particle() {
@@ -63,7 +62,6 @@ particle::particle() {
   _calculateVel = false;
   _press = 0.0;
   _tau = 0.0;
-  _contacts = 0;
 };
 
 void particle::calculateVel() {
@@ -75,8 +73,6 @@ void particle::calculateVel() {
 };
 
 void particle::addStress(Eigen::Matrix3d addStressTensor) {
-  _contacts +=1;
-  //_stressTensor += cart_to_cyl(addStressTensor, _posZyl(2));
   _stressTensor += addStressTensor;
 };
 
@@ -85,7 +81,7 @@ Eigen::Matrix3d particle::stressTensor() {
 };
 
 Eigen::Matrix3d particle::stressTensorAVG() {
-  if (_contacts>0) {
+  if (_contactParticles.size()>0) {
     return _stressTensor/this->vol();
   } else {
     return _stressTensor.Zero();

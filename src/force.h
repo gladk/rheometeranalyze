@@ -42,7 +42,6 @@ class force {
                                   // [dfX, dfY, dfZ]
 
     bool _calculateStressTensor;  // Whether the StressTensor was calculated
-    
 
   public:
     force(std::shared_ptr<particle>, std::shared_ptr<particle>, unsigned  int, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);

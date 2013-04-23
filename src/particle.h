@@ -51,7 +51,6 @@ class particle {
     
     Eigen::Matrix3d _stressTensor;// Stress tensor in cylindrical coordinates 
     double _press, _tau;
-    int _contacts;
 
   public:
     particle(unsigned long long, int, unsigned int, double, double, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
