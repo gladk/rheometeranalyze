@@ -32,7 +32,7 @@ Eigen::Vector3d cart_to_cyl(Eigen::Vector3d cart) {
 
 };
 
-Eigen::Matrix3d cart_to_cyl(Eigen::Matrix3d cart, double phi) {
+Eigen::Matrix3d cart_to_cyl(Eigen::Matrix3d& cart, double& phi) {
   double const& axx = cart(0);
   double const& axy = cart(1);
   double const& axz = cart(2);
@@ -59,36 +59,7 @@ Eigen::Matrix3d cart_to_cyl(Eigen::Matrix3d cart, double phi) {
   return tmpMatrix;
 }
 
-
-Eigen::Matrix3d get_axes(Eigen::Vector3d X, double phi) {
-  double const& x = X(0);
-  double const& y = X(1);
-  double const& z = X(2);
-  
-  
-  
-  double const& arx = x * cos(phi);
-  double const& ary = y * sin(phi);
-  double const& arz = 0.0;
-  
-  double const& azx = 0.0;
-  double const& azy = 0.0;
-  double const& azz = z;
-  
-  double const& afx = x/sqrt(x*x +y*y + z*z);
-  double const& afy = y/sqrt(x*x +y*y + z*z);
-  double const& afz = z/sqrt(x*x +y*y + z*z);
-  
-  
-  Eigen::Matrix3d tmpMatrix;
-  /*
-                  tmpMatrix << arr, arz, arf,
-                               azr, azz, azf,
-                               afr, afz, aff;*/
-  return tmpMatrix;
-}
-
-Eigen::Matrix3d get_axes_coord(Eigen::Vector3d X, Eigen::Quaternion<double> rotateCC) {
+Eigen::Matrix3d get_axes_coord(Eigen::Vector3d& X, Eigen::Quaternion<double>& rotateCC) {
   double const& rho = X(0);
   double const& z = X(1);
   double const& phi = X(2);
@@ -105,7 +76,7 @@ Eigen::Matrix3d get_axes_coord(Eigen::Vector3d X, Eigen::Quaternion<double> rota
   return tmpMatrix;
 }
 
-Eigen::Vector3d get_cyl_rotated_vector(Eigen::Vector3d X, Eigen::Matrix3d rotateMatrix) {
+Eigen::Vector3d get_cyl_rotated_vector(Eigen::Vector3d& X, Eigen::Matrix3d& rotateMatrix) {
     
   Eigen::Matrix3d tempMatrix; tempMatrix << X, X, X;
   tempMatrix.transposeInPlace();
