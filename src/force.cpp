@@ -36,8 +36,6 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
   _cPZ = Eigen::Vector3d::Zero();
   _val = val;
   _fileId = fileId;
-  _bandR = -1; _bandZ=-1; _bandN=-1;
-  _disable = false;
   _calculateStressTensor = false;
   _cP = (pos1-pos2)/2.0 + pos1;
   _axisMatrix = _axisMatrix.Zero();
@@ -49,8 +47,6 @@ force::force() {
   _cP = Eigen::Vector3d::Zero();
   _valZ = Eigen::Vector3d::Zero();
   _cPZ = Eigen::Vector3d::Zero();
-  _bandR = -1; _bandZ=-1; _bandN=-1;
-  _disable = false;
   _calculateStressTensor = false;
 };
 

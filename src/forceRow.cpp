@@ -40,17 +40,3 @@ std::shared_ptr<force> forceRow::getF(unsigned long long id) {
   return _allForce[id];
 };
 
-void forceRow::disable(unsigned long long id) {
-  if (not(_allForce[id]->disabled())) {
-    _allForce[id]->disable();
-    _realForceNum--;
-  }
-};
-
-bool forceRow::forceReal(unsigned long long id) {
-  if (_allForce[id]->disabled()) {
-    return false;
-  } else {
-    return true;
-  }
-};

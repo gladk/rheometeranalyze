@@ -42,8 +42,6 @@ class force {
                                   // [dzX, dzY, dzZ]
                                   // [dfX, dfY, dfZ]
 
-    
-    bool _disable;                // Disable force, if it is out of region
     bool _calculateStressTensor;  // Whether the StressTensor was calculated
     
 
@@ -75,8 +73,5 @@ class force {
     void set_band(int bR, int bZ, int bN) {_bandR=bR; _bandZ=bZ; _bandN=bN;};
     void set_cPZ(Eigen::Vector3d cPZ) {_cPZ = cPZ;};
     void set_valZ(Eigen::Vector3d valZ) {_valZ = valZ;};
-    void disable() {_disable=true;};
-    void enable() {_disable=false;};
-    bool disabled() { return _disable; }
     void calculateStressTensor();
 };

@@ -31,7 +31,5 @@ class forceRow {
     void addF(std::shared_ptr<force> );
     long long arraySize() {return _allForce.size();};
     long long elementsNum();
-    bool forceReal(unsigned long long);
     std::shared_ptr<force> getF(unsigned long long);
-    void disable(unsigned long long);
 };
