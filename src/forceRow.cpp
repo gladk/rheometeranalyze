@@ -24,16 +24,14 @@
 
 forceRow::forceRow() {
   std::vector <std::shared_ptr<force> > _allForce;
-  _realForceNum = 0;
 };
 
 void forceRow::addF(std::shared_ptr<force> forc ) {
   _allForce.push_back(forc);
-  _realForceNum ++;
 };
 
 long long forceRow::elementsNum() {
-  return _realForceNum;
+  return _allForce.size();
 };
 
 std::shared_ptr<force> forceRow::getF(unsigned long long id) {

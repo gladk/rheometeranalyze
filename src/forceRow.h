@@ -24,8 +24,6 @@
 class forceRow {
   private: 
     std::vector <std::shared_ptr<force> > _allForce;
-    std::shared_ptr<force> _tmpF;
-    long long _realForceNum;
   public:
     forceRow();
     void addF(std::shared_ptr<force> );
