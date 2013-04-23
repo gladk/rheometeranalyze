@@ -118,17 +118,7 @@ unsigned int particle::contacts() {
 
 void particle::setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateCC)  {
   _posZyl = cart_to_cyl(rotateCC*loc);
-  double const& rho = _posZyl(0);
-  double const& z = _posZyl(1);
-  double const& phi = _posZyl(2);
-  
-  Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCC*dr;
-  Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCC*df;
-  Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCC*dz;
-  
-  dr.normalize(); dz.normalize(); df.normalize();
-  _axisMatrix << dr, dz, df;
-  _axisMatrix.transposeInPlace();
+  _axisMatrix = get_axes_coord(_posZyl, rotateCC);
   
   Eigen::Matrix3d valTempMatrix; valTempMatrix << _v, _v, _v;
   valTempMatrix.transposeInPlace();

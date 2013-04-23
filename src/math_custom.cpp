@@ -87,3 +87,20 @@ Eigen::Matrix3d get_axes(Eigen::Vector3d X, double phi) {
                                afr, afz, aff;*/
   return tmpMatrix;
 }
+
+Eigen::Matrix3d get_axes_coord(Eigen::Vector3d X, Eigen::Quaternion<double> rotateCC) {
+  double const& rho = X(0);
+  double const& z = X(1);
+  double const& phi = X(2);
+  
+  Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCC*dr;
+  Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCC*df;
+  Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCC*dz;
+  dr.normalize(); dz.normalize(); df.normalize();
+  
+  Eigen::Matrix3d tmpMatrix;
+  tmpMatrix << dr, dz, df;
+  tmpMatrix.transposeInPlace();
+  
+  return tmpMatrix;
+}

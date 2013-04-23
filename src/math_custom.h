@@ -47,3 +47,7 @@ Eigen::Matrix3d cart_to_cyl(Eigen::Matrix3d cart, double phi);    //Returns (rho
 Eigen::Matrix3d get_axes(Eigen::Vector3d X, double phi);          //Returns [drX, drY, drZ]
                                                                          // [dzX, dzY, dzZ]
                                                                          // [dfX, dfY, dfZ]
+
+Eigen::Matrix3d get_axes_coord(Eigen::Vector3d X, Eigen::Quaternion<double> rotateCC);  //Returns [drX, drY, drZ]
+                                                                                               // [dzX, dzY, dzZ]
+                                                                                               // [dfX, dfY, dfZ]
