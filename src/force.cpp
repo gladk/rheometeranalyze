@@ -56,25 +56,12 @@ void force::calculateStressTensor() {
 
   l = (this->pos1()-this->pos2())/2.0;
   
-  // Set Forces into the matrix
+  // Calculate force into cylindrical coordinates  (projections)
+  Eigen::Vector3d FZ = get_cyl_rotated_vector(_val, _axisMatrix);
   
-  Eigen::Matrix3d valTempMatrix; valTempMatrix << _val, _val, _val;
-  valTempMatrix.transposeInPlace();
-  valTempMatrix = _axisMatrix.cwiseProduct(valTempMatrix);
+  // Calculate branch-vector into cylindrical coordinates  (projections)
+  Eigen::Vector3d lZ = get_cyl_rotated_vector(l, _axisMatrix);
   
-  Eigen::Vector3d FZ = Eigen::Vector3d(valTempMatrix.row(0).sum(),
-                                       valTempMatrix.row(1).sum(),
-                                       valTempMatrix.row(2).sum());
-  
-  // Set branch-vector into the matrix
-  Eigen::Matrix3d lTempMatrix; lTempMatrix << l, l, l;
-  lTempMatrix.transposeInPlace();
-  lTempMatrix = _axisMatrix.cwiseProduct(lTempMatrix);
-  
-  Eigen::Vector3d lZ = Eigen::Vector3d(lTempMatrix.row(0).sum(),
-                                       lTempMatrix.row(1).sum(),
-                                       lTempMatrix.row(2).sum());
-
   // Calculate the stress tensor
   Eigen::Matrix3d _stressTensorTMP = FZ*lZ.transpose();
   

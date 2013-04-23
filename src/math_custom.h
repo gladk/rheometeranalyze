@@ -51,3 +51,4 @@ Eigen::Matrix3d get_axes(Eigen::Vector3d X, double phi);          //Returns [drX
 Eigen::Matrix3d get_axes_coord(Eigen::Vector3d X, Eigen::Quaternion<double> rotateCC);  //Returns [drX, drY, drZ]
                                                                                                // [dzX, dzY, dzZ]
                                                                                                // [dfX, dfY, dfZ]
+Eigen::Vector3d get_cyl_rotated_vector(Eigen::Vector3d X, Eigen::Matrix3d rotateMatrix);  //Returns [dr, dz, drf]

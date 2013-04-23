@@ -120,13 +120,7 @@ void particle::setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rota
   _posZyl = cart_to_cyl(rotateCC*loc);
   _axisMatrix = get_axes_coord(_posZyl, rotateCC);
   
-  Eigen::Matrix3d valTempMatrix; valTempMatrix << _v, _v, _v;
-  valTempMatrix.transposeInPlace();
-  valTempMatrix = _axisMatrix.cwiseProduct(valTempMatrix);
-  
-  _vZylindrical = Eigen::Vector3d(valTempMatrix.row(0).sum(),
-                                  valTempMatrix.row(1).sum(),
-                                  valTempMatrix.row(2).sum());
+  _vZylindrical = get_cyl_rotated_vector(_v, _axisMatrix);
   _calculateVel = true;
 };
 

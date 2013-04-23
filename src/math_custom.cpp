@@ -104,3 +104,15 @@ Eigen::Matrix3d get_axes_coord(Eigen::Vector3d X, Eigen::Quaternion<double> rota
   
   return tmpMatrix;
 }
+
+Eigen::Vector3d get_cyl_rotated_vector(Eigen::Vector3d X, Eigen::Matrix3d rotateMatrix) {
+    
+  Eigen::Matrix3d tempMatrix; tempMatrix << X, X, X;
+  tempMatrix.transposeInPlace();
+  tempMatrix = rotateMatrix.cwiseProduct(tempMatrix);
+  
+  Eigen::Vector3d tmpVector = Eigen::Vector3d(tempMatrix.row(0).sum(),
+                                              tempMatrix.row(1).sum(),
+                                              tempMatrix.row(2).sum());
+  return tmpVector;
+}
