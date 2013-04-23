@@ -65,7 +65,6 @@ void bandRow::fillBands (){
   Eigen::Quaternion<double> rotateCCz;   // Rotate coordinate system, zurueck
   
   rotateCCh = rotateCCh.setFromTwoVectors(Eigen::Vector3d(0.0,0.0,1.0), Z);
-  rotateCCz = rotateCCz.setFromTwoVectors(Z, Eigen::Vector3d(0.0,0.0,1.0));
   
   //Put particles into band
   long long particleRemoved = 0;
@@ -78,7 +77,7 @@ void bandRow::fillBands (){
         
         Eigen::Vector3d OPtrans = rotateCCh*OP;
         Eigen::Vector3d cyl_coords = cart_to_cyl(OPtrans);
-        partTemp->setPosZyl(cyl_coords, rotateCCz);
+        partTemp->setPosZyl(cyl_coords, rotateCCh);
         
         //Define band
         int bR = getBandR(partTemp->dist());
@@ -104,7 +103,7 @@ void bandRow::fillBands (){
       Eigen::Vector3d OP = forceTemp->cP() - O;   //Vector from center to contact point
       Eigen::Vector3d cyl_coords = cart_to_cyl(rotateCCh*OP);
       forceTemp->set_dg(_cfg->get_g());
-      forceTemp->set_cPZ(cyl_coords, rotateCCz);
+      forceTemp->set_cPZ(cyl_coords, rotateCCh);
     }
   }
 };
