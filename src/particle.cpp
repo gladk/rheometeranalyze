@@ -112,6 +112,10 @@ Eigen::Vector3d particle::vZyl() {
   return _vZylindrical;
 };
 
+unsigned int particle::contacts() {
+  return _contactParticles.size();
+};
+
 void particle::setPosZyl(Eigen::Vector3d zyl, Eigen::Quaternion<double> rotateCCz) {
   _posZyl = zyl;
   

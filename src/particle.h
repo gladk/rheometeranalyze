@@ -82,4 +82,5 @@ class particle {
     Eigen::Matrix3d stressTensorAVG();
     double stressPress();
     double stressTau();
+    unsigned int contacts();
 };

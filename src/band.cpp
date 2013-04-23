@@ -65,6 +65,7 @@ void band::set_scherRate(double scherRate) {
 void band::calculateValues (int numSnapshots) {
   _volPart = 0.0;
   _volFraction  = 0.0;
+  _contactNumAVG = 0.0;
   
   Eigen::Matrix3d _totalStressTensor = Eigen::Matrix3d::Zero();
   
@@ -85,6 +86,7 @@ void band::calculateValues (int numSnapshots) {
       densTMP.push_back(_allPart[p]->density());
       _volPart  += _allPart[p]->vol();
       _totalStressTensor += _allPart[p]->kinEnergie() + _allPart[p]->stressTensor();
+      _contactNumAVG  += _allPart[p]->contacts();
       i++;
     }
   }
@@ -103,8 +105,8 @@ void band::calculateValues (int numSnapshots) {
     */ 
     
     _volFraction  = _volPart/_vol/numSnapshots;
-    //_contactNumAVG = (double)_allForces.size()/i;
-    _contactNumAVG = 0.0;
+    _contactNumAVG = _contactNumAVG/i/numSnapshots;
+    
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
     
     _vZylavg = std::accumulate(velZylTMP.begin(), velZylTMP.end(), Eigen::Vector3d(0,0,0)) / velZylTMP.size();
