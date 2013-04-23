@@ -116,16 +116,15 @@ unsigned int particle::contacts() {
   return _contactParticles.size();
 };
 
-void particle::setPosZyl(Eigen::Vector3d zyl, Eigen::Quaternion<double> rotateCCz) {
-  _posZyl = zyl;
+void particle::setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateCC)  {
+  _posZyl = cart_to_cyl(rotateCC*loc);
+  double const& rho = _posZyl(0);
+  double const& z = _posZyl(1);
+  double const& phi = _posZyl(2);
   
-  double const& rho = zyl(0);
-  double const& z = zyl(1);
-  double const& phi = zyl(2);
-  
-  Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
-  Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
-  Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCCz*dz;
+  Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCC*dr;
+  Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCC*df;
+  Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCC*dz;
   
   dr.normalize(); dz.normalize(); df.normalize();
   _axisMatrix << dr, dz, df;

@@ -67,7 +67,7 @@ class particle {
     Eigen::Vector3d dz() {return _axisMatrix.row(1);}
     Eigen::Vector3d df() {return _axisMatrix.row(2);}
     Eigen::Vector3d posZyl() {return _posZyl;}
-    void setPosZyl(Eigen::Vector3d zyl, Eigen::Quaternion<double> rotateCCz);
+    void setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateCC);
     void calculateVel();
     double dist() { return _posZyl(0);};
     double height() { return _posZyl(1);};

@@ -75,10 +75,8 @@ void bandRow::fillBands (){
         std::shared_ptr<particle> partTemp = _pRow[i]->getP(z);
         Eigen::Vector3d OP = partTemp->c() - O;     //Vector from center to point
         
-        Eigen::Vector3d OPtrans = rotateCCh*OP;
-        Eigen::Vector3d cyl_coords = cart_to_cyl(OPtrans);
-        partTemp->setPosZyl(cyl_coords, rotateCCh);
-        
+        partTemp->setLocalCoord(OP, rotateCCh);
+
         //Define band
         int bR = getBandR(partTemp->dist());
         int bZ = getBandZ(partTemp->height());
