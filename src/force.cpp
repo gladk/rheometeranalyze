@@ -31,8 +31,6 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
     std::cerr<<"pid1 "<<part1->id()<<": ("<<pos1[0]<<" "<<pos1[1]<<" "<<pos1[2]<< ") != (" << part1->c()[0]<<" "<<part1->c()[1]<<" "<<part1->c()[2]<<std::endl;
     std::cerr<<"pid2 "<<part2->id()<<": ("<<pos2[0]<<" "<<pos2[1]<<" "<<pos2[2]<< ") != (" << part2->c()[0]<<" "<<part2->c()[1]<<" "<<part2->c()[2]<<");   "<<std::endl;
   }
-
-  _valZ = Eigen::Vector3d::Zero();
   _cPZ = Eigen::Vector3d::Zero();
   _val = val;
   _fileId = fileId;
@@ -45,16 +43,8 @@ force::force() {
   _fileId = -1;
   _val = Eigen::Vector3d::Zero();
   _cP = Eigen::Vector3d::Zero();
-  _valZ = Eigen::Vector3d::Zero();
   _cPZ = Eigen::Vector3d::Zero();
   _calculateStressTensor = false;
-};
-
-void force::set_axis(Eigen::Vector3d dr, Eigen::Vector3d dz, Eigen::Vector3d df) {
-  _axisMatrix = _axisMatrix.Zero();
-  dr.normalize(); dz.normalize(); df.normalize();
-  _axisMatrix << dr, dz, df;
-  _axisMatrix.transposeInPlace();
 };
 
 void force::calculateStressTensor() {
@@ -122,5 +112,23 @@ Eigen::Vector3d force::nVec() {
   nVec = _part1->c() - _part2->c();
   nVec.normalize();
   return nVec;
+};
+
+void force::set_cPZ(Eigen::Vector3d cPZ, Eigen::Quaternion<double> rotateCCz) {
+  _cPZ = cPZ;
+  
+  double const& rho = cPZ(0);
+  double const& z = cPZ(1);
+  double const& phi = cPZ(2);
+  
+  Eigen::Vector3d dr = Eigen::Vector3d(cos(phi), sin(phi), 0.0); dr = rotateCCz*dr;
+  Eigen::Vector3d df = Eigen::Vector3d(-sin(phi), cos(phi), 0.0); df = rotateCCz*df;
+  Eigen::Vector3d dz = Eigen::Vector3d(0.0, 0.0, z); dz = rotateCCz*dz;
+  
+  dr.normalize(); dz.normalize(); df.normalize();
+  _axisMatrix << dr, dz, df;
+  _axisMatrix.transposeInPlace();
+  this->calculateStressTensor();
+  
 };
 

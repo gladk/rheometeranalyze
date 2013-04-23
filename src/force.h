@@ -27,8 +27,8 @@
 
 class force {
   private:
-    Eigen::Vector3d _val, _valZ;   // Force values in cartesian and Zylindrical coordinates (dR, dZ, dF)
-    Eigen::Vector3d _cP,  _cPZ;    // Contact Point
+    Eigen::Vector3d _val;   // Force values in cartesian coordinates
+    Eigen::Vector3d _cP, _cPZ;    // Contact Point
     
     std::shared_ptr<particle> _part1;     // Pointer into particle1
     std::shared_ptr<particle> _part2;     // Pointer into particle2
@@ -46,7 +46,6 @@ class force {
   public:
     force(std::shared_ptr<particle>, std::shared_ptr<particle>, unsigned  int, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
     force();
-    void set_axis(Eigen::Vector3d dr, Eigen::Vector3d dz, Eigen::Vector3d df);
     unsigned long long  pid1() {return _part1->id();};
     unsigned long long  pid2() {return _part2->id();};
     std::shared_ptr<particle> part1();
@@ -65,7 +64,6 @@ class force {
     double dist() { return _cPZ(0);};
     double height() { return _cPZ(1);};
     void set_dg(Eigen::Vector3d dg) {_dg=dg;};
-    void set_cPZ(Eigen::Vector3d cPZ) {_cPZ = cPZ;};
-    void set_valZ(Eigen::Vector3d valZ) {_valZ = valZ;};
+    void set_cPZ(Eigen::Vector3d cPZ, Eigen::Quaternion<double> rotateCCz);
     void calculateStressTensor();
 };
