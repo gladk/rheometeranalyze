@@ -199,8 +199,8 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     std::cerr<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting."<<std::endl;
     exit (EXIT_FAILURE);
   } else {
-    std::cerr<<"Number of particle files is "<< filesParticle.size()   <<std::endl;
-    std::cerr<<"Number of force files is "<< filesForces.size()   <<std::endl;
+    std::cout<<"Number of particle files is "<< filesParticle.size()   <<std::endl;
+    std::cout<<"Number of force files is "<< filesForces.size()   <<std::endl;
   }
   
   //=====================================================

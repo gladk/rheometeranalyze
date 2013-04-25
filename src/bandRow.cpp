@@ -97,7 +97,7 @@ void bandRow::fillBands (){
       }
     }
   }
-  std::cerr<<particleRemoved<<" particles removed"<<std::endl;
+  std::cout<<particleRemoved<<" particles removed"<<std::endl;
   
   // Calculate stresses
   for (unsigned int i = 0; i < _fRow.size(); i++)  {

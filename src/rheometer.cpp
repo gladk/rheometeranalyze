@@ -116,7 +116,7 @@ void rheometer::loadParticles() {
   
       } else if (curLine == _cfg->nAt()) {
         linestream >> valInt;
-        std::cerr<<"File "<<partNumbCounter<<"/"<<snapshots->size()<<std::endl<<"Expected particles "<<valInt;
+        std::cout<<"File "<<partNumbCounter<<"/"<<snapshots->size()<<std::endl<<"Expected particles "<<valInt;
       } else if (curLine == _cfg->nPSt()) {
         linestream >> valInt;
         snapshotCur->setTimeStep(valInt);
@@ -130,7 +130,7 @@ void rheometer::loadParticles() {
     BOOST_FOREACH( std::shared_ptr<particle> p, tmpPartVector) {
        _particleAll[partNumbTMP]->addP(p);
     }
-    std::cerr<<"; "<<_particleAll[partNumbTMP]->elementsNum()<<" particles added."<<std::endl;
+    std::cout<<"; "<<_particleAll[partNumbTMP]->elementsNum()<<" particles added."<<std::endl;
     _particleNum+=_particleAll[partNumbTMP]->elementsNum();
     partNumbCounter++;
     
@@ -138,8 +138,8 @@ void rheometer::loadParticles() {
   
   }
   snapshots->sortRow();
-  std::cerr<<"The total number of added particles is "<<_particleNum<<std::endl;
-  std::cerr<<"The total number of added forces is "<<_forceNum<<std::endl;
+  std::cout<<"The total number of added particles is "<<_particleNum<<std::endl;
+  std::cout<<"The total number of added forces is "<<_forceNum<<std::endl;
 };
 
 
@@ -216,17 +216,17 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
   
       } else if (curLine == _cfg->fAt()) {
         linestream >> valInt;
-         std::cerr<<"Expected forces "<<valInt;
+         std::cout<<"Expected forces "<<valInt;
       } else if (curLine == _cfg->nFSt()) {
         linestream >> valInt;
         unsigned int valIntUn = valInt;
         if (valIntUn != loadSnap->timeStep()) {
-          std::cerr << "Timestep of force and particle files is not the same!\n"; 
+          std::cout << "Timestep of force and particle files is not the same!\n"; 
           exit (EXIT_FAILURE);
         }
       }
       curLine++;
     };
-    std::cerr<<"; "<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added."<<std::endl<<std::endl;
+    std::cout<<"; "<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added."<<std::endl<<std::endl;
     _forceNum+=_forceRow[forceRowNumbTMP]->elementsNum();
 };

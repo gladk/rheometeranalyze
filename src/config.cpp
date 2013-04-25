@@ -75,9 +75,9 @@ configopt::configopt(const std::string &filename) {
   //Files
   _FOutput = pt.get<std::string>("Files.output");
   if (not fs::is_directory(_FOutput)) {
-    std::cerr<<"The direcrory " << _FOutput<< " does not exists. Creating."<<std::endl;
+    std::cout<<"The direcrory " << _FOutput<< " does not exists. Creating."<<std::endl;
     if (fs::create_directory(_FOutput)) {
-      std::cerr<<"The direcrory " << _FOutput<< " created."<<std::endl;
+      std::cout<<"The direcrory " << _FOutput<< " created."<<std::endl;
     }
   }
   _utwente = false;
