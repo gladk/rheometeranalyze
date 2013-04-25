@@ -41,6 +41,8 @@
 #include <vtkTriangle.h>
 #include <vtkLine.h>
 #include <vtkQuad.h>
+#include <vtkBitArray.h>
+
 
 
 #include "band.h"

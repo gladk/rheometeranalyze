@@ -147,6 +147,11 @@ void exportclass::VTK() {
   bandVelLinDf->SetNumberOfComponents(1);
   bandVelLinDf->SetName("bandVelLinDf");
   
+  #ifdef ALGLIB
+    vtkSmartPointer<vtkIntArray> bandShearBand = vtkSmartPointer<vtkIntArray>::New();
+    bandShearBand->SetNumberOfComponents(1);
+    bandShearBand->SetName("bandShearBand");
+  #endif
   
   vtkSmartPointer<vtkUnstructuredGrid> spheresUg = vtkSmartPointer<vtkUnstructuredGrid>::New();
   
@@ -212,6 +217,13 @@ void exportclass::VTK() {
         bandScherRate->InsertNextValue(bandTMP->scherRate());
         bandMu->InsertNextValue(bandTMP->muAVG());
         bandVelLinDf->InsertNextValue(bandTMP->vDf());
+        #ifdef ALGLIB
+          if (bandTMP->shearBand()) {
+            bandShearBand->InsertNextValue(1);
+          } else {
+            bandShearBand->InsertNextValue(0);
+          }
+        #endif
         
         spheresCells->InsertNextCell(1,pid);
       }
@@ -247,7 +259,9 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandTensor);
     spheresUg->GetPointData()->AddArray(partTensor);
     spheresUg->GetPointData()->AddArray(posZyl);
-    
+    #ifdef ALGLIB
+    spheresUg->GetPointData()->AddArray(bandShearBand);
+    #endif
   }
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   writer->SetDataModeToAscii();
@@ -330,7 +344,7 @@ void exportclass::gnuplotSchearRate() {
       }
     }
   }
-  
+  /*
   if (myfile4.is_open()) {
     myfile4 << "RPOS\tZPOS\tW" << std::endl;
     for(unsigned int b=0; b<_bandRow->getBandShearZonesSize(); b++) {
@@ -338,7 +352,8 @@ void exportclass::gnuplotSchearRate() {
       myfile4 << bandSZ->RPOS() << "\t"<< bandSZ->ZPOS() << "\t"<< bandSZ->W() << std::endl;
     }
   }
-    
+  */  
+  
   myfile1.close();
   myfile11.close();
   myfile4.close();

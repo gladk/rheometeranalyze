@@ -21,14 +21,13 @@
 
 #pragma once
 
-#include "bandShearZone.h"
 #include "forceRow.h"
 #include "particleRow.h"
 
 class bandRow {
   private:
     std::vector<std::shared_ptr<band> > _bandAll;
-    std::vector<std::shared_ptr<bandShearZone> > _bandShearZones;
+    std::vector<Eigen::Vector3d> _shearBands;
     std::shared_ptr<configopt> _cfg; 
     std::vector<std::shared_ptr<particleRow>> _pRow;
     std::vector<std::shared_ptr<forceRow>> _fRow;
@@ -37,8 +36,7 @@ class bandRow {
     void fillBands();
     int getBandR(double);
     int getBandZ(double);
-    unsigned int getBandShearZonesSize() {return _bandShearZones.size();};
-    std::shared_ptr<bandShearZone> getBandShearZones(int id) {return _bandShearZones[id];};
+    unsigned int shearBandSize() {return _shearBands.size();};
     void calculateValues();
     std::shared_ptr<band> getBand(unsigned int id) {return _bandAll[id];}
     std::shared_ptr<band> getBand(unsigned int idR, unsigned int idZ) {return _bandAll[idZ*_cfg->SecRadial() + idR];}

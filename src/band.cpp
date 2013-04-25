@@ -49,6 +49,7 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _densAVG = 0.0;
   _eta = 0.0;
   _vZylavg = _vZylavg.Zero();
+  _shearBand = false;
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {

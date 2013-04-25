@@ -23,7 +23,13 @@
 #include "bandRow.h"
 #include "math_custom.h"
 
-
+#ifdef ALGLIB
+  #include "interpolation.h"
+  void function_cx_1_func(const alglib::real_1d_array &c, const alglib::real_1d_array &x, double &func, void *ptr) 
+    {
+         func = 0.5 + 0.5*erf((x[0] - c[0])/c[1]);
+    }
+#endif
 
 bandRow::bandRow (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<particleRow>> pRow, std::vector<std::shared_ptr<forceRow>> fRow){
   _cfg =  cfg;
@@ -153,35 +159,48 @@ void bandRow::calculateValues () {
     }
   }
   
-  //Create vector of bandShearZones
-  std::shared_ptr<band> maxBandShear;
-  std::shared_ptr<band> minBandShear;
-  bool maxShearTemp = false;
-  bool minShearTemp = false;
   
-  for(unsigned int i=1; i<_bandAll.size(); i++) {
-    if (_bandAll[i]->idR() > _bandAll[i-1]->idR()) {
-      if (_bandAll[i-1]->scherRate() < 0.01 and _bandAll[i]->scherRate() > 0.01 and not(minShearTemp)) {
-        minShearTemp = true;
-        minBandShear = _bandAll[i-1];
-      }
+  //Create vector of Create ShearBands
+  
+  #ifdef ALGLIB
+    
+    double omega0 = this->getBand(_cfg->SecRadial()-1,0)->omega(); 
+    for(int h=0; h<_cfg->SecZ(); h++) {
+      alglib::real_2d_array x;
+      alglib::real_1d_array y;
+      alglib::real_1d_array c = "[0.08, 0.0075]";
+      x.setlength(_cfg->SecZ(), 1);
+      y.setlength(_cfg->SecZ());
       
-      if (_bandAll[i]->scherRate() < 0.01 and _bandAll[i-1]->scherRate() > 0.01 and not(maxShearTemp)) {
-        maxShearTemp = true;
-        maxBandShear = _bandAll[i];
+      for(int r=0; r<_cfg->SecRadial(); r++) {
+      
+        double omega = this->getBand(r,h)->omega(); 
+        double valT = omega/omega0;
+        x(r,0) = (this->getBand(r,0))->midLinedR();
+        y(r) = valT;
       }
-    } else {
-      if (maxShearTemp and minShearTemp) {
-        std::shared_ptr<bandShearZone> tmpBandShearZone (new bandShearZone(minBandShear, maxBandShear));
-        _bandShearZones.push_back(tmpBandShearZone);
+      double epsf = 0;
+      double epsx = 0.0000001;
+      alglib::ae_int_t maxits = 0;
+      alglib::ae_int_t info;
+      alglib::lsfitstate state;
+      alglib::lsfitreport rep;
+      double diffstep = 0.000001;
+      lsfitcreatef(x, y, c, diffstep, state);
+      lsfitsetcond(state, epsf, epsx, maxits);
+      alglib::lsfitfit(state, function_cx_1_func);
+      lsfitresults(state, info, c, rep);
+      
+      const double Rz = c(0);
+      const double W = c(1);
+      _shearBands.push_back(Eigen::Vector3d(Rz-W, Rz, Rz+W));
+      for(int r=0; r<_cfg->SecRadial(); r++) {
+        double const Rt = this->getBand(r,h)->midLinedR();
+        if ((Rt>=(Rz-W)) and (Rt<=(Rz+W))) {
+          this->getBand(r,h)->shearBandOn();
+        }
       }
-      maxShearTemp = false;
-      minShearTemp = false;
     }
-  }
-  if (maxShearTemp and minShearTemp) {
-    std::shared_ptr<bandShearZone> tmpBandShearZone (new bandShearZone(minBandShear, maxBandShear));
-    _bandShearZones.push_back(tmpBandShearZone);
-  }
+  #endif
 };
 

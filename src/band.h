@@ -49,6 +49,7 @@ class band {
     double _I;                                            // Schear intensity, dimensionless
     double _densAVG;                                      // Average particle denisty
     double _eta;                                          // Viscosity
+    bool _shearBand;                                      // True, if the band is in shearband
     
 
   public:
@@ -84,4 +85,7 @@ class band {
     double eta() { return _eta;}
     Eigen::Vector3d vZyl() { return _vZylavg;}
     double vDf() { return _vZylavg(2);}
+    void shearBandOn() { _shearBand = true;}
+    void shearBandOff() { _shearBand = false;}
+    bool shearBand() { return _shearBand;}
 };
