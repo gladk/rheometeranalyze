@@ -32,7 +32,7 @@ int main(int ac, char* av[])
   string particlesFileName;
   string forcesFileName;
   
-  std::cerr<<"\n\
+  std::cout<<"\n\
 Rheometeranalyze\n\
 Copyright (C) 2013 TU Bergakademie Freiberg\nInstitute for Mechanics and Fluid Dynamics\n\
 This program comes with ABSOLUTELY NO WARRANTY.\n\
@@ -117,7 +117,11 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     exit (EXIT_FAILURE);
   }
   
-  
+  #ifdef ALGLIB
+    std::cout<<"\n\ALGLIB Library is found and export of shearbands will be produced \n"<<std::endl;
+  #else
+    std::cout<<"\n\ALGLIB Library is NOT found and export of shearbands will NOT be produced \n"<<std::endl;
+  #endif
   
   
   //=====================================================
