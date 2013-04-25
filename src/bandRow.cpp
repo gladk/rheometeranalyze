@@ -193,7 +193,7 @@ void bandRow::calculateValues () {
       
       const double Rz = c(0);
       const double W = c(1);
-      _shearBands.push_back(Eigen::Vector3d(Rz-W, Rz, Rz+W));
+      _shearBands.push_back(Eigen::Vector3d(Rz, W, this->getBand(0,h)->midLinedZ()));
       for(int r=0; r<_cfg->SecRadial(); r++) {
         double const Rt = this->getBand(r,h)->midLinedR();
         if ((Rt>=(Rz-W)) and (Rt<=(Rz+W))) {

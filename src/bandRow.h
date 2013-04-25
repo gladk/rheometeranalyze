@@ -27,7 +27,7 @@
 class bandRow {
   private:
     std::vector<std::shared_ptr<band> > _bandAll;
-    std::vector<Eigen::Vector3d> _shearBands;
+    std::vector<Eigen::Vector3d> _shearBands;       //[Rz, W, H]
     std::shared_ptr<configopt> _cfg; 
     std::vector<std::shared_ptr<particleRow>> _pRow;
     std::vector<std::shared_ptr<forceRow>> _fRow;
@@ -37,6 +37,7 @@ class bandRow {
     int getBandR(double);
     int getBandZ(double);
     unsigned int shearBandSize() {return _shearBands.size();};
+    Eigen::Vector3d shearBand(unsigned int i) {return _shearBands[i];};
     void calculateValues();
     std::shared_ptr<band> getBand(unsigned int id) {return _bandAll[id];}
     std::shared_ptr<band> getBand(unsigned int idR, unsigned int idZ) {return _bandAll[idZ*_cfg->SecRadial() + idR];}

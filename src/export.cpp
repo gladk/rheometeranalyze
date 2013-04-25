@@ -284,7 +284,7 @@ void exportclass::gnuplotSchearRate() {
   _fileNameG3 += "/gnuplot_vel1_c.txt";
   
   _fileNameG4 =  _cfg->FOutput();
-  _fileNameG4 += "/gnuplot_shearZone.txt";
+  _fileNameG4 += "/shearband";
   
   _fileNameG5 =  _cfg->FOutput();
   _fileNameG5 += "/gnuplot_vel2.txt";
@@ -344,15 +344,16 @@ void exportclass::gnuplotSchearRate() {
       }
     }
   }
-  /*
+  
+  #ifdef ALGLIB
   if (myfile4.is_open()) {
-    myfile4 << "RPOS\tZPOS\tW" << std::endl;
-    for(unsigned int b=0; b<_bandRow->getBandShearZonesSize(); b++) {
-      std::shared_ptr<bandShearZone> bandSZ = _bandRow->getBandShearZones(b);
-      myfile4 << bandSZ->RPOS() << "\t"<< bandSZ->ZPOS() << "\t"<< bandSZ->W() << std::endl;
+    myfile4 << "RZ\tW\tH" << std::endl;
+    for(unsigned int b=0; b<_bandRow->shearBandSize(); b++) {
+      const Eigen::Vector3d tmpVal = _bandRow->shearBand(b);
+      myfile4 << tmpVal[0] << "\t"<< tmpVal[1] << "\t"<< tmpVal[2] << std::endl;
     }
   }
-  */  
+  #endif
   
   myfile1.close();
   myfile11.close();
