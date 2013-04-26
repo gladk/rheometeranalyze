@@ -273,7 +273,7 @@ void exportclass::VTK() {
 
 void exportclass::gnuplotSchearRate() {  
   
-  std::string _fileNameG1, _fileNameG2, _fileNameG3, _fileNameG4, _fileNameG5;
+  std::string _fileNameG1, _fileNameG2, _fileNameG3, _fileNameG4, _fileNameG5, _fileNameG;
   _fileNameG1 =  _cfg->FOutput();
   _fileNameG1 += "/gnuplot_shearrate.txt";
   
@@ -288,6 +288,9 @@ void exportclass::gnuplotSchearRate() {
   
   _fileNameG5 =  _cfg->FOutput();
   _fileNameG5 += "/gnuplot_vel2.txt";
+  
+  _fileNameG  =  _cfg->FOutput();
+  _fileNameG  +=  "gnuplot_daten";
   
   ofstream myfile1 (_fileNameG1.c_str());
   ofstream myfile11 (_fileNameG2.c_str());
@@ -428,6 +431,14 @@ void exportclass::gnuplotSchearRate() {
     }
   }
   myfile5.close();
+  
+  ofstream myfileG (_fileNameG.c_str());
+  for(unsigned int b=0; b<_bandRow->size(); b++) {
+    std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
+      myfileG << "id \t r \t z \t rPos \t zPos \t H \t W ";
+  }
+        
+  myfileG.close();
 };
 
 void exportclass::Utwente()  {
@@ -489,21 +500,5 @@ void exportclass::Utwente()  {
     }
     
     Fstat.close();
-    /*
-    C3d << particles.size() << "\t" << snapshotCur->timeStep()*_cfg->dT()
-        << "\t" << -_cfg->Dout()/2.0 << "\t"<<-_cfg->Dout()/2.0 << "\t0.0\t"
-        << _cfg->Dout()/2.0 << "\t" << _cfg->Dout()/2.0 << "\t" << _cfg->H()
-        << std::endl;
-    
-    BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
-      C3d << p->c()(0) << "\t" << p->c()(1) << "\t"<< p->c()(2) << "\t" 
-          << p->v()(0) << "\t" << p->v()(1) << "\t"<< p->v()(2) << "\t"
-          << p->rad() << std::endl;
-    };
-    
-    C3d << "\t"<< std::endl;
-    C3d.close();
-    */ 
-    //================================================
   }
 }
