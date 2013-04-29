@@ -41,7 +41,7 @@ class band {
     double _p, _pavg;                                     // Results, Press (trace), hydrostatic stress
     double  _muAVG;                                       // Results, mu calculated
     double _vavg, _vavgStDev;                             // Results, angular velocity of particles, standard deviation
-    Eigen::Vector3d _vZylavg;                             // Results, average velocity of particles in zylindrical coordinates
+    Eigen::Vector3d _vZylavg;                             // Results, average velocity of particles in zylindrical coordinates (dR, dZ, dF)
     double _scherRate;                                    // Results, scherrate
     double _volFraction;                                  // Volume fraction
     double _contactNumAVG;                                // Contact number per particle, AVG
