@@ -169,8 +169,8 @@ void bandRow::calculateValues () {
       alglib::real_2d_array x;
       alglib::real_1d_array y;
       alglib::real_1d_array c = "[0.08, 0.0075]";
-      x.setlength(_cfg->SecZ(), 1);
-      y.setlength(_cfg->SecZ());
+      x.setlength(_cfg->SecRadial(), 1);
+      y.setlength(_cfg->SecRadial());
       
       for(int r=0; r<_cfg->SecRadial(); r++) {
       
