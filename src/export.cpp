@@ -290,7 +290,7 @@ void exportclass::gnuplotSchearRate() {
   _fileNameG5 += "/gnuplot_vel2.txt";
   
   _fileNameG  =  _cfg->FOutput();
-  _fileNameG  +=  "gnuplot_daten";
+  _fileNameG  +=  "/gnuplot_daten";
   
   ofstream myfile1 (_fileNameG1.c_str());
   ofstream myfile11 (_fileNameG2.c_str());
@@ -433,9 +433,22 @@ void exportclass::gnuplotSchearRate() {
   myfile5.close();
   
   ofstream myfileG (_fileNameG.c_str());
+  myfileG << "#000_id\t001_r\t002_z\t003_rPos\t004_zPos\t005_H\t006_W\t007_PartN\t";
+  myfileG << "008_vol\t009_volFract\t011_contactNum\t   \n";
   for(unsigned int b=0; b<_bandRow->size(); b++) {
-    std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
-      myfileG << "id \t r \t z \t rPos \t zPos \t H \t W ";
+    std::shared_ptr<band> bT = _bandRow->getBand(b);
+    myfileG << bT->id() << "\t";           // 000_id
+    myfileG << bT->idR() << "\t";          // 001_r
+    myfileG << bT->idZ() << "\t";          // 002_z
+    myfileG << bT->midLinedR() << "\t";    // 003_rPos
+    myfileG << bT->midLinedZ() << "\t";    // 004_zPos
+    myfileG << bT->dZ() << "\t";           // 005_H
+    myfileG << bT->dR() << "\t";           // 006_W
+    myfileG << bT->partNumb() << "\t";     // 007_PartN
+    myfileG << bT->vol() << "\t";          // 008_vol
+    myfileG << bT->volFraction() << "\t";  // 009_volFract
+    myfileG << bT->contactNumAVG() << "\t";// 010_contactNum
+    myfileG << " \n"; 
   }
         
   myfileG.close();
