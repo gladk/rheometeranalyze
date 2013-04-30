@@ -134,32 +134,6 @@ void bandRow::calculateValues () {
   for(unsigned int i=0; i<_bandAll.size(); i++) {
     _bandAll[i]->calculateValues(_cfg->numSnapshot());
   }
-
-  // Scherrate
-  /*
-  for(unsigned int i=0; i<_bandAll.size()-1; i++) {
-    /*
-    if (
-       (_bandAll[i+1]->idR() > _bandAll[i-1]->idR()) and 
-       (_bandAll[i+1]->idZ() == _bandAll[i-1]->idZ())) {
-      double _shearRateTmp, _shearRateTmpA, _shearRateTmpB;
-      //Calculate Scherrate
-      
-      _shearRateTmpA = (_bandAll[i+1]->vZyl()(2) - _bandAll[i-1]->vZyl()(2))/
-                       (_bandAll[i+1]->midLinedR() - _bandAll[i-1]->midLinedR() -
-                       _bandAll[i]->vZyl()(2)/_bandAll[i]->midLinedR());
-      
-      if (i>_cfg->SecRadial() and (i+_cfg->SecRadial())<_bandAll.size()) {
-        _shearRateTmpB = (_bandAll[i+_cfg->SecRadial()]->vZyl()(2) - _bandAll[i-_cfg->SecRadial()]->vZyl()(2))/
-                         (_bandAll[i+_cfg->SecRadial()]->midLinedZ() - _bandAll[i-_cfg->SecRadial()]->midLinedZ());
-      } else {
-        _shearRateTmpB = 0.0;
-      }
-      _shearRateTmp =  0.5*sqrt(_shearRateTmpA*_shearRateTmpA + _shearRateTmpB*_shearRateTmpB);
-      _bandAll[i]->set_scherRate(_shearRateTmp);    
-      
-    }
-  }*/
   
   for(unsigned int i=0; i<_bandAll.size()-1-_cfg->SecRadial(); i++) {
     if (

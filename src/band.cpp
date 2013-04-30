@@ -59,7 +59,7 @@ void band::addParticle(std::shared_ptr<particle> tmpPart) {
 
 void band::set_scherRate(double scherRate) {
   _scherRate = fabs(scherRate);
-  _I = _scherRate*(2.0*_radAvg)/(sqrt(_densAVG/_pavg));
+  _I = _scherRate*(2.0*_radAvg)/(sqrt(_pavg/_densAVG));
   if (_scherRate != 0.0) {
     _eta = _tauavg/_scherRate;
   }
