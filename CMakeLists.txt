@@ -12,6 +12,13 @@ IF(NOT(CMAKE_CXX_FLAGS))
   SET(CMAKE_CXX_FLAGS  "-Wall -fPIC -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security")
 ENDIF (NOT(CMAKE_CXX_FLAGS))
 
+IF(OPENMP_FOUND)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLED_OPENMP ${OpenMP_CXX_FLAGS}")
+  MESSAGE(STATUS "Found OpenMP")
+ELSE(OPENMP_FOUND)
+  MESSAGE(STATUS "OpenMP NOT found")
+ENDIF(OPENMP_FOUND)
+
 #C+11 support
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 #===========================================================
