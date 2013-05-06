@@ -274,6 +274,7 @@ void exportclass::VTK() {
 void exportclass::gnuplotSchearRate() {  
   
   std::string _fileNameG1, _fileNameG2, _fileNameG3, _fileNameG4, _fileNameG5, _fileNameG;
+  /*
   _fileNameG1 =  _cfg->FOutput();
   _fileNameG1 += "/gnuplot_shearrate.txt";
   
@@ -282,19 +283,22 @@ void exportclass::gnuplotSchearRate() {
   
   _fileNameG3 =  _cfg->FOutput();
   _fileNameG3 += "/gnuplot_vel1_c.txt";
-  
-  _fileNameG4 =  _cfg->FOutput();
-  _fileNameG4 += "/shearband";
-  
+
+ 
   _fileNameG5 =  _cfg->FOutput();
   _fileNameG5 += "/gnuplot_vel2.txt";
+  */
+    
+  _fileNameG4 =  _cfg->FOutput();
+  _fileNameG4 += "/shearband";
   
   _fileNameG  =  _cfg->FOutput();
   _fileNameG  +=  "/gnuplot_daten";
   
+  /*
   ofstream myfile1 (_fileNameG1.c_str());
   ofstream myfile11 (_fileNameG2.c_str());
-  ofstream myfile4 (_fileNameG4.c_str());
+  
   ofstream myfile5 (_fileNameG5.c_str());
   
   //HACK==================================
@@ -354,16 +358,6 @@ void exportclass::gnuplotSchearRate() {
       }
     }
   }
-  
-  #ifdef ALGLIB
-  if (myfile4.is_open()) {
-    myfile4 << "RZ\tW\tH" << std::endl;
-    for(unsigned int b=0; b<_bandRow->shearBandSize(); b++) {
-      const Eigen::Vector3d tmpVal = _bandRow->shearBand(b);
-      myfile4 << tmpVal[0] << "\t"<< tmpVal[1] << "\t"<< tmpVal[2] << std::endl;
-    }
-  }
-  #endif
   
   myfile1.close();
   myfile11.close();
@@ -431,6 +425,18 @@ void exportclass::gnuplotSchearRate() {
     }
   }
   myfile5.close();
+  */
+  
+  ofstream myfile4 (_fileNameG4.c_str());
+  #ifdef ALGLIB
+  if (myfile4.is_open()) {
+    myfile4 << "RZ\tW\tH" << std::endl;
+    for(unsigned int b=0; b<_bandRow->shearBandSize(); b++) {
+      const Eigen::Vector3d tmpVal = _bandRow->shearBand(b);
+      myfile4 << tmpVal[0] << "\t"<< tmpVal[1] << "\t"<< tmpVal[2] << std::endl;
+    }
+  }
+  #endif
   
   ofstream myfileG (_fileNameG.c_str());
   myfileG << "#000_id\t001_r\t002_z\t003_rPos\t004_zPos\t005_H\t006_W\t007_PartN\t";
