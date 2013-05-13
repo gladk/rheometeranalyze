@@ -513,7 +513,7 @@ void exportclass::Utwente()  {
     BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
       C3d << p->c()(0) << " " << p->c()(1) << " "<< p->c()(2) << " " 
           << p->v()(0) << " " << p->v()(1) << " "<< p->v()(2) << " "
-          << p->rad() << std::endl;
+          << p->rad() << " 0 " << std::endl;
     };
     
     C3d << "\t"<< std::endl;
