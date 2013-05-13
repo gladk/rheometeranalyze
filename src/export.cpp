@@ -527,7 +527,7 @@ void exportclass::Utwente()  {
     
     ofstream Fstat (_fileNameFstat.c_str());
     std::vector <std::shared_ptr<force> > forces = snapshotCur->forces();
-    Fstat<<"# TimeStep " << snapshotCur->timeStep() << std::endl;
+    Fstat<<"# " << timeTmp << " volumenfraction" << std::endl;
     Fstat<<"# Time " << timeTmp << std::endl;
     Fstat<<"#  " << std::endl;
     
