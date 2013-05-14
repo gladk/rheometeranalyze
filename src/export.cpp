@@ -534,20 +534,20 @@ void exportclass::Utwente()  {
     
     
     BOOST_FOREACH(std::shared_ptr<force> f, forces) {
-      unsigned long long pid1T = f->pid1();
-      unsigned long long pid2T = f->pid2();
+      long long pid1T = f->pid1();
+      long long pid2T = f->pid2();
       
-      if ((_cfg->tC()>=0) and (f->part1()->type() != _cfg->tC())) {
+      if ((_cfg->tF()>=0) and (f->part1()->type() != _cfg->tF()) and (f->part2()->type() == _cfg->tF())) {
         pid1T = -1;
       }
-      if ((_cfg->tC()>=0) and (f->part2()->type() != _cfg->tC())) {
+      if ((_cfg->tF()>=0) and (f->part2()->type() != _cfg->tF()) and (f->part1()->type() == _cfg->tF())) {
         pid2T = -1;
       }
       
       Fstat << timeTmp << " " << pid1T << " " << pid2T << " "
             << f->cP()(0) << " " << f->cP()(1) << " " << f->cP()(2) << " " 
             << f->deltaN() << " "
-            << "0.0" << " "                                      //Theta, should be fixed.
+            << "0.0" << " "                               //Theta, should be fixed.
             << f->valN() << " " <<  "0.0" << " "          //Normal and tangential components of the force
             << f->nVec()(0) << " " << f->nVec()(1) << " " << f->nVec()(2) << " " 
             << "0.0" << " " << "0.0" << " " << "0.0" << " " 
