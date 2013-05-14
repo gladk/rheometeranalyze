@@ -1,0 +1,99 @@
+[Files]
+;Folder for output files
+output = output
+
+[Rheometer]
+;coordinates of center
+cX = 0.0
+cY = 0.0
+cZ = 0.0
+
+;coordinates of origin
+oX = 0.0
+oY = 0.0
+oZ = 1.0
+
+;internal and outer diameters and height of the rheometer
+Din = 0.0270
+Dout = 0.22
+H = 0.035
+
+;number of sections, in which the rheometer will be divided in radial- and Z-direction 
+SecRadial = 39
+SecZ = 20
+
+;gravity direction
+gX = 0.0
+gY = 0.0
+gZ = -1.0
+
+;delta time
+dT =  0.000005
+
+[Particle]
+;number of atoms string
+nAt = 4
+
+;number of timestep string (particles)
+nPSt = 2
+
+;begin of data string
+nDat = 10
+
+;column of Id
+cId = 1
+
+;column of type 
+cT = 2
+
+;column of mass
+cM = 3
+
+;column of Center
+cC = 4
+
+;column of linear velocity 
+cV = 10
+
+;column of angular velocity 
+cO = 16
+
+;column of radius
+cR = 19
+
+;column of density
+cD = 27
+
+;type of particle, which will be calculated. -1 means calculating of all particles
+tC = -1
+
+[Force]
+;number of forces string
+nFt = 4
+
+;number of timestep string (forces)
+nFSt = 2
+
+;begin of data string
+nDat = 6
+
+;column Pos1
+cPos1 = 1
+
+;column Pos2
+cPos2 = 4
+
+;column Pos1ID
+cPos1ID = 7
+
+;column Pos2ID
+cPos2ID = 8
+
+;column Forc
+cForc = 10
+
+;type of particle, which will be calculated for forces. -1 means calculating of all particles
+tF = 1
+
+
+
