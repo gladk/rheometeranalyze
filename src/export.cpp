@@ -487,7 +487,8 @@ void exportclass::gnuplotSchearRate() {
 
 void exportclass::Utwente()  {
   std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
-  unsigned int leadingZerosLen = static_cast <unsigned int> (log10 (snapshots->size()) + 1);
+  //unsigned int leadingZerosLen = static_cast <unsigned int> (log10 (snapshots->size()) + 1);
+  unsigned int leadingZerosLen = 4;
   
   for(unsigned int i=0; i<snapshots->size(); i++) {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
