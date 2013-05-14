@@ -534,7 +534,17 @@ void exportclass::Utwente()  {
     
     
     BOOST_FOREACH(std::shared_ptr<force> f, forces) {
-      Fstat << timeTmp << " " << f->pid1() << " " << f->pid2() << " "
+      unsigned long long pid1T = f->pid1();
+      unsigned long long pid2T = f->pid2();
+      
+      if ((_cfg->tC()>=0) and (f->part1()->type() != _cfg->tC())) {
+        pid1T = -1;
+      }
+      if ((_cfg->tC()>=0) and (f->part2()->type() != _cfg->tC())) {
+        pid2T = -1;
+      }
+      
+      Fstat << timeTmp << " " << pid1T << " " << pid2T << " "
             << f->cP()(0) << " " << f->cP()(1) << " " << f->cP()(2) << " " 
             << f->deltaN() << " "
             << "0.0" << " "                                      //Theta, should be fixed.
