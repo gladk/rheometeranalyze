@@ -108,7 +108,7 @@ void band::calculateValues (int numSnapshots) {
     */ 
     
     _volFraction  = _volPart/_vol/numSnapshots;
-    _contactNumAVG = _contactNumAVG/i/numSnapshots;
+    _contactNumAVG = _contactNumAVG/i;
     
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
     
