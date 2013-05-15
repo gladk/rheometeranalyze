@@ -84,7 +84,7 @@ void band::calculateValues (int numSnapshots) {
   for(unsigned long long p=0; p<_allPart.size(); p++) {
     if (not(_allPart[p]->disabled())) {
       angVelTmpV.push_back(_allPart[p]->realAngular());
-      velZylTMP.push_back(_allPart[p]->vZyl());
+      velZylTMP.push_back(_allPart[p]->vZyl()*_allPart[p]->vol());
       radTMPV.push_back(_allPart[p]->rad());
       densTMP.push_back(_allPart[p]->density());
       _volPart  += _allPart[p]->vol();
