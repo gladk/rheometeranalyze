@@ -143,9 +143,9 @@ void exportclass::VTK() {
   bandContactNumAVG->SetNumberOfComponents(1);
   bandContactNumAVG->SetName("bandContactNumAVG");
   
-  vtkSmartPointer<vtkDoubleArray> bandVelLinDf = vtkSmartPointer<vtkDoubleArray>::New();
-  bandVelLinDf->SetNumberOfComponents(1);
-  bandVelLinDf->SetName("bandVelLinDf");
+  vtkSmartPointer<vtkDoubleArray> bandVelLin = vtkSmartPointer<vtkDoubleArray>::New();
+  bandVelLin->SetNumberOfComponents(3);
+  bandVelLin->SetName("bandVelLin_rzf");
   
   #ifdef ALGLIB
     vtkSmartPointer<vtkIntArray> bandShearBand = vtkSmartPointer<vtkIntArray>::New();
@@ -216,7 +216,9 @@ void exportclass::VTK() {
         bandContactNumAVG->InsertNextValue(bandTMP->contactNumAVG());
         bandScherRate->InsertNextValue(bandTMP->scherRate());
         bandMu->InsertNextValue(bandTMP->muAVG());
-        bandVelLinDf->InsertNextValue(bandTMP->vDf());
+        
+        double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
+        bandVelLin->InsertNextTupleValue(VelLin);
         #ifdef ALGLIB
           if (bandTMP->shearBand()) {
             bandShearBand->InsertNextValue(1);
@@ -255,7 +257,7 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandContactNumAVG);
     spheresUg->GetPointData()->AddArray(bandScherRate);
     spheresUg->GetPointData()->AddArray(bandMu);
-    spheresUg->GetPointData()->AddArray(bandVelLinDf);
+    spheresUg->GetPointData()->AddArray(bandVelLin);
     spheresUg->GetPointData()->AddArray(bandTensor);
     spheresUg->GetPointData()->AddArray(partTensor);
     spheresUg->GetPointData()->AddArray(posZyl);
