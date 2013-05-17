@@ -116,6 +116,37 @@ unsigned int particle::contacts() {
   return _contactParticles.size();
 };
 
+unsigned int particle::wetContacts() {
+  unsigned int wetContacts = 0;
+  for (unsigned int i = 0; i < _contactParticles.size(); i++) {
+    std::shared_ptr<particle> tmpParticle = _contactParticles[i];
+    if (((_c - tmpParticle->c()).norm() - (_rad + tmpParticle->rad())) > 0) {
+      wetContacts++;
+    }
+  }
+  return wetContacts;
+};
+
+double particle::wetContactsAverageDistance() {
+  unsigned int wetContacts = 0;
+  double wetContactsAverageDistance = 0.0;
+  
+  for (unsigned int i = 0; i < _contactParticles.size(); i++) {
+    std::shared_ptr<particle> tmpParticle = _contactParticles[i];
+    double tmpDist = (_c - tmpParticle->c()).norm() - (_rad + tmpParticle->rad());
+    if ( tmpDist > 0) {
+      wetContacts++;
+      wetContactsAverageDistance += tmpDist;
+    }
+  }
+  if (wetContacts>0) {
+    return wetContactsAverageDistance/wetContacts;
+  } else {
+    return 0.0;
+  }
+  
+};
+
 void particle::setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateCC)  {
   _posZyl = cart_to_cyl(rotateCC*loc);
   _axisMatrix = get_axes_coord(_posZyl, rotateCC);

@@ -50,6 +50,8 @@ band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, d
   _eta = 0.0;
   _vZylavg = _vZylavg.Zero();
   _shearBand = false;
+  _wetContactsAVG = 0;
+  _wetContactDistanceAVG = 0;
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
@@ -69,6 +71,8 @@ void band::calculateValues (int numSnapshots) {
   _volPart = 0.0;
   _volFraction  = 0.0;
   _contactNumAVG = 0.0;
+  _wetContactsAVG = 0.0;
+  _wetContactDistanceAVG = 0.0;
   
   Eigen::Matrix3d _totalStressTensor = Eigen::Matrix3d::Zero();
   
@@ -90,6 +94,8 @@ void band::calculateValues (int numSnapshots) {
       _volPart  += _allPart[p]->vol();
       _totalStressTensor += _allPart[p]->kinEnergie() + _allPart[p]->stressTensor();
       _contactNumAVG  += _allPart[p]->contacts();
+      _wetContactsAVG += _allPart[p]->wetContacts();
+      _wetContactDistanceAVG += _allPart[p]->wetContactsAverageDistance();
       i++;
     }
   }
@@ -109,6 +115,8 @@ void band::calculateValues (int numSnapshots) {
     
     _volFraction  = _volPart/_vol/numSnapshots;
     _contactNumAVG = _contactNumAVG/i;
+    _wetContactsAVG = _wetContactsAVG/i;
+    _wetContactDistanceAVG = _wetContactDistanceAVG/i;
     
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
     

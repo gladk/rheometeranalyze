@@ -147,6 +147,14 @@ void exportclass::VTK() {
   bandVelLin->SetNumberOfComponents(3);
   bandVelLin->SetName("bandVelLin_rzf");
   
+  vtkSmartPointer<vtkDoubleArray> bandWetContactsAVG = vtkSmartPointer<vtkDoubleArray>::New();
+  bandWetContactsAVG->SetNumberOfComponents(1);
+  bandWetContactsAVG->SetName("bandWetContactsAVG");
+  
+  vtkSmartPointer<vtkDoubleArray> bandWetContactDistanceAVG = vtkSmartPointer<vtkDoubleArray>::New();
+  bandWetContactDistanceAVG->SetNumberOfComponents(1);
+  bandWetContactDistanceAVG->SetName("bandWetContactDistanceAVG");
+  
   #ifdef ALGLIB
     vtkSmartPointer<vtkIntArray> bandShearBand = vtkSmartPointer<vtkIntArray>::New();
     bandShearBand->SetNumberOfComponents(1);
@@ -216,6 +224,8 @@ void exportclass::VTK() {
         bandContactNumAVG->InsertNextValue(bandTMP->contactNumAVG());
         bandScherRate->InsertNextValue(bandTMP->scherRate());
         bandMu->InsertNextValue(bandTMP->muAVG());
+        bandWetContactDistanceAVG->InsertNextValue(bandTMP->wetContactDistanceAVG());
+        bandWetContactsAVG->InsertNextValue(bandTMP->wetContactsAVG());
         
         double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
         bandVelLin->InsertNextTupleValue(VelLin);
@@ -261,6 +271,8 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandTensor);
     spheresUg->GetPointData()->AddArray(partTensor);
     spheresUg->GetPointData()->AddArray(posZyl);
+    spheresUg->GetPointData()->AddArray(bandWetContactsAVG);
+    spheresUg->GetPointData()->AddArray(bandWetContactDistanceAVG);
     #ifdef ALGLIB
     spheresUg->GetPointData()->AddArray(bandShearBand);
     #endif
@@ -447,7 +459,7 @@ void exportclass::gnuplotSchearRate() {
   myfileG << "022_strTensRR\t023_strTensRZ\t024_strTensRF\t";
   myfileG << "025_strTensZR\t026_strTensZZ\t027_strTensZF\t";
   myfileG << "028_strTensFR\t029_strTensFZ\t030_strTensFF\t";
-  myfileG << "031_ShearBand\t \n";
+  myfileG << "031_ShearBand\t032_WetContactsAVG\t033_WetContactsDistAVG\t \n";
   for(unsigned int b=0; b<_bandRow->size(); b++) {
     std::shared_ptr<band> bT = _bandRow->getBand(b);
     myfileG << bT->id() << "\t";           // 001_id
@@ -481,6 +493,8 @@ void exportclass::gnuplotSchearRate() {
     myfileG << bT->TensorAVG()(7)<< "\t";  // 029_strTensFZ
     myfileG << bT->TensorAVG()(8)<< "\t";  // 030_strTensFF
     myfileG << bT->shearBand()<< "\t";     // 031_ShearBand - True (1) or False (0)
+    myfileG << bT->wetContactsAVG()<< "\t";// 032_WetContactsAVG
+    myfileG << bT->wetContactDistanceAVG()<< "\t";// 033_WetContactsDistAVG
     myfileG << " \n"; 
   }
         

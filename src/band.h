@@ -38,6 +38,7 @@ class band {
     Eigen::Matrix3d _stressTensorAVG;
     
     double _tau, _tauavg, _vol, _volPart;                 // Results, Tau, Vol, Vol of particles
+    double _wetContactsAVG, _wetContactDistanceAVG;       // Average number of wet contacts and average distance
     double _p, _pavg;                                     // Results, Press (trace), hydrostatic stress
     double  _muAVG;                                       // Results, mu calculated
     double _vavg, _vavgStDev;                             // Results, angular velocity of particles, standard deviation
@@ -83,6 +84,8 @@ class band {
     double I() { return _I;}
     double density() { return _densAVG;}
     double eta() { return _eta;}
+    double wetContactDistanceAVG() { return _wetContactDistanceAVG;}
+    double wetContactsAVG() { return _wetContactsAVG;}
     Eigen::Vector3d vZyl() { return _vZylavg;}
     double vDf() { return _vZylavg(2);}
     void shearBandOn() { _shearBand = true;}

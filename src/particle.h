@@ -83,4 +83,6 @@ class particle {
     double stressPress();
     double stressTau();
     unsigned int contacts();
+    unsigned int wetContacts();
+    double wetContactsAverageDistance();
 };
