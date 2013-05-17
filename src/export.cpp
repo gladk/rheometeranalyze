@@ -439,46 +439,46 @@ void exportclass::gnuplotSchearRate() {
   #endif
   
   ofstream myfileG (_fileNameG.c_str());
-  myfileG << "#000_id\t001_r\t002_z\t003_rPos\t004_zPos\t005_H\t006_W\t007_PartN\t";
-  myfileG << "008_vol\t009_volFract\t010_contactNum\t011_vZyldR\t012_vZyldZ\t013_vZyldF\t";
-  myfileG << "014_ShearRate\t015_I\t016_Eta\t017_omega\t018_press\t019_tau\t020_mu\t";
-  myfileG << "021_strTensRR\t022_strTensRZ\t023_strTensRF\t";
-  myfileG << "024_strTensZR\t025_strTensZZ\t026_strTensZF\t";
-  myfileG << "027_strTensFR\t028_strTensFZ\t029_strTensFF\t";
-  myfileG << "030_ShearBand\t \n";
+  myfileG << "#001_id\t002_r\t003_z\t004_rPos\t005_zPos\t006_H\t007_W\t008_PartN\t";
+  myfileG << "009_vol\t010_volFract\t011_contactNum\t012_vZyldR\t013_vZyldZ\t014_vZyldF\t";
+  myfileG << "015_ShearRate\t016_I\t017_Eta\t018_omega\t019_press\t020_tau\t021_mu\t";
+  myfileG << "022_strTensRR\t023_strTensRZ\t024_strTensRF\t";
+  myfileG << "025_strTensZR\t026_strTensZZ\t027_strTensZF\t";
+  myfileG << "028_strTensFR\t029_strTensFZ\t030_strTensFF\t";
+  myfileG << "031_ShearBand\t \n";
   for(unsigned int b=0; b<_bandRow->size(); b++) {
     std::shared_ptr<band> bT = _bandRow->getBand(b);
-    myfileG << bT->id() << "\t";           // 000_id
-    myfileG << bT->idR() << "\t";          // 001_r
-    myfileG << bT->idZ() << "\t";          // 002_z
-    myfileG << bT->midLinedR() << "\t";    // 003_rPos
-    myfileG << bT->midLinedZ() << "\t";    // 004_zPos
-    myfileG << bT->dZ() << "\t";           // 005_H
-    myfileG << bT->dR() << "\t";           // 006_W
-    myfileG << bT->partNumb() << "\t";     // 007_PartN
-    myfileG << bT->vol() << "\t";          // 008_vol
-    myfileG << bT->volFraction() << "\t";  // 009_volFract
-    myfileG << bT->contactNumAVG() << "\t";// 010_contactNum
-    myfileG << bT->vZyl()[0]<< "\t";       // 011_vZyldR
-    myfileG << bT->vZyl()[1]<< "\t";       // 012_vZyldZ
-    myfileG << bT->vZyl()[2]<< "\t";       // 013_vZyldF
-    myfileG << bT->scherRate()<< "\t";     // 014_ShearRate
-    myfileG << bT->I()<< "\t";             // 015_I
-    myfileG << bT->eta()<< "\t";           // 016_Eta
-    myfileG << bT->omega()<< "\t";         // 017_omega
-    myfileG << bT->press()<< "\t";         // 018_press
-    myfileG << bT->tau()<< "\t";           // 019_tau
-    myfileG << bT->muAVG()<< "\t";         // 020_mu
-    myfileG << bT->TensorAVG()(0)<< "\t";  // 021_strTensRR
-    myfileG << bT->TensorAVG()(1)<< "\t";  // 022_strTensRZ
-    myfileG << bT->TensorAVG()(2)<< "\t";  // 023_strTensRF
-    myfileG << bT->TensorAVG()(3)<< "\t";  // 024_strTensZR
-    myfileG << bT->TensorAVG()(4)<< "\t";  // 025_strTensZZ
-    myfileG << bT->TensorAVG()(5)<< "\t";  // 026_strTensZF
-    myfileG << bT->TensorAVG()(6)<< "\t";  // 027_strTensFR
-    myfileG << bT->TensorAVG()(7)<< "\t";  // 028_strTensFZ
-    myfileG << bT->TensorAVG()(8)<< "\t";  // 029_strTensFF
-    myfileG << bT->shearBand()<< "\t";     // 030_ShearBand - True (1) or False (0)
+    myfileG << bT->id() << "\t";           // 001_id
+    myfileG << bT->idR() << "\t";          // 002_r
+    myfileG << bT->idZ() << "\t";          // 003_z
+    myfileG << bT->midLinedR() << "\t";    // 004_rPos
+    myfileG << bT->midLinedZ() << "\t";    // 005_zPos
+    myfileG << bT->dZ() << "\t";           // 006_H
+    myfileG << bT->dR() << "\t";           // 007_W
+    myfileG << bT->partNumb() << "\t";     // 008_PartN
+    myfileG << bT->vol() << "\t";          // 009_vol
+    myfileG << bT->volFraction() << "\t";  // 010_volFract
+    myfileG << bT->contactNumAVG() << "\t";// 011_contactNum
+    myfileG << bT->vZyl()[0]<< "\t";       // 012_vZyldR
+    myfileG << bT->vZyl()[1]<< "\t";       // 013_vZyldZ
+    myfileG << bT->vZyl()[2]<< "\t";       // 014_vZyldF
+    myfileG << bT->scherRate()<< "\t";     // 015_ShearRate
+    myfileG << bT->I()<< "\t";             // 016_I
+    myfileG << bT->eta()<< "\t";           // 017_Eta
+    myfileG << bT->omega()<< "\t";         // 018_omega
+    myfileG << bT->press()<< "\t";         // 019_press
+    myfileG << bT->tau()<< "\t";           // 020_tau
+    myfileG << bT->muAVG()<< "\t";         // 021_mu
+    myfileG << bT->TensorAVG()(0)<< "\t";  // 022_strTensRR
+    myfileG << bT->TensorAVG()(1)<< "\t";  // 023_strTensRZ
+    myfileG << bT->TensorAVG()(2)<< "\t";  // 024_strTensRF
+    myfileG << bT->TensorAVG()(3)<< "\t";  // 025_strTensZR
+    myfileG << bT->TensorAVG()(4)<< "\t";  // 026_strTensZZ
+    myfileG << bT->TensorAVG()(5)<< "\t";  // 027_strTensZF
+    myfileG << bT->TensorAVG()(6)<< "\t";  // 028_strTensFR
+    myfileG << bT->TensorAVG()(7)<< "\t";  // 029_strTensFZ
+    myfileG << bT->TensorAVG()(8)<< "\t";  // 030_strTensFF
+    myfileG << bT->shearBand()<< "\t";     // 031_ShearBand - True (1) or False (0)
     myfileG << " \n"; 
   }
         
