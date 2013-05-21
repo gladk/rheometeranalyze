@@ -52,6 +52,16 @@ void force::calculateStressTensor() {
   Eigen::Vector3d l;
   Eigen::Matrix3d _stressTensor;
   
+  
+  
+  /*
+   * 
+   * The formula (15, part2) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+   * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+   * 
+   */
+  
+  
   // Cartesian coordinates
 
   l = (this->pos1()-this->pos2())/2.0;

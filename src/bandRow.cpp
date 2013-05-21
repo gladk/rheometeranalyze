@@ -27,6 +27,12 @@
   #include "interpolation.h"
   void function_cx_1_func(const alglib::real_1d_array &c, const alglib::real_1d_array &x, double &func, void *ptr) 
     {
+        /*
+         * 
+         * The formula (18) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+         * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+         * 
+         */
          func = 0.5 + 0.5*erf((x[0] - c[0])/c[1]);
     }
 #endif
@@ -140,7 +146,14 @@ void bandRow::calculateValues () {
        (_bandAll[i+1]->idR() > _bandAll[i]->idR()) and 
        (_bandAll[i+1]->idZ() == _bandAll[i]->idZ())) {
       double _shearRateTmp, _shearRateTmpA, _shearRateTmpB;
-      //Calculate Scherrate
+      // Calculate Scherrate
+      
+      /*
+       * 
+       * The formula (16) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+       * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+       * 
+       */ 
       
       _shearRateTmpA = (_bandAll[i+1]->vZyl()(2) - _bandAll[i]->vZyl()(2))/
                        (_bandAll[i+1]->midLinedR() - _bandAll[i]->midLinedR()) -

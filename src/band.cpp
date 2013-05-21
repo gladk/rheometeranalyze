@@ -61,8 +61,20 @@ void band::addParticle(std::shared_ptr<particle> tmpPart) {
 
 void band::set_scherRate(double scherRate) {
   _scherRate = fabs(scherRate);
+  /*
+  * 
+  * The formula (3) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+  * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+  * 
+  */ 
   _I = _scherRate*(2.0*_radAvg)/(sqrt(_pavg/_densAVG));
   if (_scherRate != 0.0) {
+   /*
+    * 
+    * The formula (1) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+    * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+    * 
+    */ 
     _eta = _tauavg/_scherRate;
   }
 };
@@ -92,7 +104,14 @@ void band::calculateValues (int numSnapshots) {
       radTMPV.push_back(_allPart[p]->rad());
       densTMP.push_back(_allPart[p]->density());
       _volPart  += _allPart[p]->vol();
+      /*
+       * 
+       * The formula (15, both parts) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+       * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+       * 
+       */
       _totalStressTensor += _allPart[p]->kinEnergie() + _allPart[p]->stressTensor();
+      
       _contactNumAVG  += _allPart[p]->contacts();
       _wetContactsAVG += _allPart[p]->wetContacts();
       _wetContactDistanceAVG += _allPart[p]->wetContactsAverageDistance();
@@ -102,6 +121,13 @@ void band::calculateValues (int numSnapshots) {
   
   if (i>0) {
     
+     /*
+     * 
+     * The formula (15) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+     * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+     * 
+     */
+   
     _stressTensorAVG = (_totalStressTensor )/_vol/numSnapshots;
     
     /*
@@ -113,20 +139,53 @@ void band::calculateValues (int numSnapshots) {
     * Press = sqrt(S_rr*S_rr + S_zz*S_zz)
     */ 
     
+    
+    /*
+     * 
+     * The formula (13) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+     * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+     * 
+     */ 
     _volFraction  = _volPart/_vol/numSnapshots;
+    
+    
     _contactNumAVG = _contactNumAVG/i;
     _wetContactsAVG = _wetContactsAVG/i;
     _wetContactDistanceAVG = _wetContactDistanceAVG/i;
     
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
     
+    
+    /*
+     * 
+     * The formula (14) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+     * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+     * 
+     */
     _vZylavg = std::accumulate(velZylTMP.begin(), velZylTMP.end(), Eigen::Vector3d(0,0,0));
     _vZylavg = _vZylavg/_vol/_volFraction/numSnapshots;
     
     double vAVGsq_sum = std::inner_product(angVelTmpV.begin(), angVelTmpV.end(), angVelTmpV.begin(), 0.0);
     _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);
     
+    
+    
+    
+    /*
+     * 
+     * The formula (--) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+     * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+     * 
+     */
     _pavg = _stressTensorAVG.trace()/3.0;
+    
+    
+    /*
+     * 
+     * The formula (17) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+     * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+     * 
+     */
     _tauavg = sqrt(_stressTensorAVG(2)*_stressTensorAVG(2) + _stressTensorAVG(5)*_stressTensorAVG(5));
     
     _radAvg = std::accumulate(radTMPV.begin(), radTMPV.end(), 0.0) / radTMPV.size();

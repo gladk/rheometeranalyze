@@ -101,6 +101,12 @@ Eigen::Matrix3d particle::kinEnergie() {
     std::cerr << "Zylindrical velocities are not set yet! Exiting..."<<std::endl; 
     exit (EXIT_FAILURE);
   };
+  /*
+   * 
+   * The formula (15, part1) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+   * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+   * 
+   */
   return _m*_vZylindrical*_vZylindrical.transpose();
 };
 
