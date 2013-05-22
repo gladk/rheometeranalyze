@@ -58,9 +58,11 @@ class force {
     Eigen::Vector3d val() {return _val;};
     Eigen::Vector3d dg() {return _dg;};
     Eigen::Vector3d cP() {return _cP;};
-    Eigen::Vector3d nVec();
+    Eigen::Vector3d nVec();                                 // Normal vector
+    Eigen::Vector3d tVec();                                 // Tangential vector
     double deltaN();                                        // Overlap
-    double valN();                                          // Normal force
+    Eigen::Vector3d forceN();                               // Normal force
+    Eigen::Vector3d forceT();                               // Tangential force
     double dist() { return _cPZ(0);};
     double height() { return _cPZ(1);};
     void set_dg(Eigen::Vector3d dg) {_dg=dg;};

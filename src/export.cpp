@@ -418,8 +418,8 @@ void exportclass::Utwente()  {
         Fstat << timeTmp << " " << pid1T << " " << pid2T << " "
               << f->cP()(0) << " " << f->cP()(1) << " " << f->cP()(2) << " " 
               << f->deltaN() << " "
-              << "0.0" << " "                               //Theta, should be fixed.
-              << f->valN() << " " <<  "0.0" << " "          //Normal and tangential components of the force
+              << "0.0" << " "                                          //Theta, should be fixed.
+              << (f->forceN()).norm() << " " <<  "0.0" << " "          //Normal and tangential components of the force
               << f->nVec()(0) << " " << f->nVec()(1) << " " << f->nVec()(2) << " " 
               << "0.0" << " " << "0.0" << " " << "0.0" << " " 
               << std::endl;
@@ -427,8 +427,8 @@ void exportclass::Utwente()  {
         Fstat << timeTmp << " " << pid2T << " " << pid1T << " "
               << f->cP()(0) << " " << f->cP()(1) << " " << f->cP()(2) << " " 
               << f->deltaN() << " "
-              << "0.0" << " "                               //Theta, should be fixed.
-              << f->valN() << " " <<  "0.0" << " "          //Normal and tangential components of the force
+              << "0.0" << " "                                          //Theta, should be fixed.
+              << (f->forceN()).norm() << " " <<  "0.0" << " "          //Normal and tangential components of the force
               << -f->nVec()(0) << " " << -f->nVec()(1) << " " << -f->nVec()(2) << " " 
               << "0.0" << " " << "0.0" << " " << "0.0" << " " 
               << std::endl;
@@ -436,9 +436,9 @@ void exportclass::Utwente()  {
       if ((pid1T>=0) and (pid2T>=0)) {
         Fstat << timeTmp << " " << pid2T << " " << pid1T << " "
               << f->cP()(0) << " " << f->cP()(1) << " " << f->cP()(2) << " " 
-              << f->deltaN() << " "
-              << "0.0" << " "                               //Theta, should be fixed.
-              << f->valN() << " " <<  "0.0" << " "          //Normal and tangential components of the force
+              << f->deltaN() << " " 
+              << "0.0" << " "                                          //Theta, should be fixed.
+              << (f->forceN()).norm() << " " <<  "0.0" << " "          //Normal and tangential components of the force
               << -f->nVec()(0) << " " << -f->nVec()(1) << " " << -f->nVec()(2) << " " 
               << "0.0" << " " << "0.0" << " " << "0.0" << " " 
               << std::endl;

@@ -100,9 +100,15 @@ double force::deltaN() {
   return (_part1->rad() + _part2->rad()) - (_part1->c() - _part2->c()).norm();
 };
 
-double force::valN() {
+Eigen::Vector3d force::forceN() {
   double valN = this->nVec().dot(_val);
-  return fabs(valN);
+  Eigen::Vector3d forceN = valN*this->nVec();
+  return forceN;
+};
+
+Eigen::Vector3d force::forceT() {
+  Eigen::Vector3d forceT = _val - this->forceN();
+  return forceT;
 };
 
 Eigen::Vector3d force::nVec() {
@@ -110,6 +116,12 @@ Eigen::Vector3d force::nVec() {
   nVec = _part1->c() - _part2->c();
   nVec.normalize();
   return nVec;
+};
+
+Eigen::Vector3d force::tVec() {
+  Eigen::Vector3d nReturn = this->forceT();
+  nReturn.normalize();
+  return nReturn;
 };
 
 void force::setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateCC) {
