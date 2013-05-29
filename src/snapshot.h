@@ -34,7 +34,6 @@ class snapshot {
     fs::path _particlesFileName;
     fs::path _forcesFileName;
     unsigned long long _timeStep;
-    double _time;
     std::vector <std::shared_ptr<particle> > _particles;
     std::vector <std::shared_ptr<force> > _forces;
 

@@ -60,7 +60,6 @@ Eigen::Matrix3d cart_to_cyl(Eigen::Matrix3d& cart, double& phi) {
 }
 
 Eigen::Matrix3d get_axes_coord(Eigen::Vector3d& X, Eigen::Quaternion<double>& rotateCC) {
-  double const& rho = X(0);
   double const& z = X(1);
   double const& phi = X(2);
   

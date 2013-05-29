@@ -202,8 +202,10 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
              and
              (
                ((_cfg->tF()>=0) and 
+                (
                  _particleAll[forceRowNumbTMP]->getP(pid1)->type()==_cfg->tF() or
                  _particleAll[forceRowNumbTMP]->getP(pid2)->type()==_cfg->tF()
+                )
                )
                or 
                (_cfg->tF()<0)

@@ -118,9 +118,9 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   }
   
   #ifdef ALGLIB
-    std::cout<<"\n\ALGLIB Library is found and export of shearbands will be produced \n"<<std::endl;
+    std::cout<<"\nALGLIB Library is found and export of shearbands will be produced \n"<<std::endl;
   #else
-    std::cout<<"\n\ALGLIB Library is NOT found and export of shearbands will NOT be produced \n"<<std::endl;
+    std::cout<<"\nALGLIB Library is NOT found and export of shearbands will NOT be produced \n"<<std::endl;
   #endif
   
   
