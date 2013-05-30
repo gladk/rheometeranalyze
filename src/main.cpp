@@ -40,6 +40,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   
   bool setVtk = false;
   bool setUtwente = false;
+  int setSnapshotsNumb;
   try {
     po::options_description desc("Allowed options");
     desc.add_options()
@@ -49,7 +50,10 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("force,f", po::value<string>(), "forces dump file")
       ("vtk,v", "create VTK-file, OFF by default")
       ("utwente,u", "create export files for UTwente, OFF by default")
+      ("snapshots,s",po::value<int>(&setSnapshotsNumb)->default_value(-1), "number of snapshots to analyze, ALL by default (-1)")
     ;
+    
+    
     
     po::positional_options_description p;
     p.add("config", -1);
@@ -57,7 +61,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     po::store(po::command_line_parser(ac, av).
     options(desc).positional(p).run(), vm);
     po::notify(vm);  
-
+    
     if (vm.count("help")) {
       cout << desc << std::endl;
       return 0;
@@ -201,6 +205,13 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   } else {
     std::cout<<"Number of particle files is "<< filesParticle.size()   <<std::endl;
     std::cout<<"Number of force files is "<< filesForces.size()   <<std::endl;
+    if (setSnapshotsNumb > 0){
+      if (setSnapshotsNumb < filesParticle.size()) {
+        std::cout<<"Reducing the number of files from "<< filesParticle.size() <<" to " << setSnapshotsNumb <<std::endl;
+        filesParticle.erase(filesParticle.begin()+setSnapshotsNumb);
+        filesForces.erase(filesForces.begin()+setSnapshotsNumb);
+      }
+    }
   }
   
   //=====================================================
