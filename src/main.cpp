@@ -208,8 +208,8 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     if (setSnapshotsNumb > 0){
       if (setSnapshotsNumb < filesParticle.size()) {
         std::cout<<"Reducing the number of files from "<< filesParticle.size() <<" to " << setSnapshotsNumb <<std::endl;
-        filesParticle.erase(filesParticle.begin()+setSnapshotsNumb);
-        filesForces.erase(filesForces.begin()+setSnapshotsNumb);
+        filesParticle.erase(filesParticle.begin(), filesParticle.begin() + filesParticle.size() - setSnapshotsNumb);
+        filesForces.erase(filesForces.begin(), filesForces.begin() + filesForces.size() - setSnapshotsNumb);
       }
     }
   }
