@@ -101,7 +101,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     if (vm.count("force")){
       cout << "forces dump-file is: "  << vm["force"].as<string>() << std::endl;
     } else {
-      cout << "force dump-file is required, use `-p` option for that or `--help` for help.\n"; 
+      cout << "force dump-file is required, use `-f` option for that or `--help` for help.\n"; 
       exit (EXIT_FAILURE);
     }
     forcesFileName = vm["force"].as<string>();
