@@ -30,6 +30,10 @@ gZ = -1.0
 ;delta time
 dT =  0.000005
 
+;angle to analyze in degrees, aStart and aEnd
+aS = 0.0
+aE = 360.0
+
 [Particle]
 ;number of atoms string
 nAt = 4

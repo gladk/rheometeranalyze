@@ -44,6 +44,13 @@ configopt::configopt(const std::string &filename) {
   
   _g = Eigen::Vector3d(pt.get<double>("Rheometer.gX"), pt.get<double>("Rheometer.gY"), pt.get<double>("Rheometer.gZ"));
   _g.normalize();
+  
+  _aS = pt.get<double>("Rheometer.aS"); _aS *=M_PI/180.0;
+  _aE = pt.get<double>("Rheometer.aE"); _aE *=M_PI/180.0;
+  if (_aS>_aE) {
+    std::cerr<<"aS cannot be more, than aE. Exiting."<<std::endl;
+    exit (EXIT_FAILURE);
+  }
 
   _nAt = pt.get<int>("Particle.nAt");
   _nPSt = pt.get<int>("Particle.nPSt");

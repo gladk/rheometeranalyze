@@ -56,6 +56,7 @@ class configopt {
     void _maxColumnCheck(int, int);    // Check whether the new column is maximal
     void _maxColumnCheckForce(int, int);    // Check whether the new column is maximal for Forces
     std::string _FOutput;          //Folder for output files
+    double _aS, _aE;           // Angle to analyze in degrees, aStart and aEnd
     
     // Forces
     int _fAt;                 // Number of forces string
@@ -80,6 +81,8 @@ class configopt {
     double Din(){return _Din;};
     double Dout(){return _Dout;};
     double H(){return _H;};
+    double aS(){return _aS;};
+    double aE(){return _aE;};
     int SecRadial(){return _SecRadial;};
     int SecZ(){return _SecZ;};
     Eigen::Vector3d get_g(){return _g;};
