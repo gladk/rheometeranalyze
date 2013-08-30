@@ -67,7 +67,12 @@ void band::set_scherRate(double scherRate) {
   * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
   * 
   */ 
-  _I = _scherRate*(2.0*_radAvg)/(sqrt(_pavg/_densAVG));
+  if (_densAVG!=0 and _pavg!=0) {
+    _I = _scherRate*(2.0*_radAvg)/(sqrt(_pavg/_densAVG));
+  } else {
+    _I = .0;
+  }
+  
   if (_scherRate != 0.0) {
    /*
     * 
