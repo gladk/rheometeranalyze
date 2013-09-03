@@ -54,7 +54,7 @@ class band {
     
 
   public:
-    band(int, int, int, double, double, double, double);
+    band(int, int, int, double, double, double, double, double);
     void addParticle(std::shared_ptr<particle>);
     void calculateValues(int numSnapshots);
     double TauAVG() {return _tauavg;};

@@ -44,7 +44,7 @@ bandRow::bandRow (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<pa
   int i = 0;
   for (int dz = 0; dz < _cfg->SecZ(); dz++) {
     for (int dr = 0; dr < _cfg->SecRadial(); dr++) {
-      std::shared_ptr<band> tmpBand (new band(i, dz, dr, _cfg->Din()/2.0+dr*_cfg->dDr(), _cfg->Din()/2.0+(dr+1)*_cfg->dDr(), _cfg->dDz()*dz, _cfg->dDz()*(dz+1)));
+      std::shared_ptr<band> tmpBand (new band(i, dz, dr, _cfg->Din()/2.0+dr*_cfg->dDr(), _cfg->Din()/2.0+(dr+1)*_cfg->dDr(), _cfg->dDz()*dz, _cfg->dDz()*(dz+1), (_cfg->aE() - _cfg->aS())));
       _bandAll.push_back(tmpBand);
       i++;
     }
@@ -62,11 +62,12 @@ void bandRow::fillBands (){
   int i=0;
   for (int z=0; z<_cfg->SecZ(); z++){
     for (int r=0; r<_cfg->SecRadial(); r++){
-      double dRmin = _cfg->Din()/2.0 + _cfg->dDr()*r;
-      double dRmax = _cfg->Din()/2.0 + _cfg->dDr()*(r+1);
-      double dZmin = _cfg->dDz()*z;
-      double dZmax = _cfg->dDz()*(z+1);
-      std::shared_ptr<band> tmpBand (new band(i, z, r, dRmin, dRmax, dZmin, dZmax));
+      const double dRmin = _cfg->Din()/2.0 + _cfg->dDr()*r;
+      const double dRmax = _cfg->Din()/2.0 + _cfg->dDr()*(r+1);
+      const double dZmin = _cfg->dDz()*z;
+      const double dZmax = _cfg->dDz()*(z+1);
+      const double dAngle = _cfg->aE() - _cfg->aS();
+      std::shared_ptr<band> tmpBand (new band(i, z, r, dRmin, dRmax, dZmin, dZmax, dAngle));
       _bandAll[i] = tmpBand;
       i++;
     }
