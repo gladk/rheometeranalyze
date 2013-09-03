@@ -39,6 +39,7 @@ configopt::configopt(const std::string &filename) {
 
   _SecRadial = pt.get<int>("Rheometer.SecRadial");
   _SecZ = pt.get<int>("Rheometer.SecZ");
+  _SecFi = pt.get<int>("Rheometer.SecFi");
   
   _dT = pt.get<double>("Rheometer.dT");
   

@@ -21,6 +21,7 @@ H = 0.0135
 ;number of sections, in which the rheometer will be divided in radial- and Z-direction 
 SecRadial = 20
 SecZ = 20
+SecFi = 1
 
 ;gravity direction
 gX = 0.0

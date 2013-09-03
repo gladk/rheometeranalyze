@@ -30,8 +30,8 @@
 
 class band {
   private:
-    int _id, _idZ, _idR;                                  // Band ids
-    double _dZmin, _dZmax, _dRmin, _dRmax;                // Band minimal and maximal sizes
+    int _id, _idZ, _idR, _idF;                            // Band ids
+    double _dZmin, _dZmax, _dRmin, _dRmax, _dFmin, _dFmax;// Band minimal and maximal sizes
     long long _partNumb;                                  // Number of particles
     std::vector <std::shared_ptr<particle> > _allPart;    // Vector of particles;
     
@@ -54,7 +54,7 @@ class band {
     
 
   public:
-    band(int, int, int, double, double, double, double, double);
+    band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax );
     void addParticle(std::shared_ptr<particle>);
     void calculateValues(int numSnapshots);
     double TauAVG() {return _tauavg;};
@@ -66,6 +66,7 @@ class band {
     double contactNumAVG() {return _contactNumAVG;};
     double midLinedR() {return ((_dRmax - _dRmin)/2.0 + _dRmin);};
     double midLinedZ() {return ((_dZmax - _dZmin)/2.0 + _dZmin);};
+    double midLinedF() {return ((_dFmax - _dFmin)/2.0 + _dFmin);};
     double dR() {return (_dRmax - _dRmin);};
     double dZ() {return (_dZmax - _dZmin);};
     long long partNumb () {return _partNumb;};
@@ -73,6 +74,7 @@ class band {
     int id() {return _id;}
     int idZ() {return _idZ;}
     int idR() {return _idR;}
+    int idF() {return _idF;}
     double tau() {return _tauavg;}
     double press() {return _pavg;}
     double muAVG() {return _muAVG;}                            

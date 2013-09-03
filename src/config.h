@@ -35,8 +35,9 @@ class configopt {
   private:
     Eigen::Vector3d _c, _o;   // Center point and origin
     double _Din, _Dout, _H;   // Internal and outer diameters
-    int _SecRadial, _SecZ;    // Number of sections, in which the rheometer will
-                              // be divided in radial- and Z-direction 
+    int _SecRadial, _SecZ, 
+                    _SecFi;   // Number of sections, in which the rheometer will
+                              // be divided in radial-, Z- and Fi-directions
     Eigen::Vector3d _g;       // Gravity direction
       
     double _dT;               // Delta time
@@ -85,6 +86,7 @@ class configopt {
     double aE(){return _aE;};
     int SecRadial(){return _SecRadial;};
     int SecZ(){return _SecZ;};
+    int SecFi(){return _SecFi;};
     Eigen::Vector3d get_g(){return _g;};
     int nAt(){return _nAt;};
     int nPSt(){return _nPSt;};
@@ -105,6 +107,7 @@ class configopt {
     std::shared_ptr<snapshotRow> snapshot() {return _snapshotRow;}
     double dDr(){return (_Dout - _Din)/_SecRadial/2.0;};
     double dDz(){return _H/_SecZ;};
+    double dDf(){return (_aE-_aS)/_SecFi;};
     double dT(){return _dT;};
     std::string FOutput(){return _FOutput;};
     
@@ -126,7 +129,5 @@ class configopt {
     
     void setUtwente() {_utwente=true;}
     void unSetUtwente() {_utwente=false;}
-    bool Utwente() {return _utwente;}
-    
-    
+    bool Utwente() {return _utwente;}  
 };

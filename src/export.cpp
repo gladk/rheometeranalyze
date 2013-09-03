@@ -91,6 +91,10 @@ void exportclass::VTK() {
   bandZ->SetNumberOfComponents(1);
   bandZ->SetName("bandZ");
   
+  vtkSmartPointer<vtkIntArray> bandF = vtkSmartPointer<vtkIntArray>::New();
+  bandF->SetNumberOfComponents(1);
+  bandF->SetName("bandF");
+  
   vtkSmartPointer<vtkIntArray> bandN = vtkSmartPointer<vtkIntArray>::New();
   bandN->SetNumberOfComponents(1);
   bandN->SetName("bandN");
@@ -213,6 +217,7 @@ void exportclass::VTK() {
         
         bandR->InsertNextValue(bandTMP->idR());
         bandZ->InsertNextValue(bandTMP->idZ());
+        bandF->InsertNextValue(bandTMP->idF());
         bandN->InsertNextValue(bandTMP->id());
         bandTau->InsertNextValue(bandTMP->tau());
         bandPress->InsertNextValue(bandTMP->press());
@@ -256,6 +261,7 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(vectorDf);
     spheresUg->GetPointData()->AddArray(bandR);
     spheresUg->GetPointData()->AddArray(bandZ);
+    spheresUg->GetPointData()->AddArray(bandF);
     spheresUg->GetPointData()->AddArray(bandN);
     spheresUg->GetPointData()->AddArray(bandTau);
     spheresUg->GetPointData()->AddArray(bandPress);
@@ -313,7 +319,8 @@ void exportclass::gnuplotSchearRate() {
   myfileG << "022_strTensRR\t023_strTensRZ\t024_strTensRF\t";
   myfileG << "025_strTensZR\t026_strTensZZ\t027_strTensZF\t";
   myfileG << "028_strTensFR\t029_strTensFZ\t030_strTensFF\t";
-  myfileG << "031_ShearBand\t032_WetContactsAVG\t033_WetContactsDistAVG\t \n";
+  myfileG << "031_ShearBand\t032_WetContactsAVG\t033_WetContactsDistAVG\t";
+  myfileG << "034_f\t035_fPos\t \n";
   for(unsigned int b=0; b<_bandRow->size(); b++) {
     std::shared_ptr<band> bT = _bandRow->getBand(b);
     myfileG << bT->id() << "\t";           // 001_id
@@ -349,6 +356,8 @@ void exportclass::gnuplotSchearRate() {
     myfileG << bT->shearBand()<< "\t";     // 031_ShearBand - True (1) or False (0)
     myfileG << bT->wetContactsAVG()<< "\t";// 032_WetContactsAVG
     myfileG << bT->wetContactDistanceAVG()<< "\t";// 033_WetContactsDistAVG
+    myfileG << bT->idF() << "\t";          // 034_f
+    myfileG << bT->midLinedF() << "\t";          // 035_fPos
     myfileG << " \n"; 
   }
         

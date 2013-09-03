@@ -23,20 +23,23 @@
 #include <iostream>
 #include <numeric>
 
-band::band(int id, int idZ, int idR, double dRmin, double dRmax, double dZmin, double dZmax, double dAngle) {
+band::band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax ) {
   _id = id;
   _idZ = idZ;
   _idR = idR;
+  _idF = idF;
   _dRmin = dRmin;
   _dRmax = dRmax;
   _dZmin = dZmin;
   _dZmax = dZmax;
+  _dFmin = dFmin;
+  _dFmax = dFmax;
   _partNumb = 0;
   _tau = 0.0; _tauavg = 0.0;
   _p = 0.0; _pavg = 0.0;
   _vavg = 0.0;
   _vavgStDev = 0.0;
-  _vol = M_PI*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin) * (dAngle/(2*M_PI));
+  _vol = M_PI*(dRmax*dRmax - dRmin*dRmin)*(dZmax-dZmin) * ((dFmax-dFmin)/(2*M_PI));
   _volPart = 0.0;
   _volFraction = 0.0;
   _contactNumAVG = 0.0;

@@ -36,6 +36,7 @@ class bandRow {
     void fillBands();
     int getBandR(double);
     int getBandZ(double);
+    int getBandF(double);
     unsigned int shearBandSize() {return _shearBands.size();};
     Eigen::Vector3d shearBand(unsigned int i) {return _shearBands[i];};
     void calculateValues();

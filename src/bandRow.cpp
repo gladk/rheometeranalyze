@@ -42,11 +42,22 @@ bandRow::bandRow (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<pa
   _pRow = pRow;
   _fRow = fRow;
   int i = 0;
-  for (int dz = 0; dz < _cfg->SecZ(); dz++) {
-    for (int dr = 0; dr < _cfg->SecRadial(); dr++) {
-      std::shared_ptr<band> tmpBand (new band(i, dz, dr, _cfg->Din()/2.0+dr*_cfg->dDr(), _cfg->Din()/2.0+(dr+1)*_cfg->dDr(), _cfg->dDz()*dz, _cfg->dDz()*(dz+1), (_cfg->aE() - _cfg->aS())));
-      _bandAll.push_back(tmpBand);
-      i++;
+  
+  //Prepare band-vector
+  
+  for (int f = 0; f < _cfg->SecFi(); f++) {
+    for (int z=0; z<_cfg->SecZ(); z++){
+      for (int r=0; r<_cfg->SecRadial(); r++){
+        const double dRmin = _cfg->Din()/2.0 + _cfg->dDr()*r;
+        const double dRmax = _cfg->Din()/2.0 + _cfg->dDr()*(r+1);
+        const double dZmin = _cfg->dDz()*z;
+        const double dZmax = _cfg->dDz()*(z+1);
+        const double dFmin = _cfg->dDf()*f;
+        const double dFmax = _cfg->dDf()*(f+1);
+        std::shared_ptr<band> tmpBand (new band(i, z, r, f, dRmin, dRmax, dZmin, dZmax, dFmin, dFmax));
+        _bandAll.push_back(tmpBand);
+        i++;
+      }
     }
   }
   fillBands();
@@ -57,23 +68,7 @@ void bandRow::fillBands (){
   //Fill bands with particles
   Eigen::Vector3d O = _cfg->get_c();
   Eigen::Vector3d Z = _cfg->get_o();
-  
-  //Prepare band-vector
-  int i=0;
-  for (int z=0; z<_cfg->SecZ(); z++){
-    for (int r=0; r<_cfg->SecRadial(); r++){
-      const double dRmin = _cfg->Din()/2.0 + _cfg->dDr()*r;
-      const double dRmax = _cfg->Din()/2.0 + _cfg->dDr()*(r+1);
-      const double dZmin = _cfg->dDz()*z;
-      const double dZmax = _cfg->dDz()*(z+1);
-      const double dAngle = _cfg->aE() - _cfg->aS();
-      std::shared_ptr<band> tmpBand (new band(i, z, r, dRmin, dRmax, dZmin, dZmax, dAngle));
-      _bandAll[i] = tmpBand;
-      i++;
-    }
-  }
-  
-  
+    
   Eigen::Quaternion<double> rotateCCh;   // Rotate coordinate system, hin
   Eigen::Quaternion<double> rotateCCz;   // Rotate coordinate system, zurueck
   
@@ -93,11 +88,11 @@ void bandRow::fillBands (){
         //Define band
         int bR = getBandR(partTemp->dist());
         int bZ = getBandZ(partTemp->height());
-        int bN = bZ*(_cfg->SecRadial()) + bR;
+        int bF = getBandF(partTemp->posZyl()[2]+M_PI);
+
+        int bN = bZ*(_cfg->SecRadial()) + bR + (bF*(_cfg->SecRadial()*_cfg->SecZ()));
         
-        if ((bR>=0 and bZ>=0 and bN>=0 and bN<_bandAll.size()) and
-            ((_cfg->aE()>0.0) and ((partTemp->posZyl()[2] + M_PI)>_cfg->aS()) and ((partTemp->posZyl()[2]+M_PI)<_cfg->aE()))
-           ) {
+        if ((bR>=0 and bZ>=0 and bF>=0 and bN>=0 and bN<_bandAll.size())) {
           _bandAll[bN]->addParticle(partTemp);
         } else {
           _pRow[i]->disable(z);    // Disable and remove particle, if they are out of bands
@@ -132,6 +127,14 @@ int bandRow::getBandR(double dist) {
 int bandRow::getBandZ(double height) {
   if ((height>=0) and (height<=_cfg->H())) {
     return floor((height)/_cfg->dDz());
+  } else {
+    return -1;
+  }
+};
+
+int bandRow::getBandF(double angle) {
+  if ((angle>=0) and (_cfg->aE()>0.0) and (angle>_cfg->aS()) and (angle<_cfg->aE())) {
+    return floor((angle-_cfg->aS())/_cfg->dDf());
   } else {
     return -1;
   }
