@@ -71,7 +71,7 @@ void band::set_scherRate(double scherRate) {
   * 
   */ 
   if (_densAVG!=0 and _pavg!=0) {
-    _I = _scherRate*(2.0*_radAvg)/(sqrt(_pavg/_densAVG));
+    _I = _scherRate*(2.0*_radAvg)/(sqrt(fabs(_pavg/_densAVG)));
   } else {
     _I = .0;
   }
