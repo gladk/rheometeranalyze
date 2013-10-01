@@ -41,6 +41,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   bool setVtk = false;
   bool setUtwente = false;
   int setSnapshotsNumb;
+  int setBeginSnapshot;
   try {
     po::options_description desc("Allowed options");
     desc.add_options()
@@ -51,6 +52,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("vtk,v", "create VTK-file, OFF by default")
       ("utwente,u", "create export files for UTwente, OFF by default")
       ("snapshots,s",po::value<int>(&setSnapshotsNumb)->default_value(-1), "number of snapshots to analyze, ALL by default (-1)")
+      ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
     ;
     
     
@@ -205,13 +207,64 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   } else {
     std::cout<<"Number of particle files is "<< filesParticle.size()   <<std::endl;
     std::cout<<"Number of force files is "<< filesForces.size()   <<std::endl;
+    int snapshotsNumbTemp = setSnapshotsNumb;
+    int beginSnapshotTemp = setBeginSnapshot;
+    
     if (setSnapshotsNumb > 0){
-      if (setSnapshotsNumb < filesParticle.size()) {
-        std::cout<<"Reducing the number of files from "<< filesParticle.size() <<" to " << setSnapshotsNumb <<std::endl;
-        filesParticle.erase(filesParticle.begin(), filesParticle.begin() + filesParticle.size() - setSnapshotsNumb);
-        filesForces.erase(filesForces.begin(), filesForces.begin() + filesForces.size() - setSnapshotsNumb);
+      if (setSnapshotsNumb <= filesParticle.size()) {
+        if (setBeginSnapshot>=0) {
+          if ((setBeginSnapshot+setSnapshotsNumb-1) > filesParticle.size()) {
+            std::cerr<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but starting from "
+                      << setBeginSnapshot <<", it is only possible to have only "<< 
+                      filesForces.size()-setBeginSnapshot + 1<<
+                      "! Exiting."<<std::endl;
+            exit (EXIT_FAILURE);
+          }
+        }
+      } else if (setSnapshotsNumb > filesParticle.size()){
+        std::cerr<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but its total number is "
+                      << filesForces.size() <<
+                      "! Exiting."<<std::endl;
+            exit (EXIT_FAILURE);
+      }
+    } else {
+      if ( (setBeginSnapshot>0) and (setBeginSnapshot > filesParticle.size()) ) {
+        std::cerr<<"Requested starting snapshot is "<<setBeginSnapshot<<", but  but its total number is "
+                 << filesParticle.size() <<
+                 "! Exiting."<<std::endl;
+            exit (EXIT_FAILURE);
+        exit (EXIT_FAILURE);
+      } else if (setBeginSnapshot>0) {
+        snapshotsNumbTemp = filesParticle.size() - setBeginSnapshot + 1;
+      } else {
+        snapshotsNumbTemp = filesParticle.size();
+        beginSnapshotTemp = 1;
       }
     }
+   
+    if (snapshotsNumbTemp<0) {
+      snapshotsNumbTemp = filesParticle.size();
+    } else if (snapshotsNumbTemp==0) {
+      std::cerr<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb
+               <<"! Exiting."<<std::endl;
+      exit (EXIT_FAILURE);
+    }
+    
+    if (beginSnapshotTemp<0) {
+      beginSnapshotTemp = filesParticle.size() - snapshotsNumbTemp + 1;
+    }
+    
+    if (filesParticle.size() > snapshotsNumbTemp) {
+      std::cout<<"Reducing the number of files from "<< filesParticle.size() <<" to " << snapshotsNumbTemp <<std::endl;
+    }
+    std::cout<<"Starting analyze from snapshot "<< beginSnapshotTemp <<std::endl;
+    filesParticle.erase(filesParticle.begin(), filesParticle.begin() + beginSnapshotTemp - 1);
+    filesParticle.erase(filesParticle.begin() + snapshotsNumbTemp, filesParticle.end());
+    
+    filesForces.erase(filesForces.begin(), filesForces.begin() + beginSnapshotTemp - 1);
+    filesForces.erase(filesForces.begin() + snapshotsNumbTemp, filesForces.end());
+
+    
   }
   
   //=====================================================
