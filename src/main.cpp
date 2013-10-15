@@ -55,8 +55,6 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
     ;
     
-    
-    
     po::positional_options_description p;
     p.add("config", -1);
     po::variables_map vm;        
@@ -70,63 +68,63 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     }
     
     if (vm.count("vtk")) {
-      cout << "VTK-file will be created" << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "VTK-file will be created" << std::endl;
       setVtk = true;
     } else {
-      cout << "VTK-file will NOT be created" << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "VTK-file will NOT be created" << std::endl;
     }
     
     if (vm.count("utwente")) {
-      cout << "UTwente-files will be created" << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "UTwente-files will be created" << std::endl;
       setUtwente = true;
     } else {
-      cout << "UTwente-files will NOT be created" << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "UTwente-files will NOT be created" << std::endl;
     }
 
     if (vm.count("config")) {
-      cout << "config file is: " << vm["config"].as<string>() << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "config file is: " << vm["config"].as<string>() << std::endl;
     } else {
-      cout << "config file is required, use `-c` option for that or `--help`.\n"; 
+      BOOST_LOG_TRIVIAL(fatal) << "config file is required, use `-c` option for that or `--help`.\n"; 
       exit (EXIT_FAILURE);
     }
     configFileName = vm["config"].as<string>();
 
     if (vm.count("particle")) {
-      cout << "particles dump-file is: " << vm["particle"].as<string>() << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "particles dump-file is: " << vm["particle"].as<string>() << std::endl;
     } else {
-      cout << "particles dump-file is required, use `-p` option for that or `--help` for help.\n"; 
+      BOOST_LOG_TRIVIAL(fatal) << "particles dump-file is required, use `-p` option for that or `--help` for help.\n"; 
       exit (EXIT_FAILURE);
     }
     
     particlesFileName = vm["particle"].as<string>();
     
     if (vm.count("force")){
-      cout << "forces dump-file is: "  << vm["force"].as<string>() << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "forces dump-file is: "  << vm["force"].as<string>() << std::endl;
     } else {
-      cout << "force dump-file is required, use `-f` option for that or `--help` for help.\n"; 
+      BOOST_LOG_TRIVIAL(fatal) << "force dump-file is required, use `-f` option for that or `--help` for help.\n"; 
       exit (EXIT_FAILURE);
     }
     forcesFileName = vm["force"].as<string>();
 
   }
   catch(exception& e) {
-      cerr << "error: " << e.what() << std::endl;
+      BOOST_LOG_TRIVIAL(fatal) << "error: " << e.what() << std::endl;
       exit (EXIT_FAILURE);
   }
   catch(...) {
-      cerr << "Exception of unknown type!\n";
+      BOOST_LOG_TRIVIAL(fatal) << "Exception of unknown type!\n";
   }
   
   if (not(fs::is_regular_file(configFileName))) {
     fs::path p = configFileName;
-    std::cerr<<"The file "<<configFileName<<" does not exist. Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The file "<<configFileName<<" does not exist. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
   }
   
   #ifdef ALGLIB
-    std::cout<<"\nALGLIB Library is found and export of shearbands will be produced \n"<<std::endl;
+    BOOST_LOG_TRIVIAL(trace)<<"\nALGLIB Library is found and export of shearbands will be produced \n"<<std::endl;
   #else
-    std::cout<<"\nALGLIB Library is NOT found and export of shearbands will NOT be produced \n"<<std::endl;
+    BOOST_LOG_TRIVIAL(warning)<<"\nALGLIB Library is NOT found and export of shearbands will NOT be produced \n"<<std::endl;
   #endif
   
   
@@ -138,7 +136,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   fs::path particle_filesmask = particle_path.filename();
   
   if (not(fs::is_directory(particle_dir))) {
-    std::cerr<<"The Directory "<<particle_dir.string()<<" does not exists. Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The Directory "<<particle_dir.string()<<" does not exists. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
   } else {
     fs::directory_iterator end_itr; // Default ctor yields past-the-end
@@ -158,7 +156,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   }
   
   if (filesParticle.size()<1) {
-    std::cerr<<"The file "<<particlesFileName<<" does not exists. Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The file "<<particlesFileName<<" does not exists. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
   }
   
@@ -173,7 +171,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   fs::path force_filesmask = force_path.filename();
   
   if (not(fs::is_directory(force_dir))) {
-    std::cerr<<"The Directory "<<force_dir.string()<<" does not exists. Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The Directory "<<force_dir.string()<<" does not exists. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
   } else {
     fs::directory_iterator end_itr; // Default ctor yields past-the-end
@@ -193,7 +191,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   }
   
   if (filesForces.size()<1) {
-    std::cerr<<"The file "<<forcesFileName<<" does not exists. Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The file "<<forcesFileName<<" does not exists. Exiting."<<std::endl;
     exit (EXIT_FAILURE);
   } 
   
@@ -202,11 +200,11 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   //=====================================================
   
   if (filesParticle.size() != filesForces.size()) {
-    std::cerr<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting."<<std::endl;
     exit (EXIT_FAILURE);
   } else {
-    std::cout<<"Number of particle files is "<< filesParticle.size()   <<std::endl;
-    std::cout<<"Number of force files is "<< filesForces.size()   <<std::endl;
+    BOOST_LOG_TRIVIAL(trace)<<"Number of particle files is "<< filesParticle.size()   <<std::endl;
+    BOOST_LOG_TRIVIAL(trace)<<"Number of force files is "<< filesForces.size()   <<std::endl;
     int snapshotsNumbTemp = setSnapshotsNumb;
     int beginSnapshotTemp = setBeginSnapshot;
     
@@ -214,7 +212,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       if (setSnapshotsNumb <= filesParticle.size()) {
         if (setBeginSnapshot>=0) {
           if ((setBeginSnapshot+setSnapshotsNumb-1) > filesParticle.size()) {
-            std::cerr<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but starting from "
+            BOOST_LOG_TRIVIAL(fatal)<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but starting from "
                       << setBeginSnapshot <<", it is only possible to have only "<< 
                       filesForces.size()-setBeginSnapshot + 1<<
                       "! Exiting."<<std::endl;
@@ -222,14 +220,14 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
           }
         }
       } else if (setSnapshotsNumb > filesParticle.size()){
-        std::cerr<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but its total number is "
+        BOOST_LOG_TRIVIAL(fatal)<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but its total number is "
                       << filesForces.size() <<
                       "! Exiting."<<std::endl;
             exit (EXIT_FAILURE);
       }
     } else {
       if ( (setBeginSnapshot>0) and (setBeginSnapshot > filesParticle.size()) ) {
-        std::cerr<<"Requested starting snapshot is "<<setBeginSnapshot<<", but  but its total number is "
+        BOOST_LOG_TRIVIAL(fatal)<<"Requested starting snapshot is "<<setBeginSnapshot<<", but  but its total number is "
                  << filesParticle.size() <<
                  "! Exiting."<<std::endl;
             exit (EXIT_FAILURE);
@@ -245,7 +243,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     if (snapshotsNumbTemp<0) {
       snapshotsNumbTemp = filesParticle.size();
     } else if (snapshotsNumbTemp==0) {
-      std::cerr<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb
+      BOOST_LOG_TRIVIAL(fatal)<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb
                <<"! Exiting."<<std::endl;
       exit (EXIT_FAILURE);
     }
@@ -255,9 +253,9 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     }
     
     if (filesParticle.size() > snapshotsNumbTemp) {
-      std::cout<<"Reducing the number of files from "<< filesParticle.size() <<" to " << snapshotsNumbTemp <<std::endl;
+      BOOST_LOG_TRIVIAL(trace)<<"Reducing the number of files from "<< filesParticle.size() <<" to " << snapshotsNumbTemp <<std::endl;
     }
-    std::cout<<"Starting analyze from snapshot "<< beginSnapshotTemp <<std::endl;
+    BOOST_LOG_TRIVIAL(trace)<<"Starting analyze from snapshot "<< beginSnapshotTemp <<std::endl;
     filesParticle.erase(filesParticle.begin(), filesParticle.begin() + beginSnapshotTemp - 1);
     filesParticle.erase(filesParticle.begin() + snapshotsNumbTemp, filesParticle.end());
     

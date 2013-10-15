@@ -27,6 +27,10 @@
 #include <boost/regex.hpp>
 #include <boost/foreach.hpp>
 
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+
 #include <iostream>
 #include <algorithm>
 #include <iterator>
