@@ -110,6 +110,7 @@ class configopt {
     double dDf(){return (_aE-_aS)/_SecFi;};
     double dT(){return _dT;};
     std::string FOutput(){return _FOutput;};
+    void FOutput(std::string FOutput){_FOutput=FOutput;};
     
     // Force
     int fAt(){return _fAt;};

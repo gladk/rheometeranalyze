@@ -31,6 +31,7 @@ int main(int ac, char* av[])
   string configFileName;
   string particlesFileName;
   string forcesFileName;
+  string outputFolder;
   
   std::cout<<"\n\
 Rheometeranalyze\n\
@@ -53,6 +54,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("utwente,u", "create export files for UTwente, OFF by default")
       ("snapshots,s",po::value<int>(&setSnapshotsNumb)->default_value(-1), "number of snapshots to analyze, ALL by default (-1)")
       ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
+      ("output,o", po::value<string>()->default_value("output"), "output folder")
     ;
     
     po::positional_options_description p;
@@ -88,6 +90,11 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       exit (EXIT_FAILURE);
     }
     configFileName = vm["config"].as<string>();
+    
+    if (vm.count("output")) {
+      BOOST_LOG_TRIVIAL(trace) << "output folder: " << vm["output"].as<string>() << std::endl;
+    }
+    outputFolder = vm["output"].as<string>();
 
     if (vm.count("particle")) {
       BOOST_LOG_TRIVIAL(trace) << "particles dump-file is: " << vm["particle"].as<string>() << std::endl;
@@ -198,6 +205,14 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   sort(filesForces.begin(), filesForces.end()); 
   
   //=====================================================
+  if (not fs::is_directory(outputFolder)) {
+    BOOST_LOG_TRIVIAL(trace)<<"The directory " << outputFolder<< " does not exists. Creating."<<std::endl;
+    if (fs::create_directory(outputFolder)) {
+      BOOST_LOG_TRIVIAL(trace)<<"The directory " << outputFolder<< " created."<<std::endl;
+    }
+  }
+  
+  //=====================================================
   
   if (filesParticle.size() != filesForces.size()) {
     BOOST_LOG_TRIVIAL(fatal)<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting."<<std::endl;
@@ -277,6 +292,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
   configParams->setSnapshot(snapshots);
+  configParams->FOutput(outputFolder);
   
   if (setVtk) configParams->setVtk();
   if (setUtwente) configParams->setUtwente();

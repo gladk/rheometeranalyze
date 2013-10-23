@@ -79,15 +79,6 @@ configopt::configopt(const std::string &filename) {
   _cForc = pt.get<int>("Force.cForc"); _maxColumnCheckForce(_cForc, 2);
   _tF = pt.get<int>("Force.tF");
   
-  
-  //Files
-  _FOutput = pt.get<std::string>("Files.output");
-  if (not fs::is_directory(_FOutput)) {
-    std::cout<<"The direcrory " << _FOutput<< " does not exists. Creating."<<std::endl;
-    if (fs::create_directory(_FOutput)) {
-      std::cout<<"The direcrory " << _FOutput<< " created."<<std::endl;
-    }
-  }
   _utwente = false;
   _vtk = false;
 };
