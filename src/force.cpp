@@ -27,11 +27,19 @@ force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, u
   _part1 = part1;
   _part2 = part2;
   
-  if (pos1 != part1->c() or pos2 != part2->c()) {
+  if (fabs(pos1.norm()/part1->c().norm() - 1.0) > 0.0001 or fabs(pos2.norm()/part2->c().norm() -1.0 ) > 0.0001 ) {
     std::cerr<<"Particle positions in force and particle files are not the same!"<<std::endl;
-    std::cerr<<"pid1 "<<part1->id()<<": ("<<pos1[0]<<" "<<pos1[1]<<" "<<pos1[2]<< ") != (" << part1->c()[0]<<" "<<part1->c()[1]<<" "<<part1->c()[2]<<std::endl;
+    std::cerr<<"pid1 "<<part1->id()<<": ("<<pos1[0]<<" "<<pos1[1]<<" "<<pos1[2]<< ") != (" << part1->c()[0]<<" "<<part1->c()[1]<<" "<<part1->c()[2];
     std::cerr<<"pid2 "<<part2->id()<<": ("<<pos2[0]<<" "<<pos2[1]<<" "<<pos2[2]<< ") != (" << part2->c()[0]<<" "<<part2->c()[1]<<" "<<part2->c()[2]<<");   "<<std::endl;
+    
+    std::cerr<<"dif1 "<<pos1.norm()/part1->c().norm()<<"; dif2 "<<pos2.norm()/part2->c().norm()<<std::endl<<std::endl;
   }
+  
+  //Updating particle positions as they are more accurate in fstat
+  _part1->c(pos1);
+  _part2->c(pos2);
+  
+  
   _cPZ = Eigen::Vector3d::Zero();
   _val = val;
   _fileId = fileId;

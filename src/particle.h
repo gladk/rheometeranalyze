@@ -60,6 +60,7 @@ class particle {
     unsigned int  fileId() {return _fileId;};
     double realAngular();    //_v.dot(df)
     Eigen::Vector3d c() {return _c;}
+    void c(Eigen::Vector3d cTmp) {_c = cTmp; _calculateVel = false;}
     Eigen::Vector3d v() {return _v;}
     Eigen::Vector3d vZyl();
     Eigen::Vector3d o() {return _o;}
