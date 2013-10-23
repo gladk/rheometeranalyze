@@ -166,6 +166,7 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
       
       unsigned long long pid1, pid2;
       Eigen::Vector3d pos1, pos2, val;
+      double volWater=-100, distCurr=-100, distCrit=-100;
     
       if (curLine>=_cfg->fDat()) {
         for (int i=1; i<=_cfg->maxCF(); i++) {
@@ -191,6 +192,15 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
             linestream >> val[2];
             i+=2;
             //std::cerr<<"val " << val<<std::endl<<std::endl;
+          } else if (i==_cfg->cVolWater()) {
+            linestream >> volWater;
+            //std::cerr<<"VolWater " << volWater<<std::endl<<std::endl;
+          } else if (i==_cfg->cDistCurr()) {
+            linestream >> distCurr;
+            //std::cerr<<"DistCurr " << distCurr<<std::endl<<std::endl;
+          } else if (i==_cfg->cDistCrit()) {
+            linestream >> distCrit;
+            //std::cerr<<"DistCrit " << distCrit<<std::endl<<std::endl;
           } else {
             linestream >> valD;
           }
@@ -211,7 +221,7 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
                (_cfg->tF()<0)
              )
            ) {
-          std::shared_ptr<force> tmpForce ( new force (_particleAll[forceRowNumbTMP]->getP(pid1), _particleAll[forceRowNumbTMP]->getP(pid2), forceRowNumbTMP, pos1, pos2, val));
+          std::shared_ptr<force> tmpForce ( new force (_particleAll[forceRowNumbTMP]->getP(pid1), _particleAll[forceRowNumbTMP]->getP(pid2), forceRowNumbTMP, pos1, pos2, val, volWater, distCurr, distCrit));
           _forceRow[forceRowNumbTMP]->addF(tmpForce);
           loadSnap->addForce(tmpForce);
         }

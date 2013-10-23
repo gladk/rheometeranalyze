@@ -69,7 +69,11 @@ class configopt {
     int _cPos1ID;             // Column of particle 1 id
     int _cPos2ID;             // Column of particle 2 id
     int _cForc;               // Column of force value
+    int _cVolWater;           // Column of volWater value
+    int _cDistCurr;           // Column of cDistCurr value
+    int _cDistCrit;           // Column of cDistCrit value
     int _maxCF;               // Maximal column number for forces
+    
   
     // Others
     std::shared_ptr<snapshotRow> _snapshotRow;    // Row of snapshots
@@ -122,6 +126,9 @@ class configopt {
     int cPos1ID(){return _cPos1ID;};
     int cPos2ID(){return _cPos2ID;};
     int cForc(){return _cForc;};
+    int cVolWater(){return _cVolWater;};
+    int cDistCurr(){return _cDistCurr;};
+    int cDistCrit(){return _cDistCrit;};
     
     // Others
     void setVtk() {_vtk=true;}

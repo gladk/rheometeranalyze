@@ -30,6 +30,8 @@ class force {
     Eigen::Vector3d _val;   // Force values in cartesian coordinates
     Eigen::Vector3d _cP, _cPZ;    // Contact Point
     
+    double _volWater, _distCurr, _distCrit;
+    
     std::shared_ptr<particle> _part1;     // Pointer into particle1
     std::shared_ptr<particle> _part2;     // Pointer into particle2
 
@@ -44,7 +46,9 @@ class force {
     bool _calculateStressTensor;  // Whether the StressTensor was calculated
 
   public:
-    force(std::shared_ptr<particle>, std::shared_ptr<particle>, unsigned  int, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
+    force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, 
+          unsigned int fileId, Eigen::Vector3d pos1, Eigen::Vector3d pos2, 
+          Eigen::Vector3d val, double volWater, double distCurr, double distCrit);
     force();
     unsigned long long  pid1() {return _part1->id();};
     unsigned long long  pid2() {return _part2->id();};
@@ -61,6 +65,9 @@ class force {
     Eigen::Vector3d nVec();                                 // Normal vector
     Eigen::Vector3d tVec();                                 // Tangential vector
     double deltaN();                                        // Overlap
+    double volWater() {return _volWater;}
+    double distCurr() {return _distCurr;}
+    double distCrit() {return _distCrit;}
     Eigen::Vector3d forceN();                               // Normal force
     Eigen::Vector3d forceT();                               // Tangential force
     double dist() { return _cPZ(0);};

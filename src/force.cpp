@@ -23,9 +23,13 @@
 #include "math_custom.h"
 #include <iostream>
 
-force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, unsigned int fileId, Eigen::Vector3d pos1, Eigen::Vector3d pos2, Eigen::Vector3d val) {
+force::force(std::shared_ptr<particle> part1, std::shared_ptr<particle> part2, unsigned int fileId, Eigen::Vector3d pos1, Eigen::Vector3d pos2, Eigen::Vector3d val, double volWater, double distCurr, double distCrit) {
   _part1 = part1;
   _part2 = part2;
+  
+  _volWater = volWater;
+  _distCurr = distCurr;
+  _distCrit = distCrit;
   
   if (fabs(pos1.norm()/part1->c().norm() - 1.0) > 0.0001 or fabs(pos2.norm()/part2->c().norm() -1.0 ) > 0.0001 ) {
     std::cerr<<"Particle positions in force and particle files are not the same!"<<std::endl;

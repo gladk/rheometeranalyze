@@ -77,6 +77,9 @@ configopt::configopt(const std::string &filename) {
   _cPos1ID = pt.get<int>("Force.cPos1ID"); _maxColumnCheckForce(_cPos1ID, 0);
   _cPos2ID = pt.get<int>("Force.cPos2ID"); _maxColumnCheckForce(_cPos2ID, 0);
   _cForc = pt.get<int>("Force.cForc"); _maxColumnCheckForce(_cForc, 2);
+  _cVolWater = pt.get<int>("Force.cVolWater"); _maxColumnCheckForce(_cVolWater, 0);
+  _cDistCurr = pt.get<int>("Force.cDistCurr"); _maxColumnCheckForce(_cDistCurr, 0);
+  _cDistCrit = pt.get<int>("Force.cDistCrit"); _maxColumnCheckForce(_cDistCrit, 0);
   _tF = pt.get<int>("Force.tF");
   
   _utwente = false;
