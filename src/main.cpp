@@ -37,7 +37,7 @@ int main(int ac, char* av[])
 Rheometeranalyze\n\
 Copyright (C) 2013 TU Bergakademie Freiberg\nInstitute for Mechanics and Fluid Dynamics\n\
 This program comes with ABSOLUTELY NO WARRANTY.\n\
-"<<std::endl;
+";
   
   bool setVtk = false;
   bool setUtwente = false;
@@ -65,26 +65,26 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     po::notify(vm);  
     
     if (vm.count("help")) {
-      cout << desc << std::endl;
+      cout << desc ;
       return 0;
     }
     
     if (vm.count("vtk")) {
-      BOOST_LOG_TRIVIAL(trace) << "VTK-file will be created" << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "VTK-file will be created" ;
       setVtk = true;
     } else {
-      BOOST_LOG_TRIVIAL(trace) << "VTK-file will NOT be created" << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "VTK-file will NOT be created" ;
     }
     
     if (vm.count("utwente")) {
-      BOOST_LOG_TRIVIAL(trace) << "UTwente-files will be created" << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "UTwente-files will be created" ;
       setUtwente = true;
     } else {
-      BOOST_LOG_TRIVIAL(trace) << "UTwente-files will NOT be created" << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "UTwente-files will NOT be created" ;
     }
 
     if (vm.count("config")) {
-      BOOST_LOG_TRIVIAL(trace) << "config file is: " << vm["config"].as<string>() << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "config file is: " << vm["config"].as<string>() ;
     } else {
       BOOST_LOG_TRIVIAL(fatal) << "config file is required, use `-c` option for that or `--help`.\n"; 
       exit (EXIT_FAILURE);
@@ -92,12 +92,12 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     configFileName = vm["config"].as<string>();
     
     if (vm.count("output")) {
-      BOOST_LOG_TRIVIAL(trace) << "output folder: " << vm["output"].as<string>() << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "output folder: " << vm["output"].as<string>() ;
     }
     outputFolder = vm["output"].as<string>();
 
     if (vm.count("particle")) {
-      BOOST_LOG_TRIVIAL(trace) << "particles dump-file is: " << vm["particle"].as<string>() << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "particles dump-file is: " << vm["particle"].as<string>() ;
     } else {
       BOOST_LOG_TRIVIAL(fatal) << "particles dump-file is required, use `-p` option for that or `--help` for help.\n"; 
       exit (EXIT_FAILURE);
@@ -106,7 +106,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     particlesFileName = vm["particle"].as<string>();
     
     if (vm.count("force")){
-      BOOST_LOG_TRIVIAL(trace) << "forces dump-file is: "  << vm["force"].as<string>() << std::endl;
+      BOOST_LOG_TRIVIAL(trace) << "forces dump-file is: "  << vm["force"].as<string>() ;
     } else {
       BOOST_LOG_TRIVIAL(fatal) << "force dump-file is required, use `-f` option for that or `--help` for help.\n"; 
       exit (EXIT_FAILURE);
@@ -115,7 +115,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
 
   }
   catch(exception& e) {
-      BOOST_LOG_TRIVIAL(fatal) << "error: " << e.what() << std::endl;
+      BOOST_LOG_TRIVIAL(fatal) << "error: " << e.what() ;
       exit (EXIT_FAILURE);
   }
   catch(...) {
@@ -124,14 +124,14 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   
   if (not(fs::is_regular_file(configFileName))) {
     fs::path p = configFileName;
-    BOOST_LOG_TRIVIAL(fatal)<<"The file "<<configFileName<<" does not exist. Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The file "<<configFileName<<" does not exist. Exiting.";
     exit (EXIT_FAILURE);
   }
   
   #ifdef ALGLIB
-    BOOST_LOG_TRIVIAL(trace)<<"\nALGLIB Library is found and export of shearbands will be produced \n"<<std::endl;
+    BOOST_LOG_TRIVIAL(trace)<<"ALGLIB Library is found and export of shearbands will be produced \n";
   #else
-    BOOST_LOG_TRIVIAL(warning)<<"\nALGLIB Library is NOT found and export of shearbands will NOT be produced \n"<<std::endl;
+    BOOST_LOG_TRIVIAL(warning)<<"ALGLIB Library is NOT found and export of shearbands will NOT be produced \n";
   #endif
   
   
@@ -143,7 +143,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   fs::path particle_filesmask = particle_path.filename();
   
   if (not(fs::is_directory(particle_dir))) {
-    BOOST_LOG_TRIVIAL(fatal)<<"The Directory "<<particle_dir.string()<<" does not exists. Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The Directory "<<particle_dir.string()<<" does not exists. Exiting.";
     exit (EXIT_FAILURE);
   } else {
     fs::directory_iterator end_itr; // Default ctor yields past-the-end
@@ -163,7 +163,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   }
   
   if (filesParticle.size()<1) {
-    BOOST_LOG_TRIVIAL(fatal)<<"The file "<<particlesFileName<<" does not exists. Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The file "<<particlesFileName<<" does not exists. Exiting.";
     exit (EXIT_FAILURE);
   }
   
@@ -178,7 +178,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   fs::path force_filesmask = force_path.filename();
   
   if (not(fs::is_directory(force_dir))) {
-    BOOST_LOG_TRIVIAL(fatal)<<"The Directory "<<force_dir.string()<<" does not exists. Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The Directory "<<force_dir.string()<<" does not exists. Exiting.";
     exit (EXIT_FAILURE);
   } else {
     fs::directory_iterator end_itr; // Default ctor yields past-the-end
@@ -198,7 +198,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   }
   
   if (filesForces.size()<1) {
-    BOOST_LOG_TRIVIAL(fatal)<<"The file "<<forcesFileName<<" does not exists. Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The file "<<forcesFileName<<" does not exists. Exiting.";
     exit (EXIT_FAILURE);
   } 
   
@@ -206,20 +206,20 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   
   //=====================================================
   if (not fs::is_directory(outputFolder)) {
-    BOOST_LOG_TRIVIAL(trace)<<"The directory " << outputFolder<< " does not exists. Creating."<<std::endl;
+    BOOST_LOG_TRIVIAL(trace)<<"The directory " << outputFolder<< " does not exists. Creating.";
     if (fs::create_directory(outputFolder)) {
-      BOOST_LOG_TRIVIAL(trace)<<"The directory " << outputFolder<< " created."<<std::endl;
+      BOOST_LOG_TRIVIAL(trace)<<"The directory " << outputFolder<< " created.";
     }
   }
   
   //=====================================================
   
   if (filesParticle.size() != filesForces.size()) {
-    BOOST_LOG_TRIVIAL(fatal)<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting."<<std::endl;
+    BOOST_LOG_TRIVIAL(fatal)<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting.";
     exit (EXIT_FAILURE);
   } else {
-    BOOST_LOG_TRIVIAL(trace)<<"Number of particle files is "<< filesParticle.size()   <<std::endl;
-    BOOST_LOG_TRIVIAL(trace)<<"Number of force files is "<< filesForces.size()   <<std::endl;
+    BOOST_LOG_TRIVIAL(trace)<<"Number of particle files is "<< filesParticle.size()   ;
+    BOOST_LOG_TRIVIAL(trace)<<"Number of force files is "<< filesForces.size()   ;
     int snapshotsNumbTemp = setSnapshotsNumb;
     int beginSnapshotTemp = setBeginSnapshot;
     
@@ -230,21 +230,21 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
             BOOST_LOG_TRIVIAL(fatal)<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but starting from "
                       << setBeginSnapshot <<", it is only possible to have only "<< 
                       filesForces.size()-setBeginSnapshot + 1<<
-                      "! Exiting."<<std::endl;
+                      "! Exiting.";
             exit (EXIT_FAILURE);
           }
         }
       } else if (setSnapshotsNumb > filesParticle.size()){
         BOOST_LOG_TRIVIAL(fatal)<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but its total number is "
                       << filesForces.size() <<
-                      "! Exiting."<<std::endl;
+                      "! Exiting.";
             exit (EXIT_FAILURE);
       }
     } else {
       if ( (setBeginSnapshot>0) and (setBeginSnapshot > filesParticle.size()) ) {
         BOOST_LOG_TRIVIAL(fatal)<<"Requested starting snapshot is "<<setBeginSnapshot<<", but  but its total number is "
                  << filesParticle.size() <<
-                 "! Exiting."<<std::endl;
+                 "! Exiting.";
             exit (EXIT_FAILURE);
         exit (EXIT_FAILURE);
       } else if (setBeginSnapshot>0) {
@@ -259,7 +259,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       snapshotsNumbTemp = filesParticle.size();
     } else if (snapshotsNumbTemp==0) {
       BOOST_LOG_TRIVIAL(fatal)<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb
-               <<"! Exiting."<<std::endl;
+               <<"! Exiting.";
       exit (EXIT_FAILURE);
     }
     
@@ -268,9 +268,9 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     }
     
     if (filesParticle.size() > snapshotsNumbTemp) {
-      BOOST_LOG_TRIVIAL(trace)<<"Reducing the number of files from "<< filesParticle.size() <<" to " << snapshotsNumbTemp <<std::endl;
+      BOOST_LOG_TRIVIAL(trace)<<"Reducing the number of files from "<< filesParticle.size() <<" to " << snapshotsNumbTemp ;
     }
-    BOOST_LOG_TRIVIAL(trace)<<"Starting analyze from snapshot "<< beginSnapshotTemp <<std::endl;
+    BOOST_LOG_TRIVIAL(trace)<<"Starting analyze from snapshot "<< beginSnapshotTemp ;
     filesParticle.erase(filesParticle.begin(), filesParticle.begin() + beginSnapshotTemp - 1);
     filesParticle.erase(filesParticle.begin() + snapshotsNumbTemp, filesParticle.end());
     
