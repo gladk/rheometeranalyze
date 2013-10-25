@@ -21,6 +21,7 @@
 
 #include "export.h"
 #include <boost/foreach.hpp>
+#include <cmath>
 
 exportclass::exportclass(std::shared_ptr<configopt> cfg, std::shared_ptr <bandRow> bandAll) {
   _cfg = cfg;
@@ -361,6 +362,64 @@ void exportclass::gnuplotSchearRate() {
     myfileG << " \n"; 
   }
         
+  myfileG.close();
+};
+
+void exportclass::gnuplotContactAnalyze(int bins) {  
+  std::string _fileNameG;
+  _fileNameG  =  _cfg->FOutput();
+  _fileNameG  +=  "/contacts";
+  ofstream myfileG (_fileNameG.c_str());
+  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContN\n";
+  
+  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+  for(unsigned int i=0; i<snapshots->size(); i++) {
+    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+    std::vector <std::shared_ptr<force> > forces = snapshotCur->forces();
+    
+    std::vector <double>         deltas;
+    std::vector <long long int>  deltasBin(bins);
+    
+    for(int x = 0; x < bins; ++x)
+      deltasBin[x] = 0;
+    
+    double minDelta = 0.0;
+    double maxDelta = 0.0;
+    
+    BOOST_FOREACH(std::shared_ptr<force> f, forces) {
+      long long pid1T = f->pid1();
+      long long pid2T = f->pid2();
+      
+      if ((_cfg->tF()>=0) and (f->part1()->type() != _cfg->tF()) and (f->part2()->type() == _cfg->tF())) {
+        pid1T = -1;
+      }
+      if ((_cfg->tF()>=0) and (f->part2()->type() != _cfg->tF()) and (f->part1()->type() == _cfg->tF())) {
+        pid2T = -1;
+      }
+      
+      if ((pid1T>=0) and (pid2T>=0)) {
+        deltas.push_back(f->deltaN());
+        if  (minDelta == maxDelta and minDelta == 0 ) {
+          minDelta = f->deltaN();
+          maxDelta = f->deltaN();
+        }
+        minDelta = std::min(minDelta, f->deltaN());
+        maxDelta = std::max(maxDelta, f->deltaN());
+      }
+    }
+    
+    double DDelta = (maxDelta - minDelta)/bins;
+    BOOST_FOREACH(double d, deltas) {
+      deltasBin[int(floor((d-minDelta)/DDelta))] += 1;
+    }
+    std::cerr<<minDelta<< "    " <<maxDelta<<std::endl;
+    for(unsigned int x = 0; x < deltasBin.size(); ++x) {
+      myfileG << x << " " <<minDelta + DDelta*x  << " " <<minDelta + DDelta*(x+1) << " " <<  deltasBin[x]  << "\n";
+    }
+    
+    
+    
+  }
   myfileG.close();
 };
 
