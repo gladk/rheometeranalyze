@@ -412,7 +412,7 @@ void exportclass::gnuplotContactAnalyze(int bins) {
     BOOST_FOREACH(double d, deltas) {
       deltasBin[int(floor((d-minDelta)/DDelta))] += 1;
     }
-    std::cerr<<minDelta<< "    " <<maxDelta<<std::endl;
+    
     for(unsigned int x = 0; x < deltasBin.size(); ++x) {
       myfileG << x << " " <<minDelta + DDelta*x  << " " <<minDelta + DDelta*(x+1) << " " <<  deltasBin[x]  << "\n";
     }
