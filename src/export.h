@@ -43,13 +43,9 @@
 #include <vtkQuad.h>
 #include <vtkBitArray.h>
 
-
-
 #include "band.h"
 #include "bandRow.h"
 
-
-using namespace std;
 class exportclass {
   private:
     std::shared_ptr <configopt> _cfg;

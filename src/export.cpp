@@ -366,11 +366,12 @@ void exportclass::gnuplotSchearRate() {
 };
 
 void exportclass::gnuplotContactAnalyze(int bins) {  
+  // Calculates, how many contacts are having the corresponding distance Delta
   std::string _fileNameG;
   _fileNameG  =  _cfg->FOutput();
   _fileNameG  +=  "/contacts";
   ofstream myfileG (_fileNameG.c_str());
-  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContN\n";
+  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContNumber\n";
   
   std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
   for(unsigned int i=0; i<snapshots->size(); i++) {
@@ -431,7 +432,7 @@ void exportclass::Utwente()  {
   for(unsigned int i=0; i<snapshots->size(); i++) {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
     
-    stringstream ss;
+    std::stringstream ss;
     ss << setw(leadingZerosLen) << setfill('0') << i;
     
     double timeTmp = snapshotCur->timeStep()*_cfg->dT();
