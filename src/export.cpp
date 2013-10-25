@@ -418,11 +418,65 @@ void exportclass::gnuplotContactAnalyze(int bins) {
       myfileG << x << " " <<minDelta + DDelta*x  << " " <<minDelta + DDelta*(x+1) << " " <<  deltasBin[x]  << "\n";
     }
     
-    
-    
   }
   myfileG.close();
 };
+
+
+bool sortContactFollow(std::shared_ptr<contactFollow> i, std::shared_ptr<contactFollow> j) {
+  
+  if (i->P1_id() < j->P1_id()) {
+    return true;
+  } else {
+    if (i->P2_id() < j->P2_id() and 
+        i->P1_id() == j->P1_id()) {
+      return true;
+    } else {
+      if (i->timeStep() < j->timeStep() and 
+          i->P2_id() == j->P2_id() and 
+          i->P1_id() == j->P1_id()) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+}
+
+void exportclass::gnuplotContactFollow() {
+  std::string _fileNameG;
+  _fileNameG  =  _cfg->FOutput();
+  _fileNameG  +=  "/followContacts";
+  ofstream myfileG (_fileNameG.c_str());
+  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContNumber\n";
+  
+  
+  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+  std::vector <std::shared_ptr<contactFollow> > cntFolw;
+  
+  for(unsigned int i=0; i<snapshots->size(); i++) {
+    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+    std::vector <std::shared_ptr<force> > forces = snapshotCur->forces();
+    
+    BOOST_FOREACH(std::shared_ptr<force> f, forces) {
+      std::shared_ptr<contactFollow> tmpCntFolw ( new contactFollow (f, snapshotCur));
+      cntFolw.push_back(tmpCntFolw);
+    }
+  }
+  
+  std::sort (cntFolw.begin(), cntFolw.end(), sortContactFollow);
+  
+  BOOST_FOREACH(std::shared_ptr<contactFollow> tmpCntFolw, cntFolw) {
+     myfileG << tmpCntFolw->P1_id() << " " << tmpCntFolw->P2_id() << " " 
+             << tmpCntFolw->timeStep()*_cfg->dT() << " " 
+             << tmpCntFolw->deltaN() << " " 
+             << tmpCntFolw->f().norm() << " " << std::endl;
+   }
+  
+  myfileG.close();
+};
+
+
 
 void exportclass::Utwente()  {
   std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();

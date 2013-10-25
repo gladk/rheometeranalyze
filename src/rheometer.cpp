@@ -41,6 +41,7 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   
   exp->gnuplotSchearRate();
   exp->gnuplotContactAnalyze(100);
+  exp->gnuplotContactFollow();
 };
 
 void rheometer::loadParticles() {

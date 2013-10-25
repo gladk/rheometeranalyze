@@ -46,6 +46,19 @@
 #include "band.h"
 #include "bandRow.h"
 
+struct contactFollow {
+  std::shared_ptr<force> _f;     // Pointer into force
+  std::shared_ptr<snapshot> _sn; // Pointer into snapshot
+    contactFollow(std::shared_ptr<force> f, std::shared_ptr<snapshot> sn) {_f = f; _sn = sn;};
+  unsigned long long P1_id() {return _f->pid1();};
+  unsigned long long P2_id() {return _f->pid2();};
+  unsigned long long timeStep() {return _sn->timeStep();};
+  double deltaN() {return _f->deltaN();};
+  Eigen::Vector3d f() {return _f->val();};
+};
+
+bool sortContactFollow(std::shared_ptr<contactFollow> i, std::shared_ptr<contactFollow> j);
+
 class exportclass {
   private:
     std::shared_ptr <configopt> _cfg;
@@ -56,5 +69,6 @@ class exportclass {
     void VTK();
     void gnuplotSchearRate();
     void gnuplotContactAnalyze(int bins);
+    void gnuplotContactFollow();
     void Utwente();
 };
