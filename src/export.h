@@ -54,6 +54,9 @@ struct contactFollow {
   unsigned long long P2_id() {return _f->pid2();};
   unsigned long long timeStep() {return _sn->timeStep();};
   double deltaN() {return _f->deltaN();};
+  double volWater() {return _f->volWater();};
+  double distCurr() {return _f->distCurr();};
+  double distCrit() {return _f->distCrit();};
   Eigen::Vector3d f() {return _f->val();};
 };
 

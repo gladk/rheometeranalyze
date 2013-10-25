@@ -448,7 +448,7 @@ void exportclass::gnuplotContactFollow() {
   _fileNameG  =  _cfg->FOutput();
   _fileNameG  +=  "/followContacts";
   ofstream myfileG (_fileNameG.c_str());
-  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContNumber\n";
+  myfileG << "#001_Pid1\t002_Pid2\t003_time\t004_delta\t005_force\t006_volWater\t007_distCurr\t008_distCrit\n";
   
   
   std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
@@ -470,7 +470,10 @@ void exportclass::gnuplotContactFollow() {
      myfileG << tmpCntFolw->P1_id() << " " << tmpCntFolw->P2_id() << " " 
              << tmpCntFolw->timeStep()*_cfg->dT() << " " 
              << tmpCntFolw->deltaN() << " " 
-             << tmpCntFolw->f().norm() << " " << std::endl;
+             << tmpCntFolw->f().norm() << " "
+             << tmpCntFolw->volWater() << " "
+             << tmpCntFolw->distCurr() << " "
+             << tmpCntFolw->distCrit() << " " << std::endl;
    }
   
   myfileG.close();
