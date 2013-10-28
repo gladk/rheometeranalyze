@@ -422,6 +422,48 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   myfileG.close();
 };
 
+void exportclass::gnuplotContactWet() {  
+  // Calculates, how many contacts are having the corresponding distance Delta
+  std::string _fileNameG;
+  _fileNameG  =  _cfg->FOutput();
+  _fileNameG  +=  "/contactsWet";
+  ofstream myfileG (_fileNameG.c_str());
+  myfileG << "#001_iter\t002_time\t003_Contacts\t004_WetContacts\t005_LiquidVol\n";
+  
+  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+  for(unsigned int i=0; i<snapshots->size(); i++) {
+    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+    std::vector <std::shared_ptr<force> > forces = snapshotCur->forces();
+    unsigned long long int numContacts = 0;
+    unsigned long long int numWetContacts = 0;
+    double liqVol = 0;
+    
+    BOOST_FOREACH(std::shared_ptr<force> f, forces) {
+      long long pid1T = f->pid1();
+      long long pid2T = f->pid2();
+      
+      if ((_cfg->tF()>=0) and (f->part1()->type() != _cfg->tF()) and (f->part2()->type() == _cfg->tF())) {
+        pid1T = -1;
+      }
+      if ((_cfg->tF()>=0) and (f->part2()->type() != _cfg->tF()) and (f->part1()->type() == _cfg->tF())) {
+        pid2T = -1;
+      }
+      
+      if ((pid1T>=0) and (pid2T>=0)) {
+        numContacts++;
+        if (f->volWater()>0) {
+          numWetContacts++;
+          liqVol+=f->volWater();
+        }
+      }
+    }
+    
+    myfileG << snapshotCur->timeStep() << " " << snapshotCur->timeStep()*_cfg->dT()  << " " << numContacts << " " <<  numWetContacts << " " <<  liqVol  << "\n";
+    
+  }
+  myfileG.close();
+};
+
 
 bool sortContactFollow(std::shared_ptr<contactFollow> i, std::shared_ptr<contactFollow> j) {
   
