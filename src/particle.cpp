@@ -127,15 +127,12 @@ unsigned int particle::wetContacts() {
 };
 
 double particle::wetContactsAverageDistance() {
-  unsigned int wetContacts = 0;
   double wetContactsAverageDistance = 0.0;
-  
   for (unsigned int i = 0; i < _contactParticlesWet.size(); i++) {
     std::shared_ptr<particle> tmpParticle = _contactParticles[i];
     double tmpDist = (_c - tmpParticle->c()).norm() - (_rad + tmpParticle->rad());
     wetContactsAverageDistance += tmpDist;
   }
-  
   if (_contactParticlesWet.size()>0) {
     return wetContactsAverageDistance/_contactParticlesWet.size();
   } else {
