@@ -21,18 +21,12 @@
 
 #include "main.h"
 
-
-bool sortFileTimeCreate(boost::filesystem::path i, boost::filesystem::path j) {
-  
-  if (boost::filesystem::last_write_time(i) < boost::filesystem::last_write_time(j)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
+
+bool sortFileTimeCreate(fs::path i, fs::path j) {
+  return (fs::last_write_time(i) < fs::last_write_time(j));
+}
 
 using namespace std;
 
