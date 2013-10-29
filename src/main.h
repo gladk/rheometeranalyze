@@ -36,8 +36,10 @@
 #include <iterator>
 #include <string>
 #include <Eigen/Dense>
+#include <sys/stat.h>
 #include "config.h"
 #include "particle.h"
 #include "rheometer.h"
 #include "forceRow.h"
 #include "snapshotRow.h"
+

@@ -121,7 +121,7 @@ void rheometer::loadParticles() {
   
       } else if (curLine == _cfg->nAt()) {
         linestream >> valInt;
-        std::cout<<"File "<<partNumbCounter<<"/"<<snapshots->size()<<std::endl<<"Expected particles "<<valInt;
+        std::cout<<"File "<<partNumbCounter<<"/"<<snapshots->size()<< " (" << snapshotCur->getParticleFile() << "); " <<std::endl<<"Expected particles "<<valInt;
       } else if (curLine == _cfg->nPSt()) {
         linestream >> valInt;
         snapshotCur->setTimeStep(valInt);

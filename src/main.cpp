@@ -21,6 +21,16 @@
 
 #include "main.h"
 
+
+bool sortFileTimeCreate(boost::filesystem::path i, boost::filesystem::path j) {
+  
+  if (boost::filesystem::last_write_time(i) < boost::filesystem::last_write_time(j)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
@@ -176,7 +186,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     exit (EXIT_FAILURE);
   }
   
-  sort(filesParticle.begin(), filesParticle.end()); 
+  sort(filesParticle.begin(), filesParticle.end(), sortFileTimeCreate); 
   
   //=====================================================
   
@@ -211,7 +221,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     exit (EXIT_FAILURE);
   } 
   
-  sort(filesForces.begin(), filesForces.end()); 
+  sort(filesForces.begin(), filesForces.end(), sortFileTimeCreate); 
   
   //=====================================================
   if (not fs::is_directory(outputFolder)) {
