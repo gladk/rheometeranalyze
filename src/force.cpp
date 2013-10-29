@@ -94,8 +94,13 @@ void force::calculateStressTensor() {
   _part2->addStress(_stressTensor);
   
   // Add force into the particles
-  _part1->addParticleContact(_part2);
-  _part2->addParticleContact(_part1);
+  if (_volWater>0) {
+    _part1->addParticleContactWet(_part2);
+    _part2->addParticleContactWet(_part1);
+  } else {
+    _part1->addParticleContact(_part2);
+    _part2->addParticleContact(_part1);
+  }
 
   _calculateStressTensor  =  true;
 };

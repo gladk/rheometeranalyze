@@ -123,34 +123,24 @@ unsigned int particle::contacts() {
 };
 
 unsigned int particle::wetContacts() {
-  unsigned int wetContacts = 0;
-  for (unsigned int i = 0; i < _contactParticles.size(); i++) {
-    std::shared_ptr<particle> tmpParticle = _contactParticles[i];
-    if (((_c - tmpParticle->c()).norm() - (_rad + tmpParticle->rad())) > 0) {
-      wetContacts++;
-    }
-  }
-  return wetContacts;
+  return _contactParticlesWet.size();
 };
 
 double particle::wetContactsAverageDistance() {
   unsigned int wetContacts = 0;
   double wetContactsAverageDistance = 0.0;
   
-  for (unsigned int i = 0; i < _contactParticles.size(); i++) {
+  for (unsigned int i = 0; i < _contactParticlesWet.size(); i++) {
     std::shared_ptr<particle> tmpParticle = _contactParticles[i];
     double tmpDist = (_c - tmpParticle->c()).norm() - (_rad + tmpParticle->rad());
-    if ( tmpDist > 0) {
-      wetContacts++;
-      wetContactsAverageDistance += tmpDist;
-    }
+    wetContactsAverageDistance += tmpDist;
   }
-  if (wetContacts>0) {
-    return wetContactsAverageDistance/wetContacts;
+  
+  if (_contactParticlesWet.size()>0) {
+    return wetContactsAverageDistance/_contactParticlesWet.size();
   } else {
     return 0.0;
   }
-  
 };
 
 void particle::setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateCC)  {
@@ -173,4 +163,9 @@ void particle::addParticleContact(std::shared_ptr<particle> addParticle) {
     }
   }
   _contactParticles.push_back(addParticle);
+};
+
+void particle::addParticleContactWet(std::shared_ptr<particle> addParticle) {
+  this->addParticleContact(addParticle);
+  _contactParticlesWet.push_back(addParticle);
 };

@@ -43,7 +43,8 @@ class particle {
     bool _calculateVel;           // Whether the velocity matrix was calculated
     Eigen::Vector3d _vZylindrical;// Linear velocity in zylindrical coordinates (dR, dZ, dF)
     Eigen::Vector3d _posZyl;      // Position in zylindrical coordinates (Rho, Z, phi)
-    std::vector <std::shared_ptr<particle> > _contactParticles;   // Vector, where all contacting particles (pointers) are saved
+    std::vector <std::shared_ptr<particle> > _contactParticles;     // Vector, where all contacting particles (pointers) are saved
+    std::vector <std::shared_ptr<particle> > _contactParticlesWet;  // Vector, where only wet contacting particles (pointers) are saved
     
     
     Eigen::Matrix3d _stressTensor;// Stress tensor in cylindrical coordinates 
@@ -79,6 +80,7 @@ class particle {
     Eigen::Matrix3d kinEnergie();
     void addStress(Eigen::Matrix3d addStressTensor);
     void addParticleContact(std::shared_ptr<particle> addParticle);
+    void addParticleContactWet(std::shared_ptr<particle> addParticle);
     Eigen::Matrix3d stressTensor();
     Eigen::Matrix3d stressTensorAVG();
     double stressPress();
