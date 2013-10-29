@@ -79,6 +79,7 @@ class configopt {
     std::shared_ptr<snapshotRow> _snapshotRow;    // Row of snapshots
     bool  _vtk;                // True, if VTK-file will be created
     bool  _utwente;            // True, if UTwente-files will be created
+    bool  _contact;            // True, if contact-analyze should be performed
   public:
     configopt(const std::string &);
     Eigen::Vector3d get_c(){return _c;};
@@ -138,4 +139,9 @@ class configopt {
     void setUtwente() {_utwente=true;}
     void unSetUtwente() {_utwente=false;}
     bool Utwente() {return _utwente;}  
+
+
+    void setContact() {_contact=true;}
+    void unSetContact() {_contact=false;}
+    bool Contact() {return _contact;}  
 };

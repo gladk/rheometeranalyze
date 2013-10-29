@@ -41,6 +41,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   
   bool setVtk = false;
   bool setUtwente = false;
+  bool setContact = false;
   int setSnapshotsNumb;
   int setBeginSnapshot;
   try {
@@ -52,6 +53,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("force,f", po::value<string>(), "forces dump file")
       ("vtk,v", "create VTK-file, OFF by default")
       ("utwente,u", "create export files for UTwente, OFF by default")
+      ("contact", "perform contact analyze and creating corresponding files, OFF by default")
       ("snapshots,s",po::value<int>(&setSnapshotsNumb)->default_value(-1), "number of snapshots to analyze, ALL by default (-1)")
       ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
       ("output,o", po::value<string>()->default_value("output"), "output folder")
@@ -83,6 +85,13 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       BOOST_LOG_TRIVIAL(trace) << "UTwente-files will NOT be created" ;
     }
 
+    if (vm.count("contact")) {
+      BOOST_LOG_TRIVIAL(trace) << "Contact-analyze will be performed" ;
+      setContact = true;
+    } else {
+      BOOST_LOG_TRIVIAL(trace) << "Contact-analyze will NOT be performed" ;
+    }
+    
     if (vm.count("config")) {
       BOOST_LOG_TRIVIAL(trace) << "config file is: " << vm["config"].as<string>() ;
     } else {
@@ -295,6 +304,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   configParams->FOutput(outputFolder);
   
   if (setVtk) configParams->setVtk();
+  if (setContact) configParams->setContact();
   if (setUtwente) configParams->setUtwente();
   
   std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
