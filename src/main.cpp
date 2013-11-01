@@ -23,6 +23,7 @@
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
+namespace logging = boost::log;
 
 bool sortFileTimeCreate(fs::path i, fs::path j) {
   return (fs::last_write_time(i) < fs::last_write_time(j));
@@ -36,6 +37,10 @@ int main(int ac, char* av[])
   string particlesFileName;
   string forcesFileName;
   string outputFolder;
+  
+  logging::core::get()->set_filter (
+    logging::trivial::severity >= logging::trivial::info
+  );
   
   std::cout<<"\n\
 Rheometeranalyze\n\
@@ -76,28 +81,28 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     }
     
     if (vm.count("vtk")) {
-      BOOST_LOG_TRIVIAL(trace) << "VTK-file will be created" ;
+      BOOST_LOG_TRIVIAL(info) << "VTK-file will be created" ;
       setVtk = true;
     } else {
-      BOOST_LOG_TRIVIAL(trace) << "VTK-file will NOT be created" ;
+      BOOST_LOG_TRIVIAL(info) << "VTK-file will NOT be created" ;
     }
     
     if (vm.count("utwente")) {
-      BOOST_LOG_TRIVIAL(trace) << "UTwente-files will be created" ;
+      BOOST_LOG_TRIVIAL(info) << "UTwente-files will be created" ;
       setUtwente = true;
     } else {
-      BOOST_LOG_TRIVIAL(trace) << "UTwente-files will NOT be created" ;
+      BOOST_LOG_TRIVIAL(info) << "UTwente-files will NOT be created" ;
     }
 
     if (vm.count("contact")) {
-      BOOST_LOG_TRIVIAL(trace) << "Contact-analyze will be performed" ;
+      BOOST_LOG_TRIVIAL(info) << "Contact-analyze will be performed" ;
       setContact = true;
     } else {
-      BOOST_LOG_TRIVIAL(trace) << "Contact-analyze will NOT be performed" ;
+      BOOST_LOG_TRIVIAL(info) << "Contact-analyze will NOT be performed" ;
     }
     
     if (vm.count("config")) {
-      BOOST_LOG_TRIVIAL(trace) << "config file is: " << vm["config"].as<string>() ;
+      BOOST_LOG_TRIVIAL(info) << "config file is: " << vm["config"].as<string>() ;
     } else {
       BOOST_LOG_TRIVIAL(fatal) << "config file is required, use `-c` option for that or `--help`.\n"; 
       exit (EXIT_FAILURE);
@@ -105,12 +110,12 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     configFileName = vm["config"].as<string>();
     
     if (vm.count("output")) {
-      BOOST_LOG_TRIVIAL(trace) << "output folder: " << vm["output"].as<string>() ;
+      BOOST_LOG_TRIVIAL(info) << "output folder: " << vm["output"].as<string>() ;
     }
     outputFolder = vm["output"].as<string>();
 
     if (vm.count("particle")) {
-      BOOST_LOG_TRIVIAL(trace) << "particles dump-file is: " << vm["particle"].as<string>() ;
+      BOOST_LOG_TRIVIAL(info) << "particles dump-file is: " << vm["particle"].as<string>() ;
     } else {
       BOOST_LOG_TRIVIAL(fatal) << "particles dump-file is required, use `-p` option for that or `--help` for help.\n"; 
       exit (EXIT_FAILURE);
@@ -119,7 +124,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     particlesFileName = vm["particle"].as<string>();
     
     if (vm.count("force")){
-      BOOST_LOG_TRIVIAL(trace) << "forces dump-file is: "  << vm["force"].as<string>() ;
+      BOOST_LOG_TRIVIAL(info) << "forces dump-file is: "  << vm["force"].as<string>() ;
     } else {
       BOOST_LOG_TRIVIAL(fatal) << "force dump-file is required, use `-f` option for that or `--help` for help.\n"; 
       exit (EXIT_FAILURE);
@@ -142,7 +147,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   }
   
   #ifdef ALGLIB
-    BOOST_LOG_TRIVIAL(trace)<<"ALGLIB Library is found and export of shearbands will be produced \n";
+    BOOST_LOG_TRIVIAL(info)<<"ALGLIB Library is found and export of shearbands will be produced \n";
   #else
     BOOST_LOG_TRIVIAL(warning)<<"ALGLIB Library is NOT found and export of shearbands will NOT be produced \n";
   #endif
@@ -219,9 +224,9 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   
   //=====================================================
   if (not fs::is_directory(outputFolder)) {
-    BOOST_LOG_TRIVIAL(trace)<<"The directory " << outputFolder<< " does not exists. Creating.";
+    BOOST_LOG_TRIVIAL(info)<<"The directory " << outputFolder<< " does not exists. Creating.";
     if (fs::create_directory(outputFolder)) {
-      BOOST_LOG_TRIVIAL(trace)<<"The directory " << outputFolder<< " created.";
+      BOOST_LOG_TRIVIAL(info)<<"The directory " << outputFolder<< " created.";
     }
   }
   
@@ -231,8 +236,8 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     BOOST_LOG_TRIVIAL(fatal)<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting.";
     exit (EXIT_FAILURE);
   } else {
-    BOOST_LOG_TRIVIAL(trace)<<"Number of particle files is "<< filesParticle.size()   ;
-    BOOST_LOG_TRIVIAL(trace)<<"Number of force files is "<< filesForces.size()   ;
+    BOOST_LOG_TRIVIAL(info)<<"Number of particle files is "<< filesParticle.size()   ;
+    BOOST_LOG_TRIVIAL(info)<<"Number of force files is "<< filesForces.size()   ;
     int snapshotsNumbTemp = setSnapshotsNumb;
     int beginSnapshotTemp = setBeginSnapshot;
     
@@ -281,9 +286,9 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     }
     
     if (filesParticle.size() > snapshotsNumbTemp) {
-      BOOST_LOG_TRIVIAL(trace)<<"Reducing the number of files from "<< filesParticle.size() <<" to " << snapshotsNumbTemp ;
+      BOOST_LOG_TRIVIAL(info)<<"Reducing the number of files from "<< filesParticle.size() <<" to " << snapshotsNumbTemp ;
     }
-    BOOST_LOG_TRIVIAL(trace)<<"Starting analyze from snapshot "<< beginSnapshotTemp ;
+    BOOST_LOG_TRIVIAL(info)<<"Starting analyze from snapshot "<< beginSnapshotTemp ;
     filesParticle.erase(filesParticle.begin(), filesParticle.begin() + beginSnapshotTemp - 1);
     filesParticle.erase(filesParticle.begin() + snapshotsNumbTemp, filesParticle.end());
     
