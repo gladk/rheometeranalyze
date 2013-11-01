@@ -23,9 +23,9 @@
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
+
 namespace logging = boost::log;
 namespace src = boost::log::sources;
-namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
 
 bool sortFileTimeCreate(fs::path i, fs::path j) {
@@ -45,8 +45,6 @@ int main(int ac, char* av[])
   using namespace logging::trivial;
   src::severity_logger< severity_level > lg;
     
-  logging::record rec = lg.open_record();
-  
   logging::core::get()->set_filter (
     logging::trivial::severity >= logging::trivial::info
   );
@@ -57,7 +55,6 @@ int main(int ac, char* av[])
   );
 
   logging::add_common_attributes();
-  
   
   std::cout<<"\n\
 Rheometeranalyze\n\
