@@ -93,8 +93,15 @@ cPos2ID = 8
 ;column Forc
 cForc = 10
 
+;column VolWater
+cVolWater = 13
+
+;column DistCurr
+cDistCurr = 14
+
+;column DistCrit
+cDistCrit = 15
+
+
 ;type of particle, which will be calculated for forces. -1 means calculating of all particles
 tF = 1
-
-
-
