@@ -51,6 +51,12 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
 };
 
 void rheometer::loadParticles() {
+  namespace src = boost::log::sources;
+  namespace logging = boost::log;
+  using namespace logging::trivial;
+  src::severity_logger< severity_level > lg;
+  
+  
   unsigned int partNumbCounter  = 1;
   std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
   
@@ -82,34 +88,34 @@ void rheometer::loadParticles() {
             linestream >> pId;
           } else if (i==_cfg->cT()) {
             linestream >> pT;
-            //std::cerr<<pT<<std::endl;
+            //std::cerr<<pT;
           } else if (i==_cfg->cC()) {
             linestream >> pC[0];
             linestream >> pC[1];
             linestream >> pC[2];
             i+=2;
-            //std::cerr<<pC<<std::endl<<std::endl;
+            //std::cerr<<pC<<std::endl;
           } else if (i==_cfg->cV()) {
             linestream >> pV[0];
             linestream >> pV[1];
             linestream >> pV[2];
             i+=2;
-            //std::cerr<<pV<<std::endl<<std::endl;
+            //std::cerr<<pV<<std::endl;
           } else if (i==_cfg->cO()) {
             linestream >> pO[0];
             linestream >> pO[1];
             linestream >> pO[2];
             i+=2;
-            //std::cerr<<pO<<std::endl<<std::endl;
+            //std::cerr<<pO<<std::endl;
           } else if (i==_cfg->cR()) {
             linestream >> pR;
-            //std::cerr<<pR<<std::endl;
+            //std::cerr<<pR;
           } else if (i==_cfg->cM()) {
             linestream >> pM;
-            //std::cerr<<pM<<std::endl;
+            //std::cerr<<pM;
           } else if (i==_cfg->cD()) {
             linestream >> pD;
-            //std::cerr<<pD<<std::endl;
+            //std::cerr<<pD;
           } else {
             linestream >> valD;
           }
@@ -124,7 +130,7 @@ void rheometer::loadParticles() {
   
       } else if (curLine == _cfg->nAt()) {
         linestream >> valInt;
-        std::cout<<"File "<<partNumbCounter<<"/"<<snapshots->size()<< " (" << snapshotCur->getParticleFile() << "); " <<std::endl<<"Expected particles "<<valInt;
+        BOOST_LOG_SEV(lg, info)<<"File "<<partNumbCounter<<"/"<<snapshots->size()<< " (" << snapshotCur->getParticleFile() << "); " <<"Expected particles "<<valInt;
       } else if (curLine == _cfg->nPSt()) {
         linestream >> valInt;
         snapshotCur->setTimeStep(valInt);
@@ -138,7 +144,7 @@ void rheometer::loadParticles() {
     BOOST_FOREACH( std::shared_ptr<particle> p, tmpPartVector) {
        _particleAll[partNumbTMP]->addP(p);
     }
-    std::cout<<"; "<<_particleAll[partNumbTMP]->elementsNum()<<" particles added."<<std::endl;
+    BOOST_LOG_SEV(lg, info)<<"; "<<_particleAll[partNumbTMP]->elementsNum()<<" particles added.";
     _particleNum+=_particleAll[partNumbTMP]->elementsNum();
     partNumbCounter++;
     
@@ -146,12 +152,17 @@ void rheometer::loadParticles() {
   
   }
   snapshots->sortRow();
-  std::cout<<"The total number of added particles is "<<_particleNum<<std::endl;
-  std::cout<<"The total number of added forces is "<<_forceNum<<std::endl;
+  BOOST_LOG_SEV(lg, info)<<"The total number of added particles is "<<_particleNum;
+  BOOST_LOG_SEV(lg, info)<<"The total number of added forces is "<<_forceNum;
 };
 
 
 void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
+  namespace src = boost::log::sources;
+  namespace logging = boost::log;
+  using namespace logging::trivial;
+  src::severity_logger< severity_level > lg;
+  
     std::ifstream _file;
     _file.open(loadSnap->getForceFile().string());
     
@@ -187,28 +198,28 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
             linestream >> pos1[1];
             linestream >> pos1[2];
             i+=2;
-            //std::cerr<<"pos1 " << pos1<<std::endl<<std::endl;
+            //std::cerr<<"pos1 " << pos1<<std::endl;
           } else if (i==_cfg->cPos2()) {
             linestream >> pos2[0];
             linestream >> pos2[1];
             linestream >> pos2[2];
             i+=2;
-            //std::cerr<<"pos2 " << pos2<<std::endl<<std::endl;
+            //std::cerr<<"pos2 " << pos2<<std::endl;
           } else if (i==_cfg->cForc()) {
             linestream >> val[0];
             linestream >> val[1];
             linestream >> val[2];
             i+=2;
-            //std::cerr<<"val " << val<<std::endl<<std::endl;
+            //std::cerr<<"val " << val<<std::endl;
           } else if (i==_cfg->cVolWater()) {
             linestream >> volWater;
-            //std::cerr<<"VolWater " << volWater<<std::endl<<std::endl;
+            //std::cerr<<"VolWater " << volWater<<std::endl;
           } else if (i==_cfg->cDistCurr()) {
             linestream >> distCurr;
-            //std::cerr<<"DistCurr " << distCurr<<std::endl<<std::endl;
+            //std::cerr<<"DistCurr " << distCurr<<std::endl;
           } else if (i==_cfg->cDistCrit()) {
             linestream >> distCrit;
-            //std::cerr<<"DistCrit " << distCrit<<std::endl<<std::endl;
+            //std::cerr<<"DistCrit " << distCrit<<std::endl;
           } else {
             linestream >> valD;
           }
@@ -236,17 +247,17 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
   
       } else if (curLine == _cfg->fAt()) {
         linestream >> valInt;
-         std::cout<<"Expected forces "<<valInt;
+         BOOST_LOG_SEV(lg, info)<<"Expected forces "<<valInt;
       } else if (curLine == _cfg->nFSt()) {
         linestream >> valInt;
         unsigned int valIntUn = valInt;
         if (valIntUn != loadSnap->timeStep()) {
-          std::cout << "Timestep of force and particle files is not the same!\n"; 
+          BOOST_LOG_SEV(lg, fatal) << "Timestep of force and particle files is not the same!\n"; 
           exit (EXIT_FAILURE);
         }
       }
       curLine++;
     };
-    std::cout<<"; "<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added."<<std::endl<<std::endl;
+    BOOST_LOG_SEV(lg, info)<<"; "<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added.";
     _forceNum+=_forceRow[forceRowNumbTMP]->elementsNum();
 };
