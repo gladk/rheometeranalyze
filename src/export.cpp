@@ -371,21 +371,21 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   _fileNameG  =  _cfg->FOutput();
   _fileNameG  +=  "/contacts";
   ofstream myfileG (_fileNameG.c_str());
-  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContNumber\n";
+  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContNumber\t005_ContNumberAVG\n";
   
+  std::vector <std::shared_ptr<force> >  deltas;
+  std::vector <long long int>            deltasBin(bins);
+  
+  for(int x = 0; x < bins; ++x)
+    deltasBin[x] = 0;
+
+  double minDelta = 0.0;
+  double maxDelta = 0.0;
+    
   std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
   for(unsigned int i=0; i<snapshots->size(); i++) {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
     std::vector <std::shared_ptr<force> > forces = snapshotCur->forces();
-    
-    std::vector <double>         deltas;
-    std::vector <long long int>  deltasBin(bins);
-    
-    for(int x = 0; x < bins; ++x)
-      deltasBin[x] = 0;
-    
-    double minDelta = 0.0;
-    double maxDelta = 0.0;
     
     BOOST_FOREACH(std::shared_ptr<force> f, forces) {
       long long pid1T = f->pid1();
@@ -399,7 +399,7 @@ void exportclass::gnuplotContactAnalyze(int bins) {
       }
       
       if ((pid1T>=0) and (pid2T>=0)) {
-        deltas.push_back(f->deltaN());
+        deltas.push_back(f);
         if  (minDelta == maxDelta and minDelta == 0 ) {
           minDelta = f->deltaN();
           maxDelta = f->deltaN();
@@ -408,17 +408,17 @@ void exportclass::gnuplotContactAnalyze(int bins) {
         maxDelta = std::max(maxDelta, f->deltaN());
       }
     }
-    
-    double DDelta = (maxDelta - minDelta)/bins;
-    BOOST_FOREACH(double d, deltas) {
-      deltasBin[int(floor((d-minDelta)/DDelta))] += 1;
-    }
-    
-    for(unsigned int x = 0; x < deltasBin.size(); ++x) {
-      myfileG << x << " " <<minDelta + DDelta*x  << " " <<minDelta + DDelta*(x+1) << " " <<  deltasBin[x]  << "\n";
-    }
-    
   }
+  
+  double DDelta = (maxDelta - minDelta)/bins;
+  BOOST_FOREACH(std::shared_ptr<force> d, deltas) {
+    deltasBin[int(floor((d->deltaN()-minDelta)/DDelta))] += 1;
+  }
+  
+  for(unsigned int x = 0; x < deltasBin.size(); ++x) {
+    myfileG << x << " " <<minDelta + DDelta*x  << " " <<minDelta + DDelta*(x+1) << " " <<  deltasBin[x] << " " <<  deltasBin[x]/snapshots->size() << "\n";
+  }
+  
   myfileG.close();
 };
 
