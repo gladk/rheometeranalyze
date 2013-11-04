@@ -27,6 +27,9 @@ namespace fs = boost::filesystem;
 namespace logging = boost::log;
 namespace src = boost::log::sources;
 namespace keywords = boost::log::keywords;
+namespace expr = boost::log::expressions;
+namespace sinks = boost::log::sinks;
+namespace attrs = boost::log::attributes;
 
 bool sortFileTimeCreate(fs::path i, fs::path j) {
   return (fs::last_write_time(i) < fs::last_write_time(j));
@@ -42,19 +45,41 @@ int main(int ac, char* av[])
   string outputFolder;
   
   
+  // File log
+  boost::shared_ptr< logging::core > core = logging::core::get();
+  boost::shared_ptr< sinks::text_file_backend > backend =
+    boost::make_shared< sinks::text_file_backend >(
+      keywords::file_name = "rheometer.log"
+    );
+    
+  typedef sinks::synchronous_sink< sinks::text_file_backend > sink_t;
+  boost::shared_ptr< sink_t > sink(new sink_t(backend));
+  
+  core->add_global_attribute("TimeStamp", attrs::local_clock());
+  
+  sink->set_formatter (
+    expr::format("[%1%] %2%")
+      % expr::attr< boost::posix_time::ptime >("TimeStamp")
+      % expr::xml_decor[ expr::stream << expr::smessage ]
+  );
+  core->add_sink(sink);
+  
+  // Screen log
+  
+  
+  boost::shared_ptr< sinks::text_ostream_backend > backendScreen = boost::make_shared< sinks::text_ostream_backend >();
+  backendScreen->add_stream(boost::shared_ptr< std::ostream >(&std::clog, logging::empty_deleter()));
+  backendScreen->auto_flush(true);
+
+  // Wrap it into the frontend and register in the core.
+  // The backend requires synchronization in the frontend.
+  typedef sinks::synchronous_sink< sinks::text_ostream_backend > sink_tScreen;
+  boost::shared_ptr< sink_tScreen > sinkScreen(new sink_tScreen(backendScreen));
+  core->add_sink(sinkScreen);
+  
   using namespace logging::trivial;
   src::severity_logger< severity_level > lg;
-    
-  logging::core::get()->set_filter (
-    logging::trivial::severity >= logging::trivial::info
-  );
 
-  logging::add_file_log (
-    keywords::file_name = "rheometer.log",
-    keywords::format = "[%TimeStamp%]: %Message%"
-  );
-
-  logging::add_common_attributes();
   
   std::cout<<"\n\
 Rheometeranalyze\n\
