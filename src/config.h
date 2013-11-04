@@ -80,6 +80,8 @@ class configopt {
     bool  _vtk;                // True, if VTK-file will be created
     bool  _utwente;            // True, if UTwente-files will be created
     bool  _contact;            // True, if contact-analyze should be performed
+    bool  _followContact;      // True, if contact-follow-analyze should be performed
+    
   public:
     configopt(const std::string &);
     Eigen::Vector3d get_c(){return _c;};
@@ -143,5 +145,9 @@ class configopt {
 
     void setContact() {_contact=true;}
     void unSetContact() {_contact=false;}
-    bool Contact() {return _contact;}  
+    bool contact() {return _contact;} 
+    
+    void setFollowContact() {_followContact=true;} 
+    void unSetFollowContact() {_followContact=false;} 
+    bool followContact() {return _followContact;}  
 };
