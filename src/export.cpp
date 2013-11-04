@@ -371,14 +371,17 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   _fileNameG  =  _cfg->FOutput();
   _fileNameG  +=  "/contacts";
   ofstream myfileG (_fileNameG.c_str());
-  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContNumber\t005_ContNumberAVG\n";
+  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContNumber\t005_ContNumberAVG\t006_ForceAVG\n";
   
   std::vector <std::shared_ptr<force> >  deltas;
   std::vector <long long int>            deltasBin(bins);
+  std::vector <double>                   forcesBin(bins);
   
-  for(int x = 0; x < bins; ++x)
+  for(int x = 0; x < bins; ++x) {
     deltasBin[x] = 0;
-
+    forcesBin[x] = 0;
+  }
+  
   double minDelta = 0.0;
   double maxDelta = 0.0;
     
@@ -413,10 +416,17 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   double DDelta = (maxDelta - minDelta)/bins;
   BOOST_FOREACH(std::shared_ptr<force> d, deltas) {
     deltasBin[int(floor((d->deltaN()-minDelta)/DDelta))] += 1;
+    forcesBin[int(floor((d->deltaN()-minDelta)/DDelta))] += d->val().norm();
   }
   
   for(unsigned int x = 0; x < deltasBin.size(); ++x) {
-    myfileG << x << " " <<minDelta + DDelta*x  << " " <<minDelta + DDelta*(x+1) << " " <<  deltasBin[x] << " " <<  deltasBin[x]/snapshots->size() << "\n";
+    double forceTmp = 0.0;
+    if (deltasBin[x]!=0) {
+      forceTmp = forcesBin[x]/deltasBin[x];
+    }
+    myfileG << x << " " <<minDelta + DDelta*x  << " " <<minDelta + DDelta*(x+1) 
+            << " " <<  deltasBin[x] << " " <<  deltasBin[x]/snapshots->size() 
+            << " "<< forceTmp <<  "\n";
   }
   
   myfileG.close();
