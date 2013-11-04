@@ -144,7 +144,7 @@ void rheometer::loadParticles() {
     BOOST_FOREACH( std::shared_ptr<particle> p, tmpPartVector) {
        _particleAll[partNumbTMP]->addP(p);
     }
-    BOOST_LOG_SEV(lg, info)<<"; "<<_particleAll[partNumbTMP]->elementsNum()<<" particles added.";
+    BOOST_LOG_SEV(lg, info)<<_particleAll[partNumbTMP]->elementsNum()<<" particles added.";
     _particleNum+=_particleAll[partNumbTMP]->elementsNum();
     partNumbCounter++;
     
@@ -258,6 +258,6 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
       }
       curLine++;
     };
-    BOOST_LOG_SEV(lg, info)<<"; "<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added.";
+    BOOST_LOG_SEV(lg, info)<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added.";
     _forceNum+=_forceRow[forceRowNumbTMP]->elementsNum();
 };
