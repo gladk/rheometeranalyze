@@ -35,7 +35,7 @@ class band {
     long long _partNumb;                                  // Number of particles
     std::vector <std::shared_ptr<particle> > _allPart;    // Vector of particles;
     
-    Eigen::Matrix3d _stressTensorAVG;
+    Eigen::Matrix3d _stressTensorAVG, _stressTensorCapAVG;
     
     double _tau, _tauavg, _vol, _volPart;                 // Results, Tau, Vol, Vol of particles
     double _wetContactsAVG, _wetContactDistanceAVG;       // Average number of wet contacts and average distance
@@ -60,6 +60,7 @@ class band {
     double TauAVG() {return _tauavg;};
     double PressAVG() {return _pavg;};
     Eigen::Matrix3d TensorAVG() {return _stressTensorAVG;};
+    Eigen::Matrix3d TensorCapAVG() {return _stressTensorCapAVG;};
     double vol() {return _vol;};
     double volFraction() {return _volFraction;};
     double radAvg() {return _radAvg;};

@@ -47,7 +47,8 @@ class particle {
     std::vector <std::shared_ptr<particle> > _contactParticlesWet;  // Vector, where only wet contacting particles (pointers) are saved
     
     
-    Eigen::Matrix3d _stressTensor;// Stress tensor in cylindrical coordinates 
+    Eigen::Matrix3d _stressTensor;     // Stress tensor in cylindrical coordinates for normal contacts
+    Eigen::Matrix3d _stressTensorCap;  // Stress tensor in cylindrical coordinates for capillar contacts
     double _press, _tau;
 
   public:
@@ -79,10 +80,13 @@ class particle {
     bool disabled() { return _disable; }
     Eigen::Matrix3d kinEnergie();
     void addStress(Eigen::Matrix3d addStressTensor);
+    void addStressCap(Eigen::Matrix3d addStressTensor);
     void addParticleContact(std::shared_ptr<particle> addParticle);
     void addParticleContactWet(std::shared_ptr<particle> addParticle);
     Eigen::Matrix3d stressTensor();
+    Eigen::Matrix3d stressTensorCap();
     Eigen::Matrix3d stressTensorAVG();
+    Eigen::Matrix3d stressTensorCapAVG();
     double stressPress();
     double stressTau();
     unsigned int contacts();

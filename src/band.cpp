@@ -45,6 +45,7 @@ band::band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double
   _contactNumAVG = 0.0;
   std::vector <std::shared_ptr<particle> > _allPart;
   _stressTensorAVG = _stressTensorAVG.Zero();
+  _stressTensorCapAVG = _stressTensorCapAVG.Zero();
   _scherRate = 0.0;
   _muAVG = 0.0;
   _radAvg = 0.0;
@@ -95,6 +96,7 @@ void band::calculateValues (int numSnapshots) {
   _wetContactDistanceAVG = 0.0;
   
   Eigen::Matrix3d _totalStressTensor = Eigen::Matrix3d::Zero();
+  Eigen::Matrix3d _stressTensorCap = Eigen::Matrix3d::Zero();
   
   
   unsigned long long i = 0;
@@ -118,7 +120,8 @@ void band::calculateValues (int numSnapshots) {
        * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
        * 
        */
-      _totalStressTensor += _allPart[p]->kinEnergie() + _allPart[p]->stressTensor();
+      _totalStressTensor += _allPart[p]->kinEnergie() + _allPart[p]->stressTensor() + _allPart[p]->stressTensorCap();
+      _stressTensorCap +=   _allPart[p]->stressTensorCap();
       
       _contactNumAVG  += _allPart[p]->contacts();
       _wetContactsAVG += _allPart[p]->wetContacts();
@@ -137,6 +140,7 @@ void band::calculateValues (int numSnapshots) {
      */
    
     _stressTensorAVG = (_totalStressTensor )/_vol/numSnapshots;
+    _stressTensorCapAVG = (_stressTensorCap )/_vol/numSnapshots;
     
     /*
     [S_rr  S_rz  S_rf]

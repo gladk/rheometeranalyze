@@ -116,6 +116,14 @@ void exportclass::VTK() {
   partTensor->SetNumberOfComponents(9);
   partTensor->SetName("partTensor");
   
+  vtkSmartPointer<vtkDoubleArray> bandTensorCap = vtkSmartPointer<vtkDoubleArray>::New();
+  bandTensorCap->SetNumberOfComponents(9);
+  bandTensorCap->SetName("bandTensorCap");
+  
+  vtkSmartPointer<vtkDoubleArray> partTensorCap = vtkSmartPointer<vtkDoubleArray>::New();
+  partTensorCap->SetNumberOfComponents(9);
+  partTensorCap->SetName("partTensorCap");
+  
   vtkSmartPointer<vtkDoubleArray> bandMu = vtkSmartPointer<vtkDoubleArray>::New();
   bandMu->SetNumberOfComponents(1);
   bandMu->SetName("bandMu");
@@ -216,6 +224,24 @@ void exportclass::VTK() {
         
         partTensor->InsertNextTupleValue(tensor2);
         
+        tensorM = bandTMP->TensorCapAVG();
+        
+        // Capillar tensor
+        
+        double tensor3[9] = {tensorM(0), tensorM(1), tensorM(2), 
+                            tensorM(3), tensorM(4), tensorM(5), 
+                            tensorM(6), tensorM(7), tensorM(8)};
+        
+        bandTensorCap->InsertNextTupleValue(tensor3);
+        
+        tensorM = partTemp->stressTensorCapAVG();
+        
+        double  tensor4[9] = {tensorM(0), tensorM(1), tensorM(2), 
+                            tensorM(3), tensorM(4), tensorM(5), 
+                            tensorM(6), tensorM(7), tensorM(8)};
+        
+        partTensorCap->InsertNextTupleValue(tensor4);
+        
         bandR->InsertNextValue(bandTMP->idR());
         bandZ->InsertNextValue(bandTMP->idZ());
         bandF->InsertNextValue(bandTMP->idF());
@@ -277,6 +303,8 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(bandVelLin);
     spheresUg->GetPointData()->AddArray(bandTensor);
     spheresUg->GetPointData()->AddArray(partTensor);
+    spheresUg->GetPointData()->AddArray(bandTensorCap);
+    spheresUg->GetPointData()->AddArray(partTensorCap);
     spheresUg->GetPointData()->AddArray(posZyl);
     spheresUg->GetPointData()->AddArray(bandWetContactsAVG);
     spheresUg->GetPointData()->AddArray(bandWetContactDistanceAVG);
@@ -321,7 +349,10 @@ void exportclass::gnuplotSchearRate() {
   myfileG << "025_strTensZR\t026_strTensZZ\t027_strTensZF\t";
   myfileG << "028_strTensFR\t029_strTensFZ\t030_strTensFF\t";
   myfileG << "031_ShearBand\t032_WetContactsAVG\t033_WetContactsDistAVG\t";
-  myfileG << "034_f\t035_fPos\t \n";
+  myfileG << "034_f\t035_fPos\t";
+  myfileG << "036_strTensCapRR\t037_strTensCapRZ\t038_strTensCapRF\t";
+  myfileG << "039_strTensCapZR\t040_strTensCapZZ\t041_strTensCapZF\t";
+  myfileG << "042_strTensCapFR\t043_strTensCapFZ\t044_strTensCapFF\t \n";
   for(unsigned int b=0; b<_bandRow->size(); b++) {
     std::shared_ptr<band> bT = _bandRow->getBand(b);
     myfileG << bT->id() << "\t";           // 001_id
@@ -357,8 +388,17 @@ void exportclass::gnuplotSchearRate() {
     myfileG << bT->shearBand()<< "\t";     // 031_ShearBand - True (1) or False (0)
     myfileG << bT->wetContactsAVG()<< "\t";// 032_WetContactsAVG
     myfileG << bT->wetContactDistanceAVG()<< "\t";// 033_WetContactsDistAVG
-    myfileG << bT->idF() << "\t";          // 034_f
-    myfileG << bT->midLinedF() << "\t";          // 035_fPos
+    myfileG << bT->idF() << "\t";             // 034_f
+    myfileG << bT->midLinedF() << "\t";       // 035_fPos
+    myfileG << bT->TensorCapAVG()(0)<< "\t";  // 036_strTensCapRR
+    myfileG << bT->TensorCapAVG()(1)<< "\t";  // 037_strTensCapRZ
+    myfileG << bT->TensorCapAVG()(2)<< "\t";  // 038_strTensCapRF
+    myfileG << bT->TensorCapAVG()(3)<< "\t";  // 039_strTensCapZR
+    myfileG << bT->TensorCapAVG()(4)<< "\t";  // 040_strTensCapZZ
+    myfileG << bT->TensorCapAVG()(5)<< "\t";  // 041_strTensCapZF
+    myfileG << bT->TensorCapAVG()(6)<< "\t";  // 042_strTensCapFR
+    myfileG << bT->TensorCapAVG()(7)<< "\t";  // 043_strTensCapFZ
+    myfileG << bT->TensorCapAVG()(8)<< "\t";  // 044_strTensCapFF
     myfileG << " \n"; 
   }
         

@@ -89,17 +89,21 @@ void force::calculateStressTensor() {
   
   _stressTensor = _stressTensorTMP;
   
-  // Set the stress tensor into the particles
-  _part1->addStress(_stressTensor);
-  _part2->addStress(_stressTensor);
+  
   
   // Add force into the particles
   if (_volWater>0) {
     _part1->addParticleContactWet(_part2);
     _part2->addParticleContactWet(_part1);
+    // Set the stress tensor into the particles
+    _part1->addStressCap(_stressTensor);
+    _part2->addStressCap(_stressTensor);
   } else {
     _part1->addParticleContact(_part2);
     _part2->addParticleContact(_part1);
+    // Set the stress tensor into the particles
+    _part1->addStress(_stressTensor);
+    _part2->addStress(_stressTensor);
   }
 
   _calculateStressTensor  =  true;

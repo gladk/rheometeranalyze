@@ -36,6 +36,7 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
   _stressTensor = _stressTensor.Zero();
+  _stressTensorCap = _stressTensorCap.Zero();
   _posZyl = _posZyl.Zero();
   _calculateVel = false;
   _press = 0.0;
@@ -56,6 +57,7 @@ particle::particle() {
   _disable = false;
   _axisMatrix = _axisMatrix.Zero();
   _stressTensor = _stressTensor.Zero();
+  _stressTensorCap = _stressTensorCap.Zero();
   _posZyl = _posZyl.Zero();
   _calculateVel = false;
   _press = 0.0;
@@ -66,8 +68,16 @@ void particle::addStress(Eigen::Matrix3d addStressTensor) {
   _stressTensor += addStressTensor;
 };
 
+void particle::addStressCap(Eigen::Matrix3d addStressTensor) {
+  _stressTensorCap += addStressTensor;
+};
+
 Eigen::Matrix3d particle::stressTensor() {
   return _stressTensor;
+};
+
+Eigen::Matrix3d particle::stressTensorCap() {
+  return _stressTensorCap;
 };
 
 Eigen::Matrix3d particle::stressTensorAVG() {
@@ -75,6 +85,14 @@ Eigen::Matrix3d particle::stressTensorAVG() {
     return _stressTensor/this->vol();
   } else {
     return _stressTensor.Zero();
+  }
+};
+
+Eigen::Matrix3d particle::stressTensorCapAVG() {
+  if (_contactParticlesWet.size()>0) {
+    return _stressTensorCap/this->vol();
+  } else {
+    return _stressTensorCap.Zero();
   }
 };
 
