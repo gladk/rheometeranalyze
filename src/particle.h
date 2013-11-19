@@ -24,6 +24,7 @@
 #include <Eigen/Dense>
 #include <memory>
 #include <vector>
+#include "interactionori.h"
 
 class particle {
   private:
