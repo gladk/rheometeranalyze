@@ -74,6 +74,7 @@ class configopt {
     int _cDistCrit;           // Column of cDistCrit value
     int _maxCF;               // Maximal column number for forces
     
+    int _intOri;              // Number of slots for analyze the orientation of interactions
   
     // Others
     std::shared_ptr<snapshotRow> _snapshotRow;    // Row of snapshots
@@ -150,4 +151,8 @@ class configopt {
     void setFollowContact() {_followContact=true;} 
     void unSetFollowContact() {_followContact=false;} 
     bool followContact() {return _followContact;}  
+    
+    void setIntOri(int intOri) {_intOri=intOri;} 
+    void unSetIntOri() {_intOri=-1;} 
+    int intOri() {return _intOri;}  
 };

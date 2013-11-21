@@ -93,6 +93,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   bool setFollowContact = false;
   int setSnapshotsNumb;
   int setBeginSnapshot;
+  int setIntOri;
   try {
     po::options_description desc("Allowed options");
     desc.add_options()
@@ -104,6 +105,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("utwente,u", "create export files for UTwente, OFF by default")
       ("contact", "perform contact analyze and creating corresponding files, OFF by default")
       ("fcontact", "perform follow-contact analyze and creating corresponding files, OFF by default")
+      ("intori",po::value<int>(&setIntOri)->default_value(-1), "perform analyze of interaction orientations, set number of slots, OFF by default (-1)")
       ("snapshots,s",po::value<int>(&setSnapshotsNumb)->default_value(-1), "number of snapshots to analyze, ALL by default (-1)")
       ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
       ("output,o", po::value<string>()->default_value("output"), "output folder")
@@ -199,7 +201,6 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   #else
     BOOST_LOG_SEV(lg, warning)<<"ALGLIB Library is NOT found and export of shearbands will NOT be produced \n";
   #endif
-  
   
   //=====================================================
   std::vector< fs::path > filesParticle;
@@ -362,6 +363,8 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setContact) configParams->setContact();
   if (setFollowContact) configParams->setFollowContact();
   if (setUtwente) configParams->setUtwente();
+  if (setIntOri>0) configParams->setIntOri(setIntOri);
+  
   
   std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
   

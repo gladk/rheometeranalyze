@@ -124,6 +124,7 @@ void rheometer::loadParticles() {
         if (((_cfg->tC()>=0) and (pT == _cfg->tC())) or (_cfg->tC()<0)) {
           maxId = max(pId, maxId);
           std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, partNumbCounter-1, pR, pM, pD, pC,pV, pO));
+          if (_cfg->intOri() > 0) tmpParticle->createIntOri(_cfg->intOri());
           tmpPartVector.push_back(tmpParticle);
           snapshotCur->addParticle(tmpParticle);
         }

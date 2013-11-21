@@ -47,6 +47,9 @@ class particle {
     std::vector <std::shared_ptr<particle> > _contactParticles;     // Vector, where all contacting particles (pointers) are saved
     std::vector <std::shared_ptr<particle> > _contactParticlesWet;  // Vector, where only wet contacting particles (pointers) are saved
     
+    std::shared_ptr<interactionori> _normContOri;  // Orientation of normal contacts
+    std::shared_ptr<interactionori> _capiContOri;  // Orientation of capillary contacts
+    int _sizeIntOri;                               // Size of array of interaction orientations
     
     Eigen::Matrix3d _stressTensor;     // Stress tensor in cylindrical coordinates for normal contacts
     Eigen::Matrix3d _stressTensorCap;  // Stress tensor in cylindrical coordinates for capillar contacts
@@ -93,4 +96,6 @@ class particle {
     unsigned int contacts();
     unsigned int wetContacts();
     double wetContactsAverageDistance();
+    void createIntOri(unsigned short intNumb);
+    unsigned short intOriSize() {return _sizeIntOri;}
 };

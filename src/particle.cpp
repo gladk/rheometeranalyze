@@ -41,6 +41,7 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _calculateVel = false;
   _press = 0.0;
   _tau = 0.0;
+  _sizeIntOri = -1;
 };
 
 particle::particle() {
@@ -62,6 +63,7 @@ particle::particle() {
   _calculateVel = false;
   _press = 0.0;
   _tau = 0.0;
+  _sizeIntOri = -1;
 };
 
 void particle::addStress(Eigen::Matrix3d addStressTensor) {
@@ -183,4 +185,10 @@ void particle::addParticleContact(std::shared_ptr<particle> addParticle) {
 void particle::addParticleContactWet(std::shared_ptr<particle> addParticle) {
   this->addParticleContact(addParticle);
   _contactParticlesWet.push_back(addParticle);
+};
+
+void particle::createIntOri(unsigned short intNumb) {
+  _sizeIntOri = intNumb;
+  _normContOri = std::shared_ptr<interactionori> ( new interactionori (intNumb));
+  _capiContOri = std::shared_ptr<interactionori> ( new interactionori (intNumb));
 };

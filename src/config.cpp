@@ -86,6 +86,7 @@ configopt::configopt(const std::string &filename) {
   _vtk = false;
   _contact = false;
   _followContact = false;
+  _intOri = -1;
 };
 
 void configopt::_maxColumnCheck(int col, int addN) {
