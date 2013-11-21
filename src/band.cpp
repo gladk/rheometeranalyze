@@ -61,6 +61,8 @@ band::band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double
   _wetContactsAVG = 0;
   _wetContactDistanceAVG = 0;
   _cfg = cfg;
+  _normContOri = InteractionsMatrix::Zero(1, 1);
+  _capiContOri = InteractionsMatrix::Zero(1, 1);
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
@@ -117,6 +119,10 @@ void band::calculateValues (int numSnapshots) {
   accumulator_set<double, stats<tag::mean > > acc_densTMP;
   accumulator_set<Eigen::Vector3d, stats<tag::sum > > acc_velZylTMP;
   
+  accumulator_set<InteractionsMatrix, stats<tag::mean > > acc_normContOri;
+  accumulator_set<InteractionsMatrix, stats<tag::mean > > acc_capiContOri;
+  
+  
   _tauavg = 0.0;
   _pavg = 0.0;
   for(unsigned long long p=0; p<_allPart.size(); p++) {
@@ -143,6 +149,11 @@ void band::calculateValues (int numSnapshots) {
       acc_contactNumAVG(_allPart[p]->contacts());
       acc_wetContactsAVG(_allPart[p]->wetContacts());
       acc_wetContactDistanceAVG (_allPart[p]->wetContactsAverageDistance());
+      
+      if (_cfg->intOri() > 0) {
+        acc_normContOri(_allPart[p]->normContOri());
+        acc_capiContOri(_allPart[p]->capiContOri());
+      }
       i++;
     }
   }
@@ -221,11 +232,22 @@ void band::calculateValues (int numSnapshots) {
     
     _densAVG = mean(acc_densTMP);
     
+    _normContOri = mean(acc_normContOri);
+    _capiContOri = mean(acc_capiContOri);
+    
     if (_pavg!= 0.0) {
       _muAVG = _tauavg/_pavg;
     } else {
       _muAVG = 0.0;
     }
   }
+};
+
+InteractionsMatrix band::normContOri() {
+  return _normContOri;
+};
+
+InteractionsMatrix band::capiContOri() {
+  return _capiContOri;
 };
 

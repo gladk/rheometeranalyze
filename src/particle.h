@@ -98,4 +98,6 @@ class particle {
     double wetContactsAverageDistance();
     void createIntOri(unsigned short intNumb);
     unsigned short intOriSize() {return _sizeIntOri;}
+    InteractionsMatrix normContOri();
+    InteractionsMatrix capiContOri();
 };

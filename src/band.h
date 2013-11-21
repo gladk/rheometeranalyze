@@ -52,6 +52,8 @@ class band {
     double _eta;                                          // Viscosity
     bool _shearBand;                                      // True, if the band is in shearband
     std::shared_ptr<configopt> _cfg; 
+    
+    InteractionsMatrix  _normContOri, _capiContOri;       // Interaction orientations
 
   public:
     band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg );
@@ -94,4 +96,6 @@ class band {
     void shearBandOn() { _shearBand = true;}
     void shearBandOff() { _shearBand = false;}
     bool shearBand() { return _shearBand;}
+    InteractionsMatrix normContOri();
+    InteractionsMatrix capiContOri();
 };

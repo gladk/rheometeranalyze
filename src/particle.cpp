@@ -202,3 +202,11 @@ void particle::createIntOri(unsigned short intNumb) {
   _normContOri = std::shared_ptr<interactionori> ( new interactionori (intNumb));
   _capiContOri = std::shared_ptr<interactionori> ( new interactionori (intNumb));
 };
+
+InteractionsMatrix particle::normContOri() {
+  return _normContOri->interactions();
+};
+
+InteractionsMatrix particle::capiContOri() {
+  return _capiContOri->interactions();
+};
