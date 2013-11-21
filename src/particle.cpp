@@ -180,11 +180,21 @@ void particle::addParticleContact(std::shared_ptr<particle> addParticle) {
     }
   }
   _contactParticles.push_back(addParticle);
+  if (_sizeIntOri > 0) {
+    Eigen::Vector3d tmpL = addParticle->c()-_c;
+    Eigen::Vector3d lZ = get_cyl_rotated_vector(tmpL, _axisMatrix);
+    _normContOri->addinteraction(lZ);
+  }
 };
 
 void particle::addParticleContactWet(std::shared_ptr<particle> addParticle) {
   this->addParticleContact(addParticle);
   _contactParticlesWet.push_back(addParticle);
+  if (_sizeIntOri > 0) {
+    Eigen::Vector3d tmpL = addParticle->c()-_c;
+    Eigen::Vector3d lZ = get_cyl_rotated_vector(tmpL, _axisMatrix);
+    _capiContOri->addinteraction(lZ);
+  }
 };
 
 void particle::createIntOri(unsigned short intNumb) {

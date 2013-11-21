@@ -105,7 +105,7 @@ void force::calculateStressTensor() {
     _part1->addStress(_stressTensor);
     _part2->addStress(_stressTensor);
   }
-
+  
   _calculateStressTensor  =  true;
 };
 
