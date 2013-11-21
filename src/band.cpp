@@ -112,18 +112,23 @@ void band::calculateValues (int numSnapshots) {
   
   unsigned long long i = 0;
   std::vector<double> angVelTmpV;
-  std::vector<double> radTMPV;
-  std::vector<double> densTMP;
-  std::vector<Eigen::Vector3d> velZylTMP;
+  accumulator_set<double, stats<tag::mean > > acc_angVelTmpV;
+  accumulator_set<double, stats<tag::mean > > acc_radTMPV;
+  accumulator_set<double, stats<tag::mean > > acc_densTMP;
+  accumulator_set<Eigen::Vector3d, stats<tag::sum > > acc_velZylTMP;
   
   _tauavg = 0.0;
   _pavg = 0.0;
   for(unsigned long long p=0; p<_allPart.size(); p++) {
     if (not(_allPart[p]->disabled())) {
+      
       angVelTmpV.push_back(_allPart[p]->realAngular());
-      velZylTMP.push_back(_allPart[p]->vZyl()*_allPart[p]->vol());
-      radTMPV.push_back(_allPart[p]->rad());
-      densTMP.push_back(_allPart[p]->density());
+      acc_angVelTmpV(_allPart[p]->realAngular());
+      
+      acc_velZylTMP(_allPart[p]->vZyl()*_allPart[p]->vol());
+      acc_radTMPV(_allPart[p]->rad());
+      acc_densTMP(_allPart[p]->density());
+      
       _volPart  += _allPart[p]->vol();
       
       /*
@@ -177,8 +182,7 @@ void band::calculateValues (int numSnapshots) {
     _wetContactsAVG = mean(acc_wetContactsAVG);
     _wetContactDistanceAVG = mean(acc_wetContactDistanceAVG);
     
-    _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
-    
+    _vavg = mean(acc_angVelTmpV);
     
     /*
      * 
@@ -186,13 +190,14 @@ void band::calculateValues (int numSnapshots) {
      * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
      * 
      */
-    _vZylavg = std::accumulate(velZylTMP.begin(), velZylTMP.end(), Eigen::Vector3d(0,0,0));
-    _vZylavg = _vZylavg/_vol/_volFraction/numSnapshots;
+    
+    _vZylavg = sum(acc_velZylTMP)/_vol/_volFraction/numSnapshots;
+    
+    
+    // !!!!!!!!!!! TODO, remove angVelTmpV, use acc_angVelTmpV instead
     
     double vAVGsq_sum = std::inner_product(angVelTmpV.begin(), angVelTmpV.end(), angVelTmpV.begin(), 0.0);
     _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);
-    
-    
     
     
     /*
@@ -212,8 +217,9 @@ void band::calculateValues (int numSnapshots) {
      */
     _tauavg = sqrt(_stressTensorAVG(2)*_stressTensorAVG(2) + _stressTensorAVG(5)*_stressTensorAVG(5));
     
-    _radAvg = std::accumulate(radTMPV.begin(), radTMPV.end(), 0.0) / radTMPV.size();
-    _densAVG = std::accumulate(densTMP.begin(), densTMP.end(), 0.0) / densTMP.size();
+    _radAvg = mean(acc_radTMPV);
+    
+    _densAVG = mean(acc_densTMP);
     
     if (_pavg!= 0.0) {
       _muAVG = _tauavg/_pavg;
