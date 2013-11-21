@@ -23,7 +23,11 @@
 #include <iostream>
 #include <numeric>
 
-band::band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax ) {
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
+
+band::band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ) {
   _id = id;
   _idZ = idZ;
   _idR = idR;
@@ -56,6 +60,7 @@ band::band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double
   _shearBand = false;
   _wetContactsAVG = 0;
   _wetContactDistanceAVG = 0;
+  _cfg = cfg;
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
@@ -95,6 +100,12 @@ void band::calculateValues (int numSnapshots) {
   _wetContactsAVG = 0.0;
   _wetContactDistanceAVG = 0.0;
   
+  using namespace boost::accumulators;
+  accumulator_set<double, stats<tag::mean > > acc_contactNumAVG;
+  accumulator_set<double, stats<tag::mean > > acc_wetContactsAVG;
+  accumulator_set<double, stats<tag::mean > > acc_wetContactDistanceAVG;
+  
+  
   Eigen::Matrix3d _totalStressTensor = Eigen::Matrix3d::Zero();
   Eigen::Matrix3d _stressTensorCap = Eigen::Matrix3d::Zero();
   
@@ -114,6 +125,7 @@ void band::calculateValues (int numSnapshots) {
       radTMPV.push_back(_allPart[p]->rad());
       densTMP.push_back(_allPart[p]->density());
       _volPart  += _allPart[p]->vol();
+      
       /*
        * 
        * The formula (15, both parts) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
@@ -123,9 +135,9 @@ void band::calculateValues (int numSnapshots) {
       _totalStressTensor += _allPart[p]->kinEnergie() + _allPart[p]->stressTensor() + _allPart[p]->stressTensorCap();
       _stressTensorCap +=   _allPart[p]->stressTensorCap();
       
-      _contactNumAVG  += _allPart[p]->contacts();
-      _wetContactsAVG += _allPart[p]->wetContacts();
-      _wetContactDistanceAVG += _allPart[p]->wetContactsAverageDistance();
+      acc_contactNumAVG(_allPart[p]->contacts());
+      acc_wetContactsAVG(_allPart[p]->wetContacts());
+      acc_wetContactDistanceAVG (_allPart[p]->wetContactsAverageDistance());
       i++;
     }
   }
@@ -161,9 +173,9 @@ void band::calculateValues (int numSnapshots) {
     _volFraction  = _volPart/_vol/numSnapshots;
     
     
-    _contactNumAVG = _contactNumAVG/i;
-    _wetContactsAVG = _wetContactsAVG/i;
-    _wetContactDistanceAVG = _wetContactDistanceAVG/i;
+    _contactNumAVG = mean(acc_contactNumAVG);
+    _wetContactsAVG = mean(acc_wetContactsAVG);
+    _wetContactDistanceAVG = mean(acc_wetContactDistanceAVG);
     
     _vavg = std::accumulate(angVelTmpV.begin(), angVelTmpV.end(), 0.0) / angVelTmpV.size();
     

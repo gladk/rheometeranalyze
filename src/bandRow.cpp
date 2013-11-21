@@ -54,7 +54,7 @@ bandRow::bandRow (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<pa
         const double dZmax = _cfg->dDz()*(z+1);
         const double dFmin = _cfg->dDf()*f;
         const double dFmax = _cfg->dDf()*(f+1);
-        std::shared_ptr<band> tmpBand (new band(i, z, r, f, dRmin, dRmax, dZmin, dZmax, dFmin, dFmax));
+        std::shared_ptr<band> tmpBand (new band(i, z, r, f, dRmin, dRmax, dZmin, dZmax, dFmin, dFmax, _cfg));
         _bandAll.push_back(tmpBand);
         i++;
       }

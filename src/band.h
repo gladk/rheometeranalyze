@@ -51,10 +51,10 @@ class band {
     double _densAVG;                                      // Average particle denisty
     double _eta;                                          // Viscosity
     bool _shearBand;                                      // True, if the band is in shearband
-    
+    std::shared_ptr<configopt> _cfg; 
 
   public:
-    band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax );
+    band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg );
     void addParticle(std::shared_ptr<particle>);
     void calculateValues(int numSnapshots);
     double TauAVG() {return _tauavg;};
