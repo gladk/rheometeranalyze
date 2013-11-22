@@ -712,6 +712,9 @@ void exportclass::intOri() {
         myfile << normContOriN(ThetaI, PsiI) << "\t"; // 009_normIterOriN
         myfile << capiContOri(ThetaI, PsiI) << "\t";  // 010_capiIterOri
         myfile << capiContOriN(ThetaI, PsiI) << "\t"; // 011_capiIterOriN
+        myfile << SphXYZ(0) << "\t";                  // 012_SphX
+        myfile << SphXYZ(1) << "\t";                  // 013_SphY
+        myfile << SphXYZ(2) << "\t";                  // 014_SphZ
         myfile << "\n";    // 
         numbLine++;
       }
