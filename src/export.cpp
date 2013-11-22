@@ -673,8 +673,8 @@ void exportclass::intOri() {
   _fileName  =  _cfg->FOutput();
   _fileName  +=  "/interOri";
   ofstream myfile (_fileName.c_str());
-  myfile << "#001_id\t002_r\t003_z\t004_rPos\t005_zPos\t006_Theta\t007_Psi\t008_normIterOri\t";
-  myfile << "#009_capiIterOri\t#010_Numb\n";
+  myfile << "#001_id\t002_r\t003_z\t004_rPos\t005_zPos\t006_Theta\t007_Psi\t008_normIterOri\t009_normIterOriN\t";
+  myfile << "#010_capiIterOri\t#011_capiIterOriN\t#012_Numb\n";
   
   unsigned long numbLine=0;
   const double dAngle = 2*M_PI/_cfg->intOri();
@@ -683,7 +683,17 @@ void exportclass::intOri() {
   for(unsigned int b=0; b<_bandRow->size(); b++) {
     std::shared_ptr<band> bT = _bandRow->getBand(b);
     InteractionsMatrixD  normContOri = bT->normContOri();
+    InteractionsMatrixD  normContOriN = normContOri;
     InteractionsMatrixD  capiContOri = bT->capiContOri();
+    InteractionsMatrixD  capiContOriN = capiContOri;
+    
+    if (normContOriN.norm()>1.0){
+      normContOriN.normalize();                     // Normalized normal contact number in every slot
+    }
+
+    if (capiContOriN.norm()>1.0){
+      capiContOriN.normalize();                     // Normalized capillary contact number in every slot
+    }
     
     for (unsigned short ThetaI=0; ThetaI < _cfg->intOri(); ThetaI++) {
       for (unsigned short PsiI=0; PsiI   < _cfg->intOri(); PsiI++) {
@@ -695,7 +705,9 @@ void exportclass::intOri() {
         myfile << ThetaI*dAngle + d2Ang << "\t";      // 006_Theta
         myfile << PsiI*dAngle + d2Ang << "\t";        // 007_Psi
         myfile << normContOri(ThetaI, PsiI) << "\t";  // 008_normIterOri
-        myfile << capiContOri(ThetaI, PsiI) << "\t";  // 009_capiIterOri
+        myfile << normContOriN(ThetaI, PsiI) << "\t"; // 009_normIterOriN
+        myfile << capiContOri(ThetaI, PsiI) << "\t";  // 010_capiIterOri
+        myfile << capiContOriN(ThetaI, PsiI) << "\t"; // 011_capiIterOriN
         myfile << "\n";    // 
         numbLine++;
       }

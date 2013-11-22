@@ -242,17 +242,11 @@ void band::calculateValues (int numSnapshots) {
     if (acc_normContOri.size()>0) {
       _normContOri = std::accumulate(acc_normContOri.begin(), acc_normContOri.end(), _normContOri);
       _normContOri  /= acc_normContOri.size();      // Average contact number in every slot
-      if (_normContOri.norm()>1.0){
-        _normContOri.normalize();                     // Normalized contact number in every slot
-      }
     }
     
     if (acc_capiContOri.size()>0) {
       _capiContOri = std::accumulate(acc_capiContOri.begin(), acc_capiContOri.end(), _capiContOri);
       _capiContOri  /= acc_capiContOri.size();      // Average contact number in every slot
-      if (_capiContOri.norm()>1.0){
-        _capiContOri.normalize();                     // Normalized contact number in every slot
-      }
     }
     
     if (_pavg!= 0.0) {
