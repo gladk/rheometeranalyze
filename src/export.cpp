@@ -674,7 +674,8 @@ void exportclass::intOri() {
   _fileName  +=  "/interOri";
   ofstream myfile (_fileName.c_str());
   myfile << "#001_id\t002_r\t003_z\t004_rPos\t005_zPos\t006_Theta\t007_Psi\t008_normIterOri\t009_normIterOriN\t";
-  myfile << "#010_capiIterOri\t#011_capiIterOriN\t#012_Numb\n";
+  myfile << "#010_capiIterOri\t#011_capiIterOriN\t";
+  myfile << "#012_SphX\t#013_SphY#014_SphZ\t\n";
   
   unsigned long numbLine=0;
   const double dAngle = 2*M_PI/_cfg->intOri();
@@ -695,8 +696,10 @@ void exportclass::intOri() {
       capiContOriN.normalize();                     // Normalized capillary contact number in every slot
     }
     
-    for (unsigned short ThetaI=0; ThetaI < _cfg->intOri(); ThetaI++) {
+    for (unsigned short ThetaI=0; ThetaI < _cfg->intOri()*2; ThetaI++) {
       for (unsigned short PsiI=0; PsiI   < _cfg->intOri(); PsiI++) {
+        Eigen::Vector3d SphXYZ = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, 1.0));
+        
         myfile << bT->id() << "\t";                   // 001_id
         myfile << bT->idR() << "\t";                  // 002_r
         myfile << bT->idZ() << "\t";                  // 003_z

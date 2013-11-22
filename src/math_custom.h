@@ -39,13 +39,32 @@ Eigen::Vector3d cart_to_cyl(Eigen::Vector3d cart);                //Returns (rho
 * Seite 517
 */ 
 Eigen::Matrix3d cart_to_cyl(Eigen::Matrix3d& cart, double& phi);    //Returns (rho-rho  rho-z  rho-phi)
-                                                                  //        (z-rho    z-z    z-phi  )
-                                                                  //        (phi-rho  phi-z  phi-phi)
-
+                                                                    //        (z-rho    z-z    z-phi  )
+                                                                    //        (phi-rho  phi-z  phi-phi)
+ 
 // Returns cartesians coordinates of every unit-vector of cylindrical coordinates. 
 // http://en.wikipedia.org/wiki/Del_in_cylindrical_and_spherical_coordinates
 Eigen::Matrix3d get_axes_coord(Eigen::Vector3d& X, Eigen::Quaternion<double>& rotateCC);  //Returns [drX, drY, drZ]
-                                                                                               // [dzX, dzY, dzZ]
-                                                                                               // [dfX, dfY, dfZ]
+                                                                                          // [dzX, dzY, dzZ]
+                                                                                          // [dfX, dfY, dfZ]
 // Returns vectors, which are projections on cylindrical coordinates.
 Eigen::Vector3d get_cyl_rotated_vector(Eigen::Vector3d& X, Eigen::Matrix3d& rotateMatrix);  //Returns [dr, dz, drf]
+
+
+// http://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
+// Theta - azimuth
+// Psi   - inclination
+/*
+ @book{papula2008mathematik,
+  title={Mathematik f{\"u}r Ingenieure und Naturwissenschaftler 3: Vektoranalysis, Wahrscheinlichkeitsrechnung, Mathematische Statistik, Fehler- und Ausgleichsrechnung},
+  author={Papula, L.},
+  isbn={9783834802255},
+  series={Viewegs Fachb{\"u}cher der Technik},
+  url={http://books.google.de/books?id=EalYEkcYF0oC},
+  year={2008},
+  publisher={Vieweg + Teubner}
+}
+*/
+Eigen::Vector3d cart_to_sph(Eigen::Vector3d cart);                //Input = [rho, z, phi], return [Theta(0<=Theta<=2Pi), Psi(0<=Psi<=Pi), R]
+
+Eigen::Vector3d sph_to_cart(Eigen::Vector3d sph);                 //Input = [Theta(0<=Theta<=2Pi), Psi(0<=Psi<=Pi), R], return = [X, Y, Z]

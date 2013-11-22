@@ -45,6 +45,7 @@
 
 #include "band.h"
 #include "bandRow.h"
+#include "math_custom.h"
 
 struct contactFollow {
   std::shared_ptr<force> _f;     // Pointer into force

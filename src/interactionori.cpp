@@ -24,19 +24,19 @@
 #include <iostream>
 
 interactionori::interactionori(unsigned short sizeori) {
-  _angles = InteractionsMatrix::Zero(sizeori, sizeori);
+  _angles = InteractionsMatrix::Zero(sizeori*2, sizeori);
   _sizeori = sizeori;
 };
 
 void interactionori::clear() {
-  _angles.Zero(_sizeori, _sizeori);
+  _angles.Zero(_sizeori*2, _sizeori);
 };
 
 void interactionori::addinteraction(unsigned short theta, unsigned short psi) {
-  if (theta < _sizeori and psi < _sizeori) {
+  if (theta < _sizeori*2 and psi < _sizeori) {
     _angles(theta, psi) += 1;
   } else {
-    std::cerr << "Theta = " << theta << "(" << _sizeori << "); Psi = " << psi << " (" << _sizeori << "). Exiting..."<<std::endl; 
+    std::cerr << "Theta = " << theta << "(" << _sizeori*2 << "); Psi = " << psi << " (" << _sizeori << "). Exiting..."<<std::endl; 
     exit (EXIT_FAILURE);
   }
 };
@@ -44,18 +44,9 @@ void interactionori::addinteraction(unsigned short theta, unsigned short psi) {
 void interactionori::addinteraction(Eigen::Vector3d lBranch) {
   lBranch.normalize();
   
-  //Rotation around axis df (2)
-  Eigen::Quaternion<double> qTheta  = Eigen::Quaternion<double>::FromTwoVectors(Eigen::Vector3d::UnitX(), Eigen::Vector3d(lBranch(0), lBranch(1), 0.0)); qTheta.normalize();
-  Eigen::AngleAxis<double>  AaTheta = Eigen::AngleAxis<double>(qTheta);
-  double angleAaTheta = AaTheta.angle()*AaTheta.axis()(2);
-  
-  //Rotation around axis dz (1)
-  Eigen::Quaternion<double> qPsi   = Eigen::Quaternion<double>::FromTwoVectors(Eigen::Vector3d::UnitX(), Eigen::Vector3d(lBranch(0), 0.0, lBranch(2))); qPsi.normalize();
-  Eigen::AngleAxis<double>  AaPsi = Eigen::AngleAxis<double>(qPsi);
-  double angleAaPsi = AaPsi.angle()*AaPsi.axis()(1);
-  
-  this->addinteraction(floor(2*M_PI/_sizeori*(angleAaTheta + M_PI)), 
-                       floor(2*M_PI/_sizeori*(angleAaPsi   + M_PI)));
+  const Eigen::Vector3d convertA = cart_to_sph(lBranch);
+  this->addinteraction(floor(convertA(0)/(M_PI/_sizeori)),    // Theta
+                       floor(convertA(1)/(M_PI/_sizeori)));   // Psi
 };
 
 InteractionsMatrix interactionori::interactions() {

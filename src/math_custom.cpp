@@ -86,3 +86,30 @@ Eigen::Vector3d get_cyl_rotated_vector(Eigen::Vector3d& X, Eigen::Matrix3d& rota
                                               tempMatrix.row(2).sum());
   return tmpVector;
 }
+
+Eigen::Vector3d cart_to_sph(Eigen::Vector3d cart) {                //Input = [rho, z, phi], return [Theta, Psi, rho]
+  double const& x = cart(2);
+  double const& y = cart(0);
+  double const& z = cart(1);
+  
+  double const rho = sqrt(x*x + y*y + z*z);
+  double Theta = atan2(y,x);
+  double const Psi = acos(z/rho);
+  
+  if (Theta < 0.0) {
+    Theta+=2*M_PI;
+  }
+  return Eigen::Vector3d(Theta, Psi, rho);
+}
+
+Eigen::Vector3d sph_to_cart(Eigen::Vector3d sph) {                //Input = [Theta(0<=Theta<=2Pi), Psi(0<=Psi<=Pi), R], return = [X, Y, Z]
+  double const& Theta = sph(0);
+  double const& Psi   = sph(1);
+  double const& rho   = sph(2);
+  
+  double const x = rho * sin (Psi) * cos(Theta);
+  double const y = rho * sin (Psi) * sin(Theta);
+  double const z = rho * cos (Psi);
+
+  return Eigen::Vector3d(x, y, z);
+}
