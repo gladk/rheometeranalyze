@@ -688,11 +688,12 @@ void exportclass::intOri() {
     InteractionsMatrixD  capiContOri = bT->capiContOri();
     InteractionsMatrixD  capiContOriN = capiContOri;
     
-    if (normContOriN.norm()>1.0){
+    
+    if (normContOriN.norm()>0.0){
       normContOriN.normalize();                     // Normalized normal contact number in every slot
     }
 
-    if (capiContOriN.norm()>1.0){
+    if (capiContOriN.norm()>0.0){
       capiContOriN.normalize();                     // Normalized capillary contact number in every slot
     }
     
