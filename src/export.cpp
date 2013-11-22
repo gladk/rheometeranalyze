@@ -666,3 +666,40 @@ void exportclass::Utwente()  {
     Fstat.close();
   }
 }
+
+void exportclass::intOri() {  
+  // Exports orientations of interactions
+  std::string _fileName;
+  _fileName  =  _cfg->FOutput();
+  _fileName  +=  "/interOri";
+  ofstream myfile (_fileName.c_str());
+  myfile << "#001_id\t002_r\t003_z\t004_rPos\t005_zPos\t006_Theta\t007_Psi\t008_normIterOri\t";
+  myfile << "#009_capiIterOri\t#010_Numb\n";
+  
+  unsigned long numbLine=0;
+  const double dAngle = 2*M_PI/_cfg->intOri();
+  const double d2Ang  = dAngle/2.0;
+  
+  for(unsigned int b=0; b<_bandRow->size(); b++) {
+    std::shared_ptr<band> bT = _bandRow->getBand(b);
+    InteractionsMatrixD  normContOri = bT->normContOri();
+    InteractionsMatrixD  capiContOri = bT->capiContOri();
+    
+    for (unsigned short ThetaI=0; ThetaI < _cfg->intOri(); ThetaI++) {
+      for (unsigned short PsiI=0; PsiI   < _cfg->intOri(); PsiI++) {
+        myfile << bT->id() << "\t";                   // 001_id
+        myfile << bT->idR() << "\t";                  // 002_r
+        myfile << bT->idZ() << "\t";                  // 003_z
+        myfile << bT->midLinedR() << "\t";            // 004_rPos
+        myfile << bT->midLinedZ() << "\t";            // 005_zPos
+        myfile << ThetaI*dAngle + d2Ang << "\t";      // 006_Theta
+        myfile << PsiI*dAngle + d2Ang << "\t";        // 007_Psi
+        myfile << normContOri(ThetaI, PsiI) << "\t";  // 008_normIterOri
+        myfile << capiContOri(ThetaI, PsiI) << "\t";  // 009_capiIterOri
+        myfile << "\n";    // 
+        numbLine++;
+      }
+    }
+  }
+  myfile.close();
+};

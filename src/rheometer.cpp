@@ -48,6 +48,11 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   if (_cfg->followContact()) {
     exp->gnuplotContactFollow();
   }
+  
+  if (_cfg->intOri()>0) {
+    exp->intOri();
+  }
+  
 };
 
 void rheometer::loadParticles() {

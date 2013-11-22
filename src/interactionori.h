@@ -26,6 +26,7 @@
 #include <vector>
 
 typedef Eigen::Matrix<unsigned short, Eigen::Dynamic, Eigen::Dynamic> InteractionsMatrix;
+typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>         InteractionsMatrixD;
 
 class interactionori {
   private:

@@ -61,8 +61,13 @@ band::band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double
   _wetContactsAVG = 0;
   _wetContactDistanceAVG = 0;
   _cfg = cfg;
-  _normContOri = InteractionsMatrix::Zero(1, 1);
-  _capiContOri = InteractionsMatrix::Zero(1, 1);
+  if (cfg->intOri()>0) {
+    _normContOri = InteractionsMatrixD::Zero(cfg->intOri(), cfg->intOri());
+    _capiContOri = InteractionsMatrixD::Zero(cfg->intOri(), cfg->intOri());
+  } else {
+    _normContOri = InteractionsMatrixD::Zero(1, 1);
+    _capiContOri = InteractionsMatrixD::Zero(1, 1);
+  }
 };
 
 void band::addParticle(std::shared_ptr<particle> tmpPart) {
@@ -119,9 +124,10 @@ void band::calculateValues (int numSnapshots) {
   accumulator_set<double, stats<tag::mean > > acc_densTMP;
   accumulator_set<Eigen::Vector3d, stats<tag::sum > > acc_velZylTMP;
   
-  accumulator_set<InteractionsMatrix, stats<tag::mean > > acc_normContOri;
-  accumulator_set<InteractionsMatrix, stats<tag::mean > > acc_capiContOri;
+  // Boost::accumulator is not used here, because it returns NULL-value by this typedef
   
+  std::vector<InteractionsMatrixD> acc_normContOri;
+  std::vector<InteractionsMatrixD> acc_capiContOri;
   
   _tauavg = 0.0;
   _pavg = 0.0;
@@ -151,8 +157,8 @@ void band::calculateValues (int numSnapshots) {
       acc_wetContactDistanceAVG (_allPart[p]->wetContactsAverageDistance());
       
       if (_cfg->intOri() > 0) {
-        acc_normContOri(_allPart[p]->normContOri());
-        acc_capiContOri(_allPart[p]->capiContOri());
+        acc_normContOri.push_back(_allPart[p]->normContOri().cast<double>());
+        acc_capiContOri.push_back(_allPart[p]->capiContOri().cast<double>());
       }
       i++;
     }
@@ -232,8 +238,22 @@ void band::calculateValues (int numSnapshots) {
     
     _densAVG = mean(acc_densTMP);
     
-    _normContOri = mean(acc_normContOri);
-    _capiContOri = mean(acc_capiContOri);
+    
+    if (acc_normContOri.size()>0) {
+      _normContOri = std::accumulate(acc_normContOri.begin(), acc_normContOri.end(), _normContOri);
+      _normContOri  /= acc_normContOri.size();      // Average contact number in every slot
+      if (_normContOri.norm()>1.0){
+        _normContOri.normalize();                     // Normalized contact number in every slot
+      }
+    }
+    
+    if (acc_capiContOri.size()>0) {
+      _capiContOri = std::accumulate(acc_capiContOri.begin(), acc_capiContOri.end(), _capiContOri);
+      _capiContOri  /= acc_capiContOri.size();      // Average contact number in every slot
+      if (_capiContOri.norm()>1.0){
+        _capiContOri.normalize();                     // Normalized contact number in every slot
+      }
+    }
     
     if (_pavg!= 0.0) {
       _muAVG = _tauavg/_pavg;
@@ -243,11 +263,11 @@ void band::calculateValues (int numSnapshots) {
   }
 };
 
-InteractionsMatrix band::normContOri() {
+InteractionsMatrixD band::normContOri() {
   return _normContOri;
 };
 
-InteractionsMatrix band::capiContOri() {
+InteractionsMatrixD band::capiContOri() {
   return _capiContOri;
 };
 

@@ -75,4 +75,5 @@ class exportclass {
     void gnuplotContactWet();
     void gnuplotContactFollow();
     void Utwente();
+    void intOri();
 };
