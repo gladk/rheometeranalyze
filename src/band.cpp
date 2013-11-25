@@ -122,7 +122,9 @@ void band::calculateValues (int numSnapshots) {
   accumulator_set<double, stats<tag::mean > > acc_angVelTmpV;
   accumulator_set<double, stats<tag::mean > > acc_radTMPV;
   accumulator_set<double, stats<tag::mean > > acc_densTMP;
-  accumulator_set<Eigen::Vector3d, stats<tag::sum > > acc_velZylTMP;
+  
+  
+  std::vector<Eigen::Vector3d> velZylTMP;
   
   // Boost::accumulator is not used here, because it returns NULL-value by this typedef
   
@@ -137,7 +139,8 @@ void band::calculateValues (int numSnapshots) {
       angVelTmpV.push_back(_allPart[p]->realAngular());
       acc_angVelTmpV(_allPart[p]->realAngular());
       
-      acc_velZylTMP(_allPart[p]->vZyl()*_allPart[p]->vol());
+      velZylTMP.push_back(_allPart[p]->vZyl()*_allPart[p]->vol());
+      
       acc_radTMPV(_allPart[p]->rad());
       acc_densTMP(_allPart[p]->density());
       
@@ -210,14 +213,8 @@ void band::calculateValues (int numSnapshots) {
      * 
      */
     
-    _vZylavg = sum(acc_velZylTMP)/_vol/_volFraction/numSnapshots;
-    
-    
-    // !!!!!!!!!!! TODO, remove angVelTmpV, use acc_angVelTmpV instead
-    
-    double vAVGsq_sum = std::inner_product(angVelTmpV.begin(), angVelTmpV.end(), angVelTmpV.begin(), 0.0);
-    _vavgStDev = std::sqrt(vAVGsq_sum / angVelTmpV.size() - _vavg * _vavg);
-    
+    _vZylavg = std::accumulate(velZylTMP.begin(), velZylTMP.end(), Eigen::Vector3d(0,0,0));
+    _vZylavg = _vZylavg/_vol/_volFraction/numSnapshots;
     
     /*
      * 
