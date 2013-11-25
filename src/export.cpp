@@ -676,6 +676,8 @@ void exportclass::intOri() {
   myfile << "#001_id\t002_r\t003_z\t004_rPos\t005_zPos\t006_Theta\t007_Psi\t008_normIterOri\t009_normIterOriN\t";
   myfile << "#010_capiIterOri\t#011_capiIterOriN\t";
   myfile << "#012_SphX\t#013_SphY#014_SphZ\t\n";
+  myfile << "#015_SphXnormContOriN\t#016_SphYnormContOriN#017_SphZnormContOriN\t\n";
+  myfile << "#018_SphXcapiContOriN\t#019_SphYcapiContOriN#020_SphZcapiContOriN\t\n";
   
   unsigned long numbLine=0;
   const double dAngle = 2*M_PI/_cfg->intOri();
@@ -700,6 +702,10 @@ void exportclass::intOri() {
     for (unsigned short ThetaI=0; ThetaI < _cfg->intOri()*2; ThetaI++) {
       for (unsigned short PsiI=0; PsiI   < _cfg->intOri(); PsiI++) {
         Eigen::Vector3d SphXYZ = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, 1.0));
+        Eigen::Vector3d SphXYZ_normContOriN = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, normContOriN(ThetaI, PsiI)));
+        Eigen::Vector3d SphXYZ_capiContOriN = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, capiContOriN(ThetaI, PsiI)));
+        Eigen::Vector3d SphXYZ_normContOri  = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, normContOri(ThetaI, PsiI)));
+        Eigen::Vector3d SphXYZ_capiContOri  = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, capiContOri(ThetaI, PsiI)));
         
         myfile << bT->id() << "\t";                   // 001_id
         myfile << bT->idR() << "\t";                  // 002_r
@@ -715,6 +721,19 @@ void exportclass::intOri() {
         myfile << SphXYZ(0) << "\t";                  // 012_SphX
         myfile << SphXYZ(1) << "\t";                  // 013_SphY
         myfile << SphXYZ(2) << "\t";                  // 014_SphZ
+        myfile << SphXYZ_normContOriN(0) << "\t";     // 015_SphXnormContOriN
+        myfile << SphXYZ_normContOriN(1) << "\t";     // 016_SphYnormContOriN
+        myfile << SphXYZ_normContOriN(2) << "\t";     // 017_SphZnormContOriN
+        myfile << SphXYZ_capiContOriN(0) << "\t";     // 018_SphXcapiContOriN
+        myfile << SphXYZ_capiContOriN(1) << "\t";     // 019_SphYcapiContOriN
+        myfile << SphXYZ_capiContOriN(2) << "\t";     // 020_SphZcapiContOriN
+        myfile << SphXYZ_normContOri(0)  << "\t";     // 021_SphXnormContOri
+        myfile << SphXYZ_normContOri(1)  << "\t";     // 022_SphYnormContOri
+        myfile << SphXYZ_normContOri(2)  << "\t";     // 023_SphZnormContOri
+        myfile << SphXYZ_capiContOri(0)  << "\t";     // 024_SphXcapiContOri
+        myfile << SphXYZ_capiContOri(1)  << "\t";     // 025_SphYcapiContOri
+        myfile << SphXYZ_capiContOri(2)  << "\t";     // 026_SphZcapiContOri
+        
         myfile << "\n";    // 
         numbLine++;
       }
