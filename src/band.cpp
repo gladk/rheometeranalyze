@@ -237,19 +237,20 @@ void band::calculateValues (int numSnapshots) {
     
     _densAVG = mean(acc_densTMP);
     
-    
-    if (acc_normContOri.size()>0) {
-      _normContOri = std::accumulate(acc_normContOri.begin(), acc_normContOri.end(), _normContOri);
-      _normContOri  /= acc_normContOri.size();      // Average contact number in every slot
-    } else {
-      _normContOri = InteractionsMatrixD::Zero(_cfg->intOri()*2, _cfg->intOri());
-    }
-    
-    if (acc_capiContOri.size()>0) {
-      _capiContOri = std::accumulate(acc_capiContOri.begin(), acc_capiContOri.end(), _capiContOri);
-      _capiContOri  /= acc_capiContOri.size();      // Average contact number in every slot
-    } else {
-      _capiContOri = InteractionsMatrixD::Zero(_cfg->intOri()*2, _cfg->intOri());
+    if (_cfg->intOri() > 0) {
+      if (acc_normContOri.size()>0) {
+        _normContOri = std::accumulate(acc_normContOri.begin(), acc_normContOri.end(), _normContOri);
+        _normContOri  /= acc_normContOri.size();      // Average contact number in every slot
+      } else {
+        _normContOri = InteractionsMatrixD::Zero(_cfg->intOri()*2, _cfg->intOri());
+      }
+      
+      if (acc_capiContOri.size()>0) {
+        _capiContOri = std::accumulate(acc_capiContOri.begin(), acc_capiContOri.end(), _capiContOri);
+        _capiContOri  /= acc_capiContOri.size();      // Average contact number in every slot
+      } else {
+        _capiContOri = InteractionsMatrixD::Zero(_cfg->intOri()*2, _cfg->intOri());
+      }
     }
     
     if (_pavg!= 0.0) {
