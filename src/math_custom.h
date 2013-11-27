@@ -67,4 +67,4 @@ Eigen::Vector3d get_cyl_rotated_vector(Eigen::Vector3d& X, Eigen::Matrix3d& rota
 */
 Eigen::Vector3d cart_to_sph(Eigen::Vector3d cart);                //Input = [rho, z, phi], return [Theta(0<=Theta<=2Pi), Psi(0<=Psi<=Pi), R]
 
-Eigen::Vector3d sph_to_cart(Eigen::Vector3d sph);                 //Input = [Theta(0<=Theta<=2Pi), Psi(0<=Psi<=Pi), R], return = [X, Y, Z]
+Eigen::Vector3d sph_to_cart(Eigen::Vector3d sph);                 //Input = [Theta(0<=Theta<=2Pi), Psi(0<=Psi<=Pi), R], return = [X, Y, Z][phi, rho, z]

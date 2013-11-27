@@ -680,7 +680,7 @@ void exportclass::intOri() {
   myfile << "#018_SphXcapiContOriN\t#019_SphYcapiContOriN#020_SphZcapiContOriN\t\n";
   
   unsigned long numbLine=0;
-  const double dAngle = 2*M_PI/_cfg->intOri();
+  const double dAngle = M_PI/_cfg->intOri();
   const double d2Ang  = dAngle/2.0;
   
   for(unsigned int b=0; b<_bandRow->size(); b++) {
@@ -702,10 +702,13 @@ void exportclass::intOri() {
     for (unsigned short ThetaI=0; ThetaI < _cfg->intOri()*2; ThetaI++) {
       for (unsigned short PsiI=0; PsiI   < _cfg->intOri(); PsiI++) {
         Eigen::Vector3d SphXYZ = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, 1.0));
-        Eigen::Vector3d SphXYZ_normContOriN = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, normContOriN(ThetaI, PsiI)));
-        Eigen::Vector3d SphXYZ_capiContOriN = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, capiContOriN(ThetaI, PsiI)));
-        Eigen::Vector3d SphXYZ_normContOri  = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, normContOri(ThetaI, PsiI)));
-        Eigen::Vector3d SphXYZ_capiContOri  = sph_to_cart(Eigen::Vector3d(ThetaI*dAngle + d2Ang, PsiI*dAngle + d2Ang, capiContOri(ThetaI, PsiI)));
+        const double ThetaId = ThetaI*dAngle + d2Ang;
+        const double PsiId   = PsiI*dAngle + d2Ang;
+        
+        Eigen::Vector3d SphXYZ_normContOriN = sph_to_cart(Eigen::Vector3d(ThetaId, PsiId, normContOriN(ThetaI, PsiI)));
+        Eigen::Vector3d SphXYZ_capiContOriN = sph_to_cart(Eigen::Vector3d(ThetaId, PsiId, capiContOriN(ThetaI, PsiI)));
+        Eigen::Vector3d SphXYZ_normContOri  = sph_to_cart(Eigen::Vector3d(ThetaId, PsiId, normContOri(ThetaI, PsiI)));
+        Eigen::Vector3d SphXYZ_capiContOri  = sph_to_cart(Eigen::Vector3d(ThetaId, PsiId, capiContOri(ThetaI, PsiI)));
         
         myfile << bT->id() << "\t";                   // 001_id
         myfile << bT->idR() << "\t";                  // 002_r
