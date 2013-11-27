@@ -676,8 +676,8 @@ void exportclass::intOri() {
   myfile << "#001_id\t002_r\t003_z\t004_rPos\t005_zPos\t006_Theta\t007_Psi\t008_normIterOri\t009_normIterOriN\t";
   myfile << "#010_capiIterOri\t#011_capiIterOriN\t";
   myfile << "#012_SphX\t#013_SphY#014_SphZ\t\n";
-  myfile << "#015_SphXnormContOriN\t#016_SphYnormContOriN#017_SphZnormContOriN\t\n";
-  myfile << "#018_SphXcapiContOriN\t#019_SphYcapiContOriN#020_SphZcapiContOriN\t\n";
+  myfile << "#015_SphXnormContOriN[Phi]\t#016_SphYnormContOriN[Rho]#017_SphZnormContOriN[Z]\t\n";
+  myfile << "#018_SphXcapiContOriN[Phi]\t#019_SphYcapiContOriN[Rho]#020_SphZcapiContOriN[Z]\t\n";
   
   unsigned long numbLine=0;
   const double dAngle = M_PI/_cfg->intOri();
