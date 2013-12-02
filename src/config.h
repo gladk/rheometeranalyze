@@ -78,7 +78,7 @@ class configopt {
   
     // Others
     std::shared_ptr<snapshotRow> _snapshotRow;    // Row of snapshots
-    bool  _vtk;                // True, if VTK-file will be created
+    unsigned short  _vtk;      // True, if VTK-file will be created (0 - no export, 1 - all data to export, 2 - only band-data to export)
     bool  _utwente;            // True, if UTwente-files will be created
     bool  _contact;            // True, if contact-analyze should be performed
     bool  _followContact;      // True, if contact-follow-analyze should be performed
@@ -135,14 +135,13 @@ class configopt {
     int cDistCrit(){return _cDistCrit;};
     
     // Others
-    void setVtk() {_vtk=true;}
-    void unSetVtk() {_vtk=false;}
-    bool Vtk() {return _vtk;}
+    void setVtk(unsigned short setVtk) {_vtk=setVtk;}
+    void unSetVtk() {_vtk=0;}
+    unsigned short Vtk() {return _vtk;}
     
     void setUtwente() {_utwente=true;}
     void unSetUtwente() {_utwente=false;}
     bool Utwente() {return _utwente;}  
-
 
     void setContact() {_contact=true;}
     void unSetContact() {_contact=false;}

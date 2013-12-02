@@ -182,31 +182,38 @@ void exportclass::VTK() {
     for (int z = 0; z<bandTMP->partNumb(); z++) {
       std::shared_ptr<particle> partTemp = bandTMP->getPart(z);
       if (not(partTemp->disabled())) {
+        
         vtkIdType pid[1];
-        pid[0] = spheresPos->InsertNextPoint(partTemp->c()[0], partTemp->c()[1], partTemp->c()[2]);
-        radii->InsertNextValue(partTemp->rad());
-        mass->InsertNextValue(partTemp->mass());
-        density->InsertNextValue(partTemp->density());
-        spheresId->InsertNextValue(partTemp->id());
-        spheresType->InsertNextValue(partTemp->type());
-        
-        double vv[3] = {partTemp->v()[0], partTemp->v()[1], partTemp->v()[2]};
-        spheresVelL->InsertNextTupleValue(vv);
-        
-        double aa[3] = {partTemp->o()[0], partTemp->o()[1], partTemp->o()[2]};
-        spheresVelA->InsertNextTupleValue(aa);
-        
-        double dr[3] = {partTemp->dr()[0], partTemp->dr()[1], partTemp->dr()[2]};
-        vectorDr->InsertNextTupleValue(dr);
-        
-        double dz[3] = {partTemp->dz()[0], partTemp->dz()[1], partTemp->dz()[2]};
-        vectorDz->InsertNextTupleValue(dz);
-        
-        double df[3] = {partTemp->df()[0], partTemp->df()[1], partTemp->df()[2]};
-        vectorDf->InsertNextTupleValue(df);
-        
-        double posZ[3] = {partTemp->posZyl()(0), partTemp->posZyl()(1), partTemp->posZyl()(2)};
-        posZyl->InsertNextTupleValue(posZ);
+        if (_cfg->Vtk()==1) {
+          pid[0] = spheresPos->InsertNextPoint(partTemp->c()[0], partTemp->c()[1], partTemp->c()[2]);
+          radii->InsertNextValue(partTemp->rad());
+          mass->InsertNextValue(partTemp->mass());
+          density->InsertNextValue(partTemp->density());
+          spheresId->InsertNextValue(partTemp->id());
+          spheresType->InsertNextValue(partTemp->type());
+          
+          double vv[3] = {partTemp->v()[0], partTemp->v()[1], partTemp->v()[2]};
+          spheresVelL->InsertNextTupleValue(vv);
+          
+          double aa[3] = {partTemp->o()[0], partTemp->o()[1], partTemp->o()[2]};
+          spheresVelA->InsertNextTupleValue(aa);
+          
+          double dr[3] = {partTemp->dr()[0], partTemp->dr()[1], partTemp->dr()[2]};
+          vectorDr->InsertNextTupleValue(dr);
+          
+          double dz[3] = {partTemp->dz()[0], partTemp->dz()[1], partTemp->dz()[2]};
+          vectorDz->InsertNextTupleValue(dz);
+          
+          double df[3] = {partTemp->df()[0], partTemp->df()[1], partTemp->df()[2]};
+          vectorDf->InsertNextTupleValue(df);
+          
+          double posZ[3] = {partTemp->posZyl()(0), partTemp->posZyl()(1), partTemp->posZyl()(2)};
+          posZyl->InsertNextTupleValue(posZ);
+        } else if (_cfg->Vtk()==2) {
+          pid[0] = spheresPos->InsertNextPoint(bandTMP->midLinedR(), bandTMP->midLinedF(), bandTMP->midLinedZ());
+          radii->InsertNextValue(bandTMP->radAvg());
+          density->InsertNextValue(bandTMP->density());
+        }
         
         Eigen::Matrix3d tensorM = bandTMP->TensorAVG();
         
@@ -270,22 +277,30 @@ void exportclass::VTK() {
         #endif
         
         spheresCells->InsertNextCell(1,pid);
+        if (_cfg->Vtk()==2) break;
       }
     }
+    
     
     
     spheresUg->SetPoints(spheresPos);
     spheresUg->SetCells(VTK_VERTEX, spheresCells);
     spheresUg->GetPointData()->AddArray(radii);
-    spheresUg->GetPointData()->AddArray(mass);
     spheresUg->GetPointData()->AddArray(density);
-    spheresUg->GetPointData()->AddArray(spheresId);
-    spheresUg->GetPointData()->AddArray(spheresType);
-    spheresUg->GetPointData()->AddArray(spheresVelL);
-    spheresUg->GetPointData()->AddArray(spheresVelA);
-    spheresUg->GetPointData()->AddArray(vectorDr);
-    spheresUg->GetPointData()->AddArray(vectorDz);
-    spheresUg->GetPointData()->AddArray(vectorDf);
+    
+    if (_cfg->Vtk()==1) {
+      // Only for particles, _cfg->Vtk()==1
+      spheresUg->GetPointData()->AddArray(mass);
+      spheresUg->GetPointData()->AddArray(spheresId);
+      spheresUg->GetPointData()->AddArray(spheresType);
+      spheresUg->GetPointData()->AddArray(spheresVelL);
+      spheresUg->GetPointData()->AddArray(spheresVelA);
+      spheresUg->GetPointData()->AddArray(vectorDr);
+      spheresUg->GetPointData()->AddArray(vectorDz);
+      spheresUg->GetPointData()->AddArray(vectorDf);
+      spheresUg->GetPointData()->AddArray(posZyl);
+    }
+    
     spheresUg->GetPointData()->AddArray(bandR);
     spheresUg->GetPointData()->AddArray(bandZ);
     spheresUg->GetPointData()->AddArray(bandF);
@@ -305,7 +320,6 @@ void exportclass::VTK() {
     spheresUg->GetPointData()->AddArray(partTensor);
     spheresUg->GetPointData()->AddArray(bandTensorCap);
     spheresUg->GetPointData()->AddArray(partTensorCap);
-    spheresUg->GetPointData()->AddArray(posZyl);
     spheresUg->GetPointData()->AddArray(bandWetContactsAVG);
     spheresUg->GetPointData()->AddArray(bandWetContactDistanceAVG);
     #ifdef ALGLIB

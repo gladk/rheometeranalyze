@@ -87,7 +87,7 @@ Copyright (C) 2013 TU Bergakademie Freiberg\nInstitute for Mechanics and Fluid D
 This program comes with ABSOLUTELY NO WARRANTY.\n\
 ";
   
-  bool setVtk = false;
+  unsigned short setVtk = 0;
   bool setUtwente = false;
   bool setContact = false;
   bool setFollowContact = false;
@@ -101,7 +101,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("config,c", po::value<string>(), "configuration file")
       ("particle,p", po::value<string>(), "particles dump file")
       ("force,f", po::value<string>(), "forces dump file")
-      ("vtk,v", "create VTK-file, OFF by default")
+      ("vtk,v", po::value<unsigned short>(&setVtk)->default_value(0), "create VTK-file (0 - no export by default, 1 - all data to export, 2 - only band-data to export)")
       ("utwente,u", "create export files for UTwente, OFF by default")
       ("contact", "perform contact analyze and creating corresponding files, OFF by default")
       ("fcontact", "perform follow-contact analyze and creating corresponding files, OFF by default")
@@ -123,11 +123,15 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       return 0;
     }
     
-    if (vm.count("vtk")) {
-      BOOST_LOG_SEV(lg, info) << "VTK-file will be created" ;
-      setVtk = true;
-    } else {
+    if (setVtk==1) {
+      BOOST_LOG_SEV(lg, info) << "VTK-file will be created, all data to export" ;
+    } else if (setVtk==2) {
+      BOOST_LOG_SEV(lg, info) << "VTK-file will be created, only band-data to export" ;
+    } else if (setVtk==0) {
       BOOST_LOG_SEV(lg, info) << "VTK-file will NOT be created" ;
+    } else {
+      BOOST_LOG_SEV(lg, fatal) << "-v parameter can only except values 0<v<=2.\n"; 
+      exit (EXIT_FAILURE);
     }
     
     if (vm.count("utwente")) {
@@ -359,7 +363,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   configParams->setSnapshot(snapshots);
   configParams->FOutput(outputFolder);
   
-  if (setVtk) configParams->setVtk();
+  if (setVtk > 0) configParams->setVtk(setVtk);
   if (setContact) configParams->setContact();
   if (setFollowContact) configParams->setFollowContact();
   if (setUtwente) configParams->setUtwente();

@@ -83,7 +83,7 @@ configopt::configopt(const std::string &filename) {
   _tF = pt.get<int>("Force.tF");
   
   _utwente = false;
-  _vtk = false;
+  _vtk = 0;
   _contact = false;
   _followContact = false;
   _intOri = -1;
