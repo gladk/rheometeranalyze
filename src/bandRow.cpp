@@ -191,7 +191,8 @@ void bandRow::calculateValues () {
       for(int r=0; r<_cfg->SecRadial(); r++) {
       
         double omega = this->getBand(r,h)->omega(); 
-        double valT = omega/omega0;
+        double valT = 0.0;
+        if (omega0!=0) valT = omega/omega0;
         x(r,0) = (this->getBand(r,0))->midLinedR();
         y(r) = valT;
       }
