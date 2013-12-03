@@ -184,7 +184,7 @@ void exportclass::VTK() {
       if (not(partTemp->disabled())) {
         
         vtkIdType pid[1];
-        if (_cfg->Vtk()==1) {
+        if (_cfg->Vtk()==1) {       // Large VTK-file with all particles, snapshots
           pid[0] = spheresPos->InsertNextPoint(partTemp->c()[0], partTemp->c()[1], partTemp->c()[2]);
           radii->InsertNextValue(partTemp->rad());
           mass->InsertNextValue(partTemp->mass());
@@ -209,10 +209,11 @@ void exportclass::VTK() {
           
           double posZ[3] = {partTemp->posZyl()(0), partTemp->posZyl()(1), partTemp->posZyl()(2)};
           posZyl->InsertNextTupleValue(posZ);
-        } else if (_cfg->Vtk()==2) {
+        } else if (_cfg->Vtk()==2 and (bandTMP->partNumb() > 0)) {    // Small VTK-file only with bands, averaged
           pid[0] = spheresPos->InsertNextPoint(bandTMP->midLinedR(), bandTMP->midLinedF(), bandTMP->midLinedZ());
           radii->InsertNextValue(bandTMP->radAvg());
           density->InsertNextValue(bandTMP->density());
+          spheresType->InsertNextValue(bandTMP->type());
         }
         
         Eigen::Matrix3d tensorM = bandTMP->TensorAVG();
@@ -292,7 +293,6 @@ void exportclass::VTK() {
       // Only for particles, _cfg->Vtk()==1
       spheresUg->GetPointData()->AddArray(mass);
       spheresUg->GetPointData()->AddArray(spheresId);
-      spheresUg->GetPointData()->AddArray(spheresType);
       spheresUg->GetPointData()->AddArray(spheresVelL);
       spheresUg->GetPointData()->AddArray(spheresVelA);
       spheresUg->GetPointData()->AddArray(vectorDr);
@@ -301,6 +301,7 @@ void exportclass::VTK() {
       spheresUg->GetPointData()->AddArray(posZyl);
     }
     
+    spheresUg->GetPointData()->AddArray(spheresType);
     spheresUg->GetPointData()->AddArray(bandR);
     spheresUg->GetPointData()->AddArray(bandZ);
     spheresUg->GetPointData()->AddArray(bandF);

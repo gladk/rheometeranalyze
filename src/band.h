@@ -50,6 +50,7 @@ class band {
     double _I;                                            // Schear intensity, dimensionless
     double _densAVG;                                      // Average particle denisty
     double _eta;                                          // Viscosity
+    double _typeAVG;                                      // Average "type" of particles
     bool _shearBand;                                      // True, if the band is in shearband
     std::shared_ptr<configopt> _cfg; 
     
@@ -89,6 +90,7 @@ class band {
     double I() { return _I;}
     double density() { return _densAVG;}
     double eta() { return _eta;}
+    double type() { return _typeAVG;}
     double wetContactDistanceAVG() { return _wetContactDistanceAVG;}
     double wetContactsAVG() { return _wetContactsAVG;}
     Eigen::Vector3d vZyl() { return _vZylavg;}
