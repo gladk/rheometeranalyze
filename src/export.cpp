@@ -687,12 +687,14 @@ void exportclass::intOri() {
   std::string _fileName;
   _fileName  =  _cfg->FOutput();
   _fileName  +=  "/interOri";
+  
   ofstream myfile (_fileName.c_str());
   myfile << "#001_id\t002_r\t003_z\t004_rPos\t005_zPos\t006_Theta\t007_Psi\t008_normIterOri\t009_normIterOriN\t";
   myfile << "#010_capiIterOri\t#011_capiIterOriN\t";
   myfile << "#012_SphX\t#013_SphY#014_SphZ\t\n";
   myfile << "#015_SphXnormContOriN[Phi]\t#016_SphYnormContOriN[Rho]#017_SphZnormContOriN[Z]\t\n";
   myfile << "#018_SphXcapiContOriN[Phi]\t#019_SphYcapiContOriN[Rho]#020_SphZcapiContOriN[Z]\t\n";
+  
   
   unsigned long numbLine=0;
   const double dAngle = M_PI/_cfg->intOri();
@@ -758,4 +760,81 @@ void exportclass::intOri() {
     }
   }
   myfile.close();
+  
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  _fileName  =  _cfg->FOutput();
+  _fileName  +=  "/interOri2D";
+  
+  ofstream myfile2 (_fileName.c_str());
+  
+  myfile2 << "#001_id\t002_r\t003_z\t004_rPos\t005_zPos\t006_Theta\t007_Psi\t008_normIterOri\t009_normIterOriN\t";
+  myfile2 << "#010_capiIterOri\t#011_capiIterOriN\t";
+  myfile2 << "#012_SphX\t#013_SphY#014_\t\n";
+  myfile2 << "#015_SphXnormContOriN[Phi]\t#016_SphYnormContOriN[Rho]#017_\t\n";
+  myfile2 << "#018_SphXcapiContOriN[Phi]\t#019_SphYcapiContOriN[Rho]#020_\t\n";
+  
+  for(unsigned int b=0; b<_bandRow->size(); b++) {
+    std::shared_ptr<band> bT = _bandRow->getBand(b);
+    InteractionsMatrixD  normContOri    = bT->normContOri().colwise().sum();
+    InteractionsMatrixD  normContOriN   = normContOri.colwise().sum();
+    InteractionsMatrixD  capiContOri    = bT->capiContOri().colwise().sum();
+    InteractionsMatrixD  capiContOriN   = capiContOri.colwise().sum();
+    
+    
+    if (normContOriN.norm()>0.0){
+      normContOriN.normalize();                     // Normalized normal contact number in every slot
+    }
+
+    if (capiContOriN.norm()>0.0){
+      capiContOriN.normalize();                     // Normalized capillary contact number in every slot
+    }
+    
+    unsigned short ThetaI = M_PI/2.0;
+    
+    for (unsigned short PsiI=0; PsiI   < _cfg->intOri(); PsiI++) {
+      const double ThetaId = ThetaI*dAngle + d2Ang;
+      const double PsiId   = PsiI*dAngle + d2Ang - M_PI/2.0;
+      Eigen::Vector2d SphXYZ = Eigen::Vector2d(cos(PsiId), sin(PsiId));
+      
+      Eigen::Vector2d SphXYZ_normContOriN = Eigen::Vector2d(cos(PsiId)*normContOriN(PsiI,  0), sin(PsiId)*normContOriN(PsiI,  0));
+      Eigen::Vector2d SphXYZ_capiContOriN = Eigen::Vector2d(cos(PsiId)*capiContOriN(PsiI,  0), sin(PsiId)*capiContOriN(PsiI,  0));
+      Eigen::Vector2d SphXYZ_normContOri  = Eigen::Vector2d(cos(PsiId)*normContOri (PsiI,  0), sin(PsiId)*normContOri (PsiI,  0));
+      Eigen::Vector2d SphXYZ_capiContOri  = Eigen::Vector2d(cos(PsiId)*capiContOri (PsiI,  0), sin(PsiId)*capiContOri (PsiI,  0));
+      
+      myfile2 << bT->id() << "\t";                   // 001_id
+      myfile2 << bT->idR() << "\t";                  // 002_r
+      myfile2 << bT->idZ() << "\t";                  // 003_z
+      myfile2 << bT->midLinedR() << "\t";            // 004_rPos
+      myfile2 << bT->midLinedZ() << "\t";            // 005_zPos
+      myfile2 << ThetaI*dAngle + d2Ang << "\t";      // 006_Theta
+      myfile2 << PsiId               << "\t";        // 007_Psi
+      myfile2 << normContOri(ThetaI, PsiI) << "\t";  // 008_normIterOri
+      myfile2 << normContOriN(ThetaI, PsiI) << "\t"; // 009_normIterOriN
+      myfile2 << capiContOri(ThetaI, PsiI) << "\t";  // 010_capiIterOri
+      myfile2 << capiContOriN(ThetaI, PsiI) << "\t"; // 011_capiIterOriN
+      myfile2 << SphXYZ(0) << "\t";                  // 012_SphX
+      myfile2 << SphXYZ(1) << "\t";                  // 013_SphY
+      myfile2              << "0.0\t";               // 014_SphZ
+      myfile2 << SphXYZ_normContOriN(0) << "\t";     // 015_SphXnormContOriN
+      myfile2 << SphXYZ_normContOriN(1) << "\t";     // 016_SphYnormContOriN
+      myfile2                           << "0.0\t";  // 017_SphZnormContOriN
+      myfile2 << SphXYZ_capiContOriN(0) << "\t";     // 018_SphXcapiContOriN
+      myfile2 << SphXYZ_capiContOriN(1) << "\t";     // 019_SphYcapiContOriN
+      myfile2                           << "0.0\t";  // 020_SphZcapiContOriN
+      myfile2 << SphXYZ_normContOri(0)  << "\t";     // 021_SphXnormContOri
+      myfile2 << SphXYZ_normContOri(1)  << "\t";     // 022_SphYnormContOri
+      myfile2                           << "0.0\t";  // 023_SphZnormContOri
+      myfile2 << SphXYZ_capiContOri(0)  << "\t";     // 024_SphXcapiContOri
+      myfile2 << SphXYZ_capiContOri(1)  << "\t";     // 025_SphYcapiContOri
+      myfile2                           << "0.0\t";  // 026_SphZcapiContOri
+      
+      myfile2 << "\n";    // 
+      numbLine++;
+    }
+  }
+  myfile2.close();
+  
+  
 };
