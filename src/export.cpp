@@ -843,7 +843,7 @@ void exportclass::torque() {
   _fileName  +=  "/torque";
   ofstream myfile2 (_fileName.c_str());
   
-  myfile2 << "001_Id\t002_time\t003_torque\n";
+  myfile2 << "#001_Id\t002_time\t003_torque\n";
   
   for(unsigned int i=0; i<snapshots->size(); i++) {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
