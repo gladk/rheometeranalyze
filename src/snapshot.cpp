@@ -19,6 +19,7 @@
     along with RheometerAnalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <boost/foreach.hpp>
 #include "snapshot.h"
 
 
@@ -67,4 +68,20 @@ std::vector <std::shared_ptr<particle> >  snapshot::particles() {
 
 std::vector <std::shared_ptr<force> >  snapshot::forces() {
   return _forces;
+};
+
+double snapshot::torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint, int typeAnalyze) {
+  double torqueRet = 0.0;
+  rotationAxis.normalize();
+  
+  BOOST_FOREACH(std::shared_ptr<force> f, _forces) {
+    if ((f->part1()->type() == typeAnalyze) and (f->part1()->type() != f->part2()->type())) {
+      const Eigen::Vector3d radiusVector = rotationAxis.cross(rotationAxis.cross(zeroPoint - f->cP()));
+      torqueRet += (radiusVector.cross(f->val())).norm();
+    } else if ((f->part2()->type() == typeAnalyze) and (f->part1()->type() != f->part2()->type())) {
+      const Eigen::Vector3d radiusVector = rotationAxis.cross(rotationAxis.cross(zeroPoint - f->cP()));
+      torqueRet += (radiusVector.cross(f->val())).norm();
+    }
+  }
+  return torqueRet;
 };

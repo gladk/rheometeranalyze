@@ -49,4 +49,5 @@ class snapshot {
     void addForce(std::shared_ptr<force> forceTmp);
     std::vector <std::shared_ptr<particle> > particles();
     std::vector <std::shared_ptr<force> > forces();
+    double torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint, int typeAnalyze);
 };

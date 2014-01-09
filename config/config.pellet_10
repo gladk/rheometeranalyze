@@ -68,6 +68,9 @@ cD = 20
 ;type of particle, which will be calculated. -1 means calculating of all particles
 tC = -1
 
+;Type of particles, which rotates. Needs for calculation of torque
+tR = 3
+
 [Force]
 ;number of forces string
 nFt = 4

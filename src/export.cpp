@@ -835,6 +835,21 @@ void exportclass::intOri() {
     }
   }
   myfile2.close();
-  
-  
 };
+
+void exportclass::torque() {
+  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+  std::string _fileName  =  _cfg->FOutput();
+  _fileName  +=  "/torque";
+  ofstream myfile2 (_fileName.c_str());
+  
+  myfile2 << "001_Id\t002_time\t003_torque\n";
+  
+  for(unsigned int i=0; i<snapshots->size(); i++) {
+    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+    myfile2                                                             << i << "\t";  // 001_snapId
+    myfile2                            << snapshotCur->timeStep()*_cfg->dT() << "\t";  // 002_time
+    myfile2 << snapshotCur->torque(_cfg->get_o(), _cfg->get_c(), _cfg->tR()) << "\n";  // 003_torque
+  }
+  myfile2.close();
+}

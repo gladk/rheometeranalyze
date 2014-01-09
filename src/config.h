@@ -47,6 +47,7 @@ class configopt {
     int _cId;                 // Column of Id
     int _cT;                  // Column of type
     int _tC;                  // Type of particle, which will be calculated. -1 means calculating of all particles
+    int _tR;                  // Type of particles, which rotates. Needs for calculation of torque
     int _cC;                  // Column of center
     int _cV;                  // Column of linear velocity
     int _cO;                  // Column of angular velocity
@@ -102,6 +103,7 @@ class configopt {
     int cId(){return _cId;};
     int cT(){return _cT;};
     int tC(){return _tC;};
+    int tR(){return _tR;};
     int cC(){return _cC;};
     int cV(){return _cV;};
     int cO(){return _cO;};

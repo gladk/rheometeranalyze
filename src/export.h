@@ -77,4 +77,5 @@ class exportclass {
     void gnuplotContactFollow();
     void Utwente();
     void intOri();
+    void torque();
 };
