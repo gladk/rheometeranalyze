@@ -23,17 +23,21 @@
 #include <boost/foreach.hpp>
 #include <cmath>
 
-exportclass::exportclass(std::shared_ptr<configopt> cfg, std::shared_ptr <bandRow> bandAll) {
+exportclass::exportclass(const std::shared_ptr<configopt> cfg, const std::shared_ptr <bandRow> bandAll, const std::vector<std::shared_ptr <forceRow>> forceAll) {
   _cfg = cfg;
   _bandRow = bandAll;
+  _forceAll = forceAll;
 };
 
 void exportclass::VTK() {
   ofstream fileVTK;
   std::string _fileNameVTU;
+  std::string _fileNameVTP;
 
   _fileNameVTU =  _cfg->FOutput();
+  _fileNameVTP =  _cfg->FOutput();
   _fileNameVTU += "/output.vtu";
+  _fileNameVTP += "/output.vtp";
 
   
   //Export Particles
@@ -176,163 +180,202 @@ void exportclass::VTK() {
   
   vtkSmartPointer<vtkUnstructuredGrid> spheresUg = vtkSmartPointer<vtkUnstructuredGrid>::New();
   
-  for(unsigned int b=0; b<_bandRow->size(); b++) {
-    std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
+  
+  if (_cfg->Vtk()==3 ) {                                // Force (interactions) to be exported
+    vtkSmartPointer<vtkPoints> partPos = vtkSmartPointer<vtkPoints>::New();
+    vtkSmartPointer<vtkCellArray> forceCells = vtkSmartPointer<vtkCellArray>::New();
+    vtkSmartPointer<vtkFloatArray> forceN = vtkSmartPointer<vtkFloatArray>::New();
+    forceN->SetNumberOfComponents(1);
+    forceN->SetName("force");
     
-    for (int z = 0; z<bandTMP->partNumb(); z++) {
-      std::shared_ptr<particle> partTemp = bandTMP->getPart(z);
-      if (not(partTemp->disabled())) {
+    
+    BOOST_FOREACH(std::shared_ptr <forceRow> fR,  _forceAll) {
+      for(unsigned long long b=0; b<fR->arraySize(); b++) {
         
-        vtkIdType pid[1];
-        if (_cfg->Vtk()==1) {       // Large VTK-file with all particles, snapshots
-          pid[0] = spheresPos->InsertNextPoint(partTemp->c()[0], partTemp->c()[1], partTemp->c()[2]);
-          radii->InsertNextValue(partTemp->rad());
-          mass->InsertNextValue(partTemp->mass());
-          density->InsertNextValue(partTemp->density());
-          spheresId->InsertNextValue(partTemp->id());
-          spheresType->InsertNextValue(partTemp->type());
-          
-          double vv[3] = {partTemp->v()[0], partTemp->v()[1], partTemp->v()[2]};
-          spheresVelL->InsertNextTupleValue(vv);
-          
-          double aa[3] = {partTemp->o()[0], partTemp->o()[1], partTemp->o()[2]};
-          spheresVelA->InsertNextTupleValue(aa);
-          
-          double dr[3] = {partTemp->dr()[0], partTemp->dr()[1], partTemp->dr()[2]};
-          vectorDr->InsertNextTupleValue(dr);
-          
-          double dz[3] = {partTemp->dz()[0], partTemp->dz()[1], partTemp->dz()[2]};
-          vectorDz->InsertNextTupleValue(dz);
-          
-          double df[3] = {partTemp->df()[0], partTemp->df()[1], partTemp->df()[2]};
-          vectorDf->InsertNextTupleValue(df);
-          
-          double posZ[3] = {partTemp->posZyl()(0), partTemp->posZyl()(1), partTemp->posZyl()(2)};
-          posZyl->InsertNextTupleValue(posZ);
-        } else if (_cfg->Vtk()==2 and (bandTMP->partNumb() > 0)) {    // Small VTK-file only with bands, averaged
-          pid[0] = spheresPos->InsertNextPoint(bandTMP->midLinedR(), bandTMP->midLinedF(), bandTMP->midLinedZ());
-          radii->InsertNextValue(bandTMP->radAvg());
-          density->InsertNextValue(bandTMP->density());
-          spheresType->InsertNextValue(bandTMP->type());
-        }
+        partPos->InsertNextPoint(fR->getF(b)->pos1()(0), fR->getF(b)->pos1()(1), fR->getF(b)->pos1()(2));
+        partPos->InsertNextPoint(fR->getF(b)->pos2()(0), fR->getF(b)->pos2()(1), fR->getF(b)->pos2()(2));
         
-        Eigen::Matrix3d tensorM = bandTMP->TensorAVG();
-        
-        double tensor[9] = {tensorM(0), tensorM(1), tensorM(2), 
-                            tensorM(3), tensorM(4), tensorM(5), 
-                            tensorM(6), tensorM(7), tensorM(8)};
-        
-        bandTensor->InsertNextTupleValue(tensor);
-        
-        tensorM = partTemp->stressTensorAVG();
-        
-        double  tensor2[9] = {tensorM(0), tensorM(1), tensorM(2), 
-                            tensorM(3), tensorM(4), tensorM(5), 
-                            tensorM(6), tensorM(7), tensorM(8)};
-        
-        partTensor->InsertNextTupleValue(tensor2);
-        
-        tensorM = bandTMP->TensorCapAVG();
-        
-        // Capillar tensor
-        
-        double tensor3[9] = {tensorM(0), tensorM(1), tensorM(2), 
-                            tensorM(3), tensorM(4), tensorM(5), 
-                            tensorM(6), tensorM(7), tensorM(8)};
-        
-        bandTensorCap->InsertNextTupleValue(tensor3);
-        
-        tensorM = partTemp->stressTensorCapAVG();
-        
-        double  tensor4[9] = {tensorM(0), tensorM(1), tensorM(2), 
-                            tensorM(3), tensorM(4), tensorM(5), 
-                            tensorM(6), tensorM(7), tensorM(8)};
-        
-        partTensorCap->InsertNextTupleValue(tensor4);
-        
-        bandR->InsertNextValue(bandTMP->idR());
-        bandZ->InsertNextValue(bandTMP->idZ());
-        bandF->InsertNextValue(bandTMP->idF());
-        bandN->InsertNextValue(bandTMP->id());
-        bandTau->InsertNextValue(bandTMP->tau());
-        bandPress->InsertNextValue(bandTMP->press());
-        bandOmega->InsertNextValue(bandTMP->omega());
-        bandPartNum->InsertNextValue(bandTMP->partNumb());
-        bandPartNumAVG->InsertNextValue(bandTMP->partNumb()/bandTMP->vol());
-        bandVol->InsertNextValue(bandTMP->vol());
-        bandVolFraction->InsertNextValue(bandTMP->volFraction());
-        bandContactNumAVG->InsertNextValue(bandTMP->contactNumAVG());
-        bandScherRate->InsertNextValue(bandTMP->scherRate());
-        bandMu->InsertNextValue(bandTMP->muAVG());
-        bandWetContactDistanceAVG->InsertNextValue(bandTMP->wetContactDistanceAVG());
-        bandWetContactsAVG->InsertNextValue(bandTMP->wetContactsAVG());
-        
-        double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
-        bandVelLin->InsertNextTupleValue(VelLin);
-        #ifdef ALGLIB
-          if (bandTMP->shearBand()) {
-            bandShearBand->InsertNextValue(1);
-          } else {
-            bandShearBand->InsertNextValue(0);
-          }
-        #endif
-        
-        spheresCells->InsertNextCell(1,pid);
-        if (_cfg->Vtk()==2) break;
+        vtkSmartPointer<vtkLine> line = vtkSmartPointer<vtkLine>::New();
+        line->GetPointIds()->SetId(0,(b*2));
+        line->GetPointIds()->SetId(1,(b*2+1));
+        forceCells->InsertNextCell(line);
+        forceN->InsertNextValue(fR->getF(b)->val().norm());
       }
     }
     
+    vtkSmartPointer<vtkPolyData> fPd = vtkSmartPointer<vtkPolyData>::New();
     
+    fPd->SetPoints(partPos);
+    fPd->SetLines(forceCells);
+    fPd->GetCellData()->AddArray(forceN);
     
-    spheresUg->SetPoints(spheresPos);
-    spheresUg->SetCells(VTK_VERTEX, spheresCells);
-    spheresUg->GetPointData()->AddArray(radii);
-    spheresUg->GetPointData()->AddArray(density);
+    vtkSmartPointer<vtkXMLPolyDataWriter> writer = vtkSmartPointer<vtkXMLPolyDataWriter>::New();
     
-    if (_cfg->Vtk()==1) {
-      // Only for particles, _cfg->Vtk()==1
-      spheresUg->GetPointData()->AddArray(mass);
-      spheresUg->GetPointData()->AddArray(spheresId);
-      spheresUg->GetPointData()->AddArray(spheresVelL);
-      spheresUg->GetPointData()->AddArray(spheresVelA);
-      spheresUg->GetPointData()->AddArray(vectorDr);
-      spheresUg->GetPointData()->AddArray(vectorDz);
-      spheresUg->GetPointData()->AddArray(vectorDf);
-      spheresUg->GetPointData()->AddArray(posZyl);
+    writer->SetDataModeToAscii();
+    writer->SetInput(fPd);
+    
+    writer->SetFileName(_fileNameVTP.c_str());
+    writer->Write();
+    
+  } else {
+    for(unsigned int b=0; b<_bandRow->size(); b++) {
+      std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
+      
+      for (int z = 0; z<bandTMP->partNumb(); z++) {
+        std::shared_ptr<particle> partTemp = bandTMP->getPart(z);
+        if (not(partTemp->disabled())) {
+          
+          vtkIdType pid[1];
+          if (_cfg->Vtk()==1) {       // Large VTK-file with all particles, snapshots
+            pid[0] = spheresPos->InsertNextPoint(partTemp->c()[0], partTemp->c()[1], partTemp->c()[2]);
+            radii->InsertNextValue(partTemp->rad());
+            mass->InsertNextValue(partTemp->mass());
+            density->InsertNextValue(partTemp->density());
+            spheresId->InsertNextValue(partTemp->id());
+            spheresType->InsertNextValue(partTemp->type());
+            
+            double vv[3] = {partTemp->v()[0], partTemp->v()[1], partTemp->v()[2]};
+            spheresVelL->InsertNextTupleValue(vv);
+            
+            double aa[3] = {partTemp->o()[0], partTemp->o()[1], partTemp->o()[2]};
+            spheresVelA->InsertNextTupleValue(aa);
+            
+            double dr[3] = {partTemp->dr()[0], partTemp->dr()[1], partTemp->dr()[2]};
+            vectorDr->InsertNextTupleValue(dr);
+            
+            double dz[3] = {partTemp->dz()[0], partTemp->dz()[1], partTemp->dz()[2]};
+            vectorDz->InsertNextTupleValue(dz);
+            
+            double df[3] = {partTemp->df()[0], partTemp->df()[1], partTemp->df()[2]};
+            vectorDf->InsertNextTupleValue(df);
+            
+            double posZ[3] = {partTemp->posZyl()(0), partTemp->posZyl()(1), partTemp->posZyl()(2)};
+            posZyl->InsertNextTupleValue(posZ);
+          } else if (_cfg->Vtk()==2 and (bandTMP->partNumb() > 0)) {    // Small VTK-file only with bands, averaged
+            pid[0] = spheresPos->InsertNextPoint(bandTMP->midLinedR(), bandTMP->midLinedF(), bandTMP->midLinedZ());
+            radii->InsertNextValue(bandTMP->radAvg());
+            density->InsertNextValue(bandTMP->density());
+            spheresType->InsertNextValue(bandTMP->type());
+          }
+          
+          Eigen::Matrix3d tensorM = bandTMP->TensorAVG();
+          
+          double tensor[9] = {tensorM(0), tensorM(1), tensorM(2), 
+                              tensorM(3), tensorM(4), tensorM(5), 
+                              tensorM(6), tensorM(7), tensorM(8)};
+          
+          bandTensor->InsertNextTupleValue(tensor);
+          
+          tensorM = partTemp->stressTensorAVG();
+          
+          double  tensor2[9] = {tensorM(0), tensorM(1), tensorM(2), 
+                              tensorM(3), tensorM(4), tensorM(5), 
+                              tensorM(6), tensorM(7), tensorM(8)};
+          
+          partTensor->InsertNextTupleValue(tensor2);
+          
+          tensorM = bandTMP->TensorCapAVG();
+          
+          // Capillar tensor
+          
+          double tensor3[9] = {tensorM(0), tensorM(1), tensorM(2), 
+                              tensorM(3), tensorM(4), tensorM(5), 
+                              tensorM(6), tensorM(7), tensorM(8)};
+          
+          bandTensorCap->InsertNextTupleValue(tensor3);
+          
+          tensorM = partTemp->stressTensorCapAVG();
+          
+          double  tensor4[9] = {tensorM(0), tensorM(1), tensorM(2), 
+                              tensorM(3), tensorM(4), tensorM(5), 
+                              tensorM(6), tensorM(7), tensorM(8)};
+          
+          partTensorCap->InsertNextTupleValue(tensor4);
+          
+          bandR->InsertNextValue(bandTMP->idR());
+          bandZ->InsertNextValue(bandTMP->idZ());
+          bandF->InsertNextValue(bandTMP->idF());
+          bandN->InsertNextValue(bandTMP->id());
+          bandTau->InsertNextValue(bandTMP->tau());
+          bandPress->InsertNextValue(bandTMP->press());
+          bandOmega->InsertNextValue(bandTMP->omega());
+          bandPartNum->InsertNextValue(bandTMP->partNumb());
+          bandPartNumAVG->InsertNextValue(bandTMP->partNumb()/bandTMP->vol());
+          bandVol->InsertNextValue(bandTMP->vol());
+          bandVolFraction->InsertNextValue(bandTMP->volFraction());
+          bandContactNumAVG->InsertNextValue(bandTMP->contactNumAVG());
+          bandScherRate->InsertNextValue(bandTMP->scherRate());
+          bandMu->InsertNextValue(bandTMP->muAVG());
+          bandWetContactDistanceAVG->InsertNextValue(bandTMP->wetContactDistanceAVG());
+          bandWetContactsAVG->InsertNextValue(bandTMP->wetContactsAVG());
+          
+          double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
+          bandVelLin->InsertNextTupleValue(VelLin);
+          #ifdef ALGLIB
+            if (bandTMP->shearBand()) {
+              bandShearBand->InsertNextValue(1);
+            } else {
+              bandShearBand->InsertNextValue(0);
+            }
+          #endif
+          
+          spheresCells->InsertNextCell(1,pid);
+          if (_cfg->Vtk()==2) break;
+        }
+      }
+      
+      
+      
+      spheresUg->SetPoints(spheresPos);
+      spheresUg->SetCells(VTK_VERTEX, spheresCells);
+      spheresUg->GetPointData()->AddArray(radii);
+      spheresUg->GetPointData()->AddArray(density);
+      
+      if (_cfg->Vtk()==1) {
+        // Only for particles, _cfg->Vtk()==1
+        spheresUg->GetPointData()->AddArray(mass);
+        spheresUg->GetPointData()->AddArray(spheresId);
+        spheresUg->GetPointData()->AddArray(spheresVelL);
+        spheresUg->GetPointData()->AddArray(spheresVelA);
+        spheresUg->GetPointData()->AddArray(vectorDr);
+        spheresUg->GetPointData()->AddArray(vectorDz);
+        spheresUg->GetPointData()->AddArray(vectorDf);
+        spheresUg->GetPointData()->AddArray(posZyl);
+      }
+      
+      spheresUg->GetPointData()->AddArray(spheresType);
+      spheresUg->GetPointData()->AddArray(bandR);
+      spheresUg->GetPointData()->AddArray(bandZ);
+      spheresUg->GetPointData()->AddArray(bandF);
+      spheresUg->GetPointData()->AddArray(bandN);
+      spheresUg->GetPointData()->AddArray(bandTau);
+      spheresUg->GetPointData()->AddArray(bandPress);
+      spheresUg->GetPointData()->AddArray(bandOmega);
+      spheresUg->GetPointData()->AddArray(bandPartNum);
+      spheresUg->GetPointData()->AddArray(bandPartNumAVG);
+      spheresUg->GetPointData()->AddArray(bandVol);
+      spheresUg->GetPointData()->AddArray(bandVolFraction);
+      spheresUg->GetPointData()->AddArray(bandContactNumAVG);
+      spheresUg->GetPointData()->AddArray(bandScherRate);
+      spheresUg->GetPointData()->AddArray(bandMu);
+      spheresUg->GetPointData()->AddArray(bandVelLin);
+      spheresUg->GetPointData()->AddArray(bandTensor);
+      spheresUg->GetPointData()->AddArray(partTensor);
+      spheresUg->GetPointData()->AddArray(bandTensorCap);
+      spheresUg->GetPointData()->AddArray(partTensorCap);
+      spheresUg->GetPointData()->AddArray(bandWetContactsAVG);
+      spheresUg->GetPointData()->AddArray(bandWetContactDistanceAVG);
+      #ifdef ALGLIB
+      spheresUg->GetPointData()->AddArray(bandShearBand);
+      #endif
     }
+    vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+    writer->SetDataModeToAscii();
+    writer->SetInput(spheresUg);
     
-    spheresUg->GetPointData()->AddArray(spheresType);
-    spheresUg->GetPointData()->AddArray(bandR);
-    spheresUg->GetPointData()->AddArray(bandZ);
-    spheresUg->GetPointData()->AddArray(bandF);
-    spheresUg->GetPointData()->AddArray(bandN);
-    spheresUg->GetPointData()->AddArray(bandTau);
-    spheresUg->GetPointData()->AddArray(bandPress);
-    spheresUg->GetPointData()->AddArray(bandOmega);
-    spheresUg->GetPointData()->AddArray(bandPartNum);
-    spheresUg->GetPointData()->AddArray(bandPartNumAVG);
-    spheresUg->GetPointData()->AddArray(bandVol);
-    spheresUg->GetPointData()->AddArray(bandVolFraction);
-    spheresUg->GetPointData()->AddArray(bandContactNumAVG);
-    spheresUg->GetPointData()->AddArray(bandScherRate);
-    spheresUg->GetPointData()->AddArray(bandMu);
-    spheresUg->GetPointData()->AddArray(bandVelLin);
-    spheresUg->GetPointData()->AddArray(bandTensor);
-    spheresUg->GetPointData()->AddArray(partTensor);
-    spheresUg->GetPointData()->AddArray(bandTensorCap);
-    spheresUg->GetPointData()->AddArray(partTensorCap);
-    spheresUg->GetPointData()->AddArray(bandWetContactsAVG);
-    spheresUg->GetPointData()->AddArray(bandWetContactDistanceAVG);
-    #ifdef ALGLIB
-    spheresUg->GetPointData()->AddArray(bandShearBand);
-    #endif
+    writer->SetFileName(_fileNameVTU.c_str());
+    writer->Write();
   }
-  vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
-  writer->SetDataModeToAscii();
-  writer->SetInput(spheresUg);
-  
-  writer->SetFileName(_fileNameVTU.c_str());
-  writer->Write();
 };
 
 void exportclass::gnuplotSchearRate() {  

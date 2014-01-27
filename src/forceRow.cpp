@@ -30,7 +30,7 @@ void forceRow::addF(std::shared_ptr<force> forc ) {
   _allForce.push_back(forc);
 };
 
-long long forceRow::elementsNum() {
+unsigned long long forceRow::elementsNum() {
   return _allForce.size();
 };
 

@@ -34,7 +34,7 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   std::shared_ptr <bandRow> _bandRow = bandRowTMP;
   
   
-  std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow));
+  std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow, _forceRow));
   
   if (_cfg->Vtk()) exp->VTK();
   if (_cfg->Utwente()) exp->Utwente();

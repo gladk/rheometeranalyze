@@ -27,7 +27,7 @@ class forceRow {
   public:
     forceRow();
     void addF(std::shared_ptr<force> );
-    long long arraySize() {return _allForce.size();};
-    long long elementsNum();
+    unsigned long long arraySize() {return _allForce.size();};
+    unsigned long long elementsNum();
     std::shared_ptr<force> getF(unsigned long long);
 };

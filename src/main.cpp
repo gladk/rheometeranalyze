@@ -127,6 +127,8 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       BOOST_LOG_SEV(lg, info) << "VTK-file will be created, all data to export" ;
     } else if (setVtk==2) {
       BOOST_LOG_SEV(lg, info) << "VTK-file will be created, only band-data to export" ;
+    } else if (setVtk==3) {
+      BOOST_LOG_SEV(lg, info) << "VTK-file will be created, force (interactions) will be exported" ;
     } else if (setVtk==0) {
       BOOST_LOG_SEV(lg, info) << "VTK-file will NOT be created" ;
     } else {

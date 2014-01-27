@@ -45,6 +45,7 @@
 
 #include "band.h"
 #include "bandRow.h"
+#include "forceRow.h"
 #include "math_custom.h"
 
 struct contactFollow {
@@ -67,9 +68,10 @@ class exportclass {
   private:
     std::shared_ptr <configopt> _cfg;
     std::shared_ptr <bandRow> _bandRow;
+    std::vector<std::shared_ptr <forceRow>> _forceAll;
     
   public:
-    exportclass(std::shared_ptr<configopt>, std::shared_ptr <bandRow>);
+    exportclass(const std::shared_ptr<configopt>, const std::shared_ptr <bandRow>, const std::vector<std::shared_ptr <forceRow>>);
     void VTK();
     void gnuplotSchearRate();
     void gnuplotContactAnalyze(int bins);
