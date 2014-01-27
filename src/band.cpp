@@ -265,6 +265,20 @@ void band::calculateValues (int numSnapshots) {
   }
 };
 
+void band::setShearBand(const bool shearb) {
+  for(unsigned long long p=0; p<_allPart.size(); p++) {
+    if (not(_allPart[p]->disabled())) {
+      if (shearb) {
+        _allPart[p]->shearBandOn();
+        _shearBand = true;
+      } else {
+        _allPart[p]->shearBandOff();
+        _shearBand = false;
+      }
+    }
+  }
+}
+
 InteractionsMatrixD band::normContOri() {
   return _normContOri;
 };

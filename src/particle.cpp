@@ -42,6 +42,7 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _press = 0.0;
   _tau = 0.0;
   _sizeIntOri = -1;
+  _shearBand = false;
 };
 
 particle::particle() {

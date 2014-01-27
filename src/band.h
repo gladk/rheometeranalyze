@@ -95,9 +95,10 @@ class band {
     double wetContactsAVG() { return _wetContactsAVG;}
     Eigen::Vector3d vZyl() { return _vZylavg;}
     double vDf() { return _vZylavg(2);}
-    void shearBandOn() { _shearBand = true;}
-    void shearBandOff() { _shearBand = false;}
+    void shearBandOn() { setShearBand(true);}
+    void shearBandOff() { setShearBand(false);}
     bool shearBand() { return _shearBand;}
     InteractionsMatrixD normContOri();
     InteractionsMatrixD capiContOri();
+    void setShearBand(const bool shearb);
 };

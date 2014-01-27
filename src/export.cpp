@@ -184,10 +184,20 @@ void exportclass::VTK() {
   if (_cfg->Vtk()==3 ) {                                // Force (interactions) to be exported
     vtkSmartPointer<vtkPoints> partPos = vtkSmartPointer<vtkPoints>::New();
     vtkSmartPointer<vtkCellArray> forceCells = vtkSmartPointer<vtkCellArray>::New();
-    vtkSmartPointer<vtkFloatArray> forceN = vtkSmartPointer<vtkFloatArray>::New();
-    forceN->SetNumberOfComponents(1);
-    forceN->SetName("force");
     
+    vtkSmartPointer<vtkFloatArray> force = vtkSmartPointer<vtkFloatArray>::New();
+    force->SetNumberOfComponents(1);
+    force->SetName("force");
+    
+    vtkSmartPointer<vtkIntArray> wet = vtkSmartPointer<vtkIntArray>::New();
+    wet->SetNumberOfComponents(1);
+    wet->SetName("wet");
+    
+    #ifdef ALGLIB
+    vtkSmartPointer<vtkIntArray> shearband = vtkSmartPointer<vtkIntArray>::New();
+    shearband->SetNumberOfComponents(1);
+    shearband->SetName("shearband");
+    #endif
     
     BOOST_FOREACH(std::shared_ptr <forceRow> fR,  _forceAll) {
       for(unsigned long long b=0; b<fR->arraySize(); b++) {
@@ -199,7 +209,23 @@ void exportclass::VTK() {
         line->GetPointIds()->SetId(0,(b*2));
         line->GetPointIds()->SetId(1,(b*2+1));
         forceCells->InsertNextCell(line);
-        forceN->InsertNextValue(fR->getF(b)->val().norm());
+        force->InsertNextValue(fR->getF(b)->val().norm());
+        
+        if (fR->getF(b)->volWater()>0) {
+          wet->InsertNextValue(1);
+        } else {
+          wet->InsertNextValue(0);
+        }
+        
+        #ifdef ALGLIB
+        if (fR->getF(b)->part1()->shearBand() and fR->getF(b)->part2()->shearBand()) {
+          shearband->InsertNextValue(2);
+        } else if (fR->getF(b)->part1()->shearBand() or fR->getF(b)->part2()->shearBand()) {
+          shearband->InsertNextValue(1);
+        } else {
+          shearband->InsertNextValue(0);
+        }
+        #endif
       }
     }
     
@@ -207,8 +233,11 @@ void exportclass::VTK() {
     
     fPd->SetPoints(partPos);
     fPd->SetLines(forceCells);
-    fPd->GetCellData()->AddArray(forceN);
-    
+    fPd->GetCellData()->AddArray(force);
+    fPd->GetCellData()->AddArray(wet);
+    #ifdef ALGLIB
+    fPd->GetCellData()->AddArray(shearband);
+    #endif
     vtkSmartPointer<vtkXMLPolyDataWriter> writer = vtkSmartPointer<vtkXMLPolyDataWriter>::New();
     
     writer->SetDataModeToAscii();
