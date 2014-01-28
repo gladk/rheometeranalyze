@@ -64,6 +64,10 @@ void exportclass::VTK() {
   spheresType->SetNumberOfComponents(1);
   spheresType->SetName("type");
   
+  vtkSmartPointer<vtkIntArray> sphereSnapshot = vtkSmartPointer<vtkIntArray>::New();
+  sphereSnapshot->SetNumberOfComponents(1);
+  sphereSnapshot->SetName("snapshot");
+  
   vtkSmartPointer<vtkDoubleArray> spheresVelL = vtkSmartPointer<vtkDoubleArray>::New();
   spheresVelL->SetNumberOfComponents(3);
   spheresVelL->SetName("velocity_lin");
@@ -177,7 +181,7 @@ void exportclass::VTK() {
     bandShearBand->SetNumberOfComponents(1);
     bandShearBand->SetName("bandShearBand");
   #endif
-  
+
   vtkSmartPointer<vtkUnstructuredGrid> spheresUg = vtkSmartPointer<vtkUnstructuredGrid>::New();
   
   
@@ -192,6 +196,10 @@ void exportclass::VTK() {
     vtkSmartPointer<vtkIntArray> wet = vtkSmartPointer<vtkIntArray>::New();
     wet->SetNumberOfComponents(1);
     wet->SetName("wet");
+    
+    vtkSmartPointer<vtkIntArray> snapshot = vtkSmartPointer<vtkIntArray>::New();
+    snapshot->SetNumberOfComponents(1);
+    snapshot->SetName("snapshot");
     
     #ifdef ALGLIB
     vtkSmartPointer<vtkIntArray> shearband = vtkSmartPointer<vtkIntArray>::New();
@@ -229,6 +237,7 @@ void exportclass::VTK() {
           shearband->InsertNextValue(0);
         }
         #endif
+        snapshot->InsertNextValue(fR->getF(b)->part1()->snapshot());
       }
     }
     
@@ -238,6 +247,7 @@ void exportclass::VTK() {
     fPd->SetLines(forceCells);
     fPd->GetCellData()->AddArray(force);
     fPd->GetCellData()->AddArray(wet);
+    fPd->GetCellData()->AddArray(snapshot);
     #ifdef ALGLIB
     fPd->GetCellData()->AddArray(shearband);
     #endif
@@ -265,6 +275,7 @@ void exportclass::VTK() {
             density->InsertNextValue(partTemp->density());
             spheresId->InsertNextValue(partTemp->id());
             spheresType->InsertNextValue(partTemp->type());
+            sphereSnapshot->InsertNextValue(partTemp->snapshot());
             
             double vv[3] = {partTemp->v()[0], partTemp->v()[1], partTemp->v()[2]};
             spheresVelL->InsertNextTupleValue(vv);
@@ -283,6 +294,7 @@ void exportclass::VTK() {
             
             double posZ[3] = {partTemp->posZyl()(0), partTemp->posZyl()(1), partTemp->posZyl()(2)};
             posZyl->InsertNextTupleValue(posZ);
+            
           } else if (_cfg->Vtk()==2 and (bandTMP->partNumb() > 0)) {    // Small VTK-file only with bands, averaged
             pid[0] = spheresPos->InsertNextPoint(bandTMP->midLinedR(), bandTMP->midLinedF(), bandTMP->midLinedZ());
             radii->InsertNextValue(bandTMP->radAvg());
@@ -373,6 +385,7 @@ void exportclass::VTK() {
         spheresUg->GetPointData()->AddArray(vectorDz);
         spheresUg->GetPointData()->AddArray(vectorDf);
         spheresUg->GetPointData()->AddArray(posZyl);
+        spheresUg->GetPointData()->AddArray(sphereSnapshot);
       }
       
       spheresUg->GetPointData()->AddArray(spheresType);

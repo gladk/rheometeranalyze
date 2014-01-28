@@ -34,6 +34,7 @@ class snapshot {
     fs::path _particlesFileName;
     fs::path _forcesFileName;
     unsigned long long _timeStep;
+    unsigned short _id;
     std::vector <std::shared_ptr<particle> > _particles;
     std::vector <std::shared_ptr<force> > _forces;
 
@@ -50,4 +51,6 @@ class snapshot {
     std::vector <std::shared_ptr<particle> > particles();
     std::vector <std::shared_ptr<force> > forces();
     double torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint, int typeAnalyze);
+    unsigned short id();
+    void id(unsigned short id);
 };

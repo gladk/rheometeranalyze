@@ -43,6 +43,7 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _tau = 0.0;
   _sizeIntOri = -1;
   _shearBand = false;
+  _snapshot = -1;
 };
 
 particle::particle() {
@@ -65,6 +66,8 @@ particle::particle() {
   _press = 0.0;
   _tau = 0.0;
   _sizeIntOri = -1;
+  _shearBand = false;
+  _snapshot = -1;
 };
 
 void particle::addStress(Eigen::Matrix3d addStressTensor) {

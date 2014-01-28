@@ -37,5 +37,8 @@ bool snp_ptr_less( std::shared_ptr<snapshot> lhs, std::shared_ptr<snapshot> rhs 
 
 void snapshotRow::sortRow() {
   std::sort( _snapshotRow.begin(), _snapshotRow.end(), & snp_ptr_less );
+  for(unsigned int i=0; i<_snapshotRow.size(); i++) {
+    _snapshotRow[i]->id(i);
+  }
 };
 

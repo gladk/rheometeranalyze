@@ -28,6 +28,7 @@ snapshot::snapshot(fs::path particlesFileName, fs::path forcesFileName,
   _particlesFileName = particlesFileName;
   _forcesFileName = forcesFileName;
   _timeStep = timeStep;
+  _id=-1;
 };
 
 void snapshot::setParticlesFileName(fs::path particlesFileName) {
@@ -60,6 +61,17 @@ void snapshot::addParticle(std::shared_ptr<particle> particleTmp) {
 
 void snapshot::addForce(std::shared_ptr<force> forceTmp) {
   _forces.push_back(forceTmp);
+};
+
+void snapshot::id(unsigned short id) {
+  _id = id;
+  BOOST_FOREACH(std::shared_ptr<particle> p, _particles) {
+    p->snapshot(id);
+  }
+};
+
+unsigned short snapshot::id() {
+  return _id;
 };
 
 std::vector <std::shared_ptr<particle> >  snapshot::particles() {

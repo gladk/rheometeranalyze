@@ -35,6 +35,8 @@ class particle {
     double _m;                    // Mass of the particle
     double _d;                    // Density of the particle
     
+    unsigned short _snapshot;     // Snapshot
+    
     Eigen::Matrix3d _axisMatrix;  // [drX, drY, drZ]
                                   // [dzX, dzY, dzZ]
                                   // [dfX, dfY, dfZ]
@@ -105,4 +107,6 @@ class particle {
     bool shearBand() {return _shearBand;}
     void shearBandOn() {_shearBand=true;}
     void shearBandOff() {_shearBand=false;}
+    unsigned short snapshot() {return _snapshot;}
+    void snapshot(unsigned short snapshot) {_snapshot = snapshot;}
 };
