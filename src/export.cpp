@@ -211,33 +211,34 @@ void exportclass::VTK() {
     
     BOOST_FOREACH(std::shared_ptr <forceRow> fR,  _forceAll) {
       for(unsigned long long b=0; b<fR->arraySize(); b++) {
-        
-        partPos->InsertNextPoint(fR->getF(b)->pos1()(0), fR->getF(b)->pos1()(1), fR->getF(b)->pos1()(2));
-        partPos->InsertNextPoint(fR->getF(b)->pos2()(0), fR->getF(b)->pos2()(1), fR->getF(b)->pos2()(2));
-        
-        vtkSmartPointer<vtkLine> line = vtkSmartPointer<vtkLine>::New();
-        line->GetPointIds()->SetId(0,(partId));
-        line->GetPointIds()->SetId(1,(partId+1));
-        partId+=2;
-        forceCells->InsertNextCell(line);
-        force->InsertNextValue(fR->getF(b)->val().norm());
-        
-        if (fR->getF(b)->volWater()>0) {
-          wet->InsertNextValue(1);
-        } else {
-          wet->InsertNextValue(0);
+        if (not(fR->getF(b)->part1()->disabled()) and not(fR->getF(b)->part2()->disabled()) ) {
+          partPos->InsertNextPoint(fR->getF(b)->pos1()(0), fR->getF(b)->pos1()(1), fR->getF(b)->pos1()(2));
+          partPos->InsertNextPoint(fR->getF(b)->pos2()(0), fR->getF(b)->pos2()(1), fR->getF(b)->pos2()(2));
+          
+          vtkSmartPointer<vtkLine> line = vtkSmartPointer<vtkLine>::New();
+          line->GetPointIds()->SetId(0,(partId));
+          line->GetPointIds()->SetId(1,(partId+1));
+          partId+=2;
+          forceCells->InsertNextCell(line);
+          force->InsertNextValue(fR->getF(b)->val().norm());
+          
+          if (fR->getF(b)->volWater()>0) {
+            wet->InsertNextValue(1);
+          } else {
+            wet->InsertNextValue(0);
+          }
+          
+          #ifdef ALGLIB
+          if (fR->getF(b)->part1()->shearBand() and fR->getF(b)->part2()->shearBand()) {
+            shearband->InsertNextValue(2);
+          } else if (fR->getF(b)->part1()->shearBand() or fR->getF(b)->part2()->shearBand()) {
+            shearband->InsertNextValue(1);
+          } else {
+            shearband->InsertNextValue(0);
+          }
+          #endif
+          snapshot->InsertNextValue(fR->getF(b)->part1()->snapshot());
         }
-        
-        #ifdef ALGLIB
-        if (fR->getF(b)->part1()->shearBand() and fR->getF(b)->part2()->shearBand()) {
-          shearband->InsertNextValue(2);
-        } else if (fR->getF(b)->part1()->shearBand() or fR->getF(b)->part2()->shearBand()) {
-          shearband->InsertNextValue(1);
-        } else {
-          shearband->InsertNextValue(0);
-        }
-        #endif
-        snapshot->InsertNextValue(fR->getF(b)->part1()->snapshot());
       }
     }
     
