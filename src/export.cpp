@@ -199,6 +199,8 @@ void exportclass::VTK() {
     shearband->SetName("shearband");
     #endif
     
+    unsigned long long partId = 0;
+    
     BOOST_FOREACH(std::shared_ptr <forceRow> fR,  _forceAll) {
       for(unsigned long long b=0; b<fR->arraySize(); b++) {
         
@@ -206,8 +208,9 @@ void exportclass::VTK() {
         partPos->InsertNextPoint(fR->getF(b)->pos2()(0), fR->getF(b)->pos2()(1), fR->getF(b)->pos2()(2));
         
         vtkSmartPointer<vtkLine> line = vtkSmartPointer<vtkLine>::New();
-        line->GetPointIds()->SetId(0,(b*2));
-        line->GetPointIds()->SetId(1,(b*2+1));
+        line->GetPointIds()->SetId(0,(partId));
+        line->GetPointIds()->SetId(1,(partId+1));
+        partId+=2;
         forceCells->InsertNextCell(line);
         force->InsertNextValue(fR->getF(b)->val().norm());
         
