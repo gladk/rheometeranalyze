@@ -341,7 +341,7 @@ void exportclass::VTK() {
           double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
           bandVelLin->InsertNextTupleValue(VelLin);
           #ifdef ALGLIB
-            if (bandTMP->shearBand()) {
+            if (partTemp->shearBand()) {
               bandShearBand->InsertNextValue(1);
             } else {
               bandShearBand->InsertNextValue(0);
