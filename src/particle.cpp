@@ -22,6 +22,7 @@
 #include "particle.h"
 #include "math_custom.h"
 #include <iostream>
+#include <boost/foreach.hpp>
 
 particle::particle(unsigned long long id, int type, unsigned int fileid, double rad, double mass, double dens, Eigen::Vector3d c, Eigen::Vector3d v, Eigen::Vector3d o) {
   _id = id;
@@ -221,6 +222,29 @@ double particle::stressSigma3() {
     sqrt(pow((_stressTensor(0) - _stressTensor(8))/2.0, 2) + 
     _stressTensor(2)*_stressTensor(2)))/this->vol();
   return sigma3;
+};
+
+bool particle::wetContact(std::shared_ptr <particle> p) {
+  BOOST_FOREACH(std::shared_ptr <particle> j,  _contactParticlesWet) {
+    if (p==j) return true;
+  }
+  return false;
+};
+
+int particle::highStressedContacts() {
+  int highStressedContactsTMP = 0;
+  BOOST_FOREACH(std::shared_ptr <particle> p,  _contactParticles) {
+    if (this->highStressedContact(p) and not(p->disabled()) and not(this->disabled())) highStressedContactsTMP++;
+  }
+  return highStressedContactsTMP;
+};
+
+bool particle::highStressedContact(std::shared_ptr <particle> p) {
+  BOOST_FOREACH(std::shared_ptr <particle> j,  _contactParticles) {
+    if ((p==j) and (p->highStress()>0) and 
+        not(this->wetContact(p))) return true;
+  }
+  return false;
 };
 
 InteractionsMatrix particle::normContOri() {

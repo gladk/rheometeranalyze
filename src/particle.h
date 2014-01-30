@@ -114,4 +114,7 @@ class particle {
     void snapshot(unsigned short snapshot) {_snapshot = snapshot;}
     int highStress() {return _highStressed;}
     void highStress(int highStressed) { _highStressed = highStressed;}
+    bool wetContact(std::shared_ptr <particle> p);
+    int highStressedContacts();
+    bool highStressedContact(std::shared_ptr <particle> p);
 };
