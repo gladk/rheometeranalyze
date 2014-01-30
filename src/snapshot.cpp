@@ -97,3 +97,8 @@ double snapshot::torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint,
   }
   return torqueRet;
 };
+
+std::shared_ptr<forceChain> snapshot::forceChainRet() {
+  _forceChain = std::shared_ptr<forceChain> (new forceChain(_particles, _forces));
+  return _forceChain;
+};

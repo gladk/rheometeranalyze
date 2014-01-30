@@ -26,6 +26,7 @@
 
 #include "particle.h"
 #include "force.h"
+#include "forceChain.h"
 
 namespace fs = boost::filesystem;
 
@@ -37,6 +38,7 @@ class snapshot {
     unsigned short _id;
     std::vector <std::shared_ptr<particle> > _particles;
     std::vector <std::shared_ptr<force> > _forces;
+    std::shared_ptr<forceChain> _forceChain;
 
   public:
     snapshot(fs::path particlesFileName, fs::path forcesFileName, unsigned long long timeStep);
@@ -53,4 +55,5 @@ class snapshot {
     double torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint, int typeAnalyze);
     unsigned short id();
     void id(unsigned short id);
+    std::shared_ptr<forceChain> forceChainRet();
 };

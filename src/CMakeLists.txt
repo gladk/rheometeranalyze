@@ -1,7 +1,8 @@
 #===========================================================
 ADD_EXECUTABLE(rheometeranalyze main.cpp config.cpp particle.cpp rheometer.cpp 
   band.cpp export.cpp force.cpp bandRow.cpp forceRow.cpp snapshot.cpp 
-  snapshotRow.cpp particleRow.cpp math_custom.cpp interactionori.cpp)
+  snapshotRow.cpp particleRow.cpp math_custom.cpp interactionori.cpp
+  forceChain.cpp)
   
 TARGET_LINK_LIBRARIES(rheometeranalyze ${Boost_LIBRARIES} vtkHybrid)
 INSTALL(TARGETS rheometeranalyze DESTINATION ${CMAKE_INSTALL_BINDIR})
