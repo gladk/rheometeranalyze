@@ -98,6 +98,8 @@ class particle {
     Eigen::Matrix3d stressTensorCapAVG();
     double stressPress();
     double stressTau();
+    double stressSigma1();
+    double stressSigma3();
     unsigned int contacts();
     unsigned int wetContacts();
     double wetContactsAverageDistance();

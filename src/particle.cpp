@@ -209,6 +209,20 @@ void particle::createIntOri(unsigned short intNumb) {
   _capiContOri = std::shared_ptr<interactionori> ( new interactionori (intNumb));
 };
 
+double particle::stressSigma1() {
+  const double sigma1 = (_stressTensor(0) + _stressTensor(8))/2.0 + 
+    sqrt(pow((_stressTensor(0) - _stressTensor(8))/2.0, 2) + 
+    _stressTensor(2)*_stressTensor(2));
+  return sigma1;
+};
+
+double particle::stressSigma3() {
+  const double sigma3 = (_stressTensor(0) + _stressTensor(8))/2.0 - 
+    sqrt(pow((_stressTensor(0) - _stressTensor(8))/2.0, 2) + 
+    _stressTensor(2)*_stressTensor(2));
+  return sigma3;
+};
+
 InteractionsMatrix particle::normContOri() {
   return _normContOri->interactions();
 };
