@@ -68,6 +68,10 @@ void exportclass::VTK() {
   sphereSnapshot->SetNumberOfComponents(1);
   sphereSnapshot->SetName("snapshot");
   
+  vtkSmartPointer<vtkIntArray> sphereHighStress = vtkSmartPointer<vtkIntArray>::New();
+  sphereHighStress->SetNumberOfComponents(1);
+  sphereHighStress->SetName("highstress");
+  
   vtkSmartPointer<vtkDoubleArray> spheresVelL = vtkSmartPointer<vtkDoubleArray>::New();
   spheresVelL->SetNumberOfComponents(3);
   spheresVelL->SetName("velocity_lin");
@@ -277,6 +281,7 @@ void exportclass::VTK() {
             spheresId->InsertNextValue(partTemp->id());
             spheresType->InsertNextValue(partTemp->type());
             sphereSnapshot->InsertNextValue(partTemp->snapshot());
+            sphereHighStress->InsertNextValue(partTemp->highStress());
             
             double vv[3] = {partTemp->v()[0], partTemp->v()[1], partTemp->v()[2]};
             spheresVelL->InsertNextTupleValue(vv);
@@ -387,6 +392,7 @@ void exportclass::VTK() {
         spheresUg->GetPointData()->AddArray(vectorDf);
         spheresUg->GetPointData()->AddArray(posZyl);
         spheresUg->GetPointData()->AddArray(sphereSnapshot);
+        spheresUg->GetPointData()->AddArray(sphereHighStress);
       }
       
       spheresUg->GetPointData()->AddArray(spheresType);
@@ -941,4 +947,12 @@ void exportclass::torque() {
     myfile2 << snapshotCur->torque(_cfg->get_o(), _cfg->get_c(), _cfg->tR()) << "\n";  // 003_torque
   }
   myfile2.close();
+}
+
+void exportclass::forceChain() {
+  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+  for(unsigned int i=0; i<snapshots->size(); i++) {
+    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+    snapshotCur->forceChainRet();
+  }
 }

@@ -33,8 +33,14 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   std::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
   std::shared_ptr <bandRow> _bandRow = bandRowTMP;
   
-  
   std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow, _forceRow));
+  
+  // ==========================ForceChain
+  
+  exp->forceChain();
+  
+  // ==========================ForceChain
+  
   
   if (_cfg->Vtk()) exp->VTK();
   if (_cfg->Utwente()) exp->Utwente();
@@ -53,6 +59,7 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   if (_cfg->intOri()>0) {
     exp->intOri();
   }
+  
 };
 
 void rheometer::loadParticles() {

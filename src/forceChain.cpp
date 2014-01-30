@@ -23,6 +23,25 @@
 #include "math_custom.h"
 #include <iostream>
 
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
+#include <boost/foreach.hpp>
+
 forceChain::forceChain (const std::vector <std::shared_ptr<particle> > & p, const std::vector <std::shared_ptr<force> > & f) {
+  
+  // Find AVG sigma3
+  using namespace boost::accumulators;
+  accumulator_set<double, stats<tag::mean > > acc_sigma3;
+  
+  BOOST_FOREACH(std::shared_ptr <particle> i,  p) {
+    if (not(i->disabled())) acc_sigma3(fabs(i->stressSigma3()));
+  }
+  const double sigma3AVG = mean(acc_sigma3);
+  const double sigma3AVGfactor = sigma3AVG/2.0;
+  
+  BOOST_FOREACH(std::shared_ptr <particle> i,  p) {
+    if (not(i->disabled()) and i->stressSigma3()>=sigma3AVGfactor) i->highStress(1);
+  }
   
 }

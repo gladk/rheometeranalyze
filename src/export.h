@@ -46,6 +46,7 @@
 #include "band.h"
 #include "bandRow.h"
 #include "forceRow.h"
+#include "forceChain.h"
 #include "math_custom.h"
 
 struct contactFollow {
@@ -80,4 +81,5 @@ class exportclass {
     void Utwente();
     void intOri();
     void torque();
+    void forceChain();
 };

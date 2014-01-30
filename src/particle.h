@@ -112,6 +112,6 @@ class particle {
     void shearBandOff() {_shearBand=false;}
     unsigned short snapshot() {return _snapshot;}
     void snapshot(unsigned short snapshot) {_snapshot = snapshot;}
-    int highStressed() {return _highStressed;}
+    int highStress() {return _highStressed;}
     void highStress(int highStressed) { _highStressed = highStressed;}
 };

@@ -210,16 +210,16 @@ void particle::createIntOri(unsigned short intNumb) {
 };
 
 double particle::stressSigma1() {
-  const double sigma1 = (_stressTensor(0) + _stressTensor(8))/2.0 + 
+  const double sigma1 = ((_stressTensor(0) + _stressTensor(8))/2.0 + 
     sqrt(pow((_stressTensor(0) - _stressTensor(8))/2.0, 2) + 
-    _stressTensor(2)*_stressTensor(2));
+    _stressTensor(2)*_stressTensor(2)))/this->vol();
   return sigma1;
 };
 
 double particle::stressSigma3() {
-  const double sigma3 = (_stressTensor(0) + _stressTensor(8))/2.0 - 
+  const double sigma3 = ((_stressTensor(0) + _stressTensor(8))/2.0 - 
     sqrt(pow((_stressTensor(0) - _stressTensor(8))/2.0, 2) + 
-    _stressTensor(2)*_stressTensor(2));
+    _stressTensor(2)*_stressTensor(2)))/this->vol();
   return sigma3;
 };
 
