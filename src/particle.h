@@ -57,7 +57,8 @@ class particle {
     Eigen::Matrix3d _stressTensorCap;  // Stress tensor in cylindrical coordinates for capillar contacts
     double _press, _tau;
     
-    bool _shearBand;
+    bool _shearBand; 
+    int _highStressed;
     
   public:
     particle(unsigned long long, int, unsigned int, double, double, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
@@ -109,4 +110,6 @@ class particle {
     void shearBandOff() {_shearBand=false;}
     unsigned short snapshot() {return _snapshot;}
     void snapshot(unsigned short snapshot) {_snapshot = snapshot;}
+    int highStressed() {return _highStressed;}
+    void highStress(int highStressed) { _highStressed = highStressed;}
 };

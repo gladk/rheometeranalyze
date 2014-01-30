@@ -43,6 +43,7 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _tau = 0.0;
   _sizeIntOri = -1;
   _shearBand = false;
+  _highStressed = -1;
   _snapshot = -1;
 };
 
@@ -67,6 +68,7 @@ particle::particle() {
   _tau = 0.0;
   _sizeIntOri = -1;
   _shearBand = false;
+  _highStressed = -1;
   _snapshot = -1;
 };
 
