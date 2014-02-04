@@ -44,162 +44,166 @@ void exportclass::VTK() {
   vtkSmartPointer<vtkPoints>  spheresPos = vtkSmartPointer<vtkPoints>::New();
   vtkSmartPointer<vtkCellArray> spheresCells = vtkSmartPointer<vtkCellArray>::New();
 
+  // Parameters per particle=====================================================
   vtkSmartPointer<vtkDoubleArray> radii = vtkSmartPointer<vtkDoubleArray>::New();
   radii->SetNumberOfComponents(1);
-  radii->SetName("radii");
+  radii->SetName("p_radii");
 
   vtkSmartPointer<vtkDoubleArray> mass = vtkSmartPointer<vtkDoubleArray>::New();
   mass->SetNumberOfComponents(1);
-  mass->SetName("mass");
+  mass->SetName("p_mass");
 
   vtkSmartPointer<vtkDoubleArray> density = vtkSmartPointer<vtkDoubleArray>::New();
   density->SetNumberOfComponents(1);
-  density->SetName("density");
+  density->SetName("p_density");
   
   vtkSmartPointer<vtkIntArray> spheresId = vtkSmartPointer<vtkIntArray>::New();
   spheresId->SetNumberOfComponents(1);
-  spheresId->SetName("id");
+  spheresId->SetName("p_id");
 
   vtkSmartPointer<vtkIntArray> spheresType = vtkSmartPointer<vtkIntArray>::New();
   spheresType->SetNumberOfComponents(1);
-  spheresType->SetName("type");
+  spheresType->SetName("p_type");
   
   vtkSmartPointer<vtkIntArray> sphereSnapshot = vtkSmartPointer<vtkIntArray>::New();
   sphereSnapshot->SetNumberOfComponents(1);
-  sphereSnapshot->SetName("snapshot");
+  sphereSnapshot->SetName("p_snapshot");
   
   vtkSmartPointer<vtkIntArray> sphereHighStress = vtkSmartPointer<vtkIntArray>::New();
   sphereHighStress->SetNumberOfComponents(1);
-  sphereHighStress->SetName("highstress");
+  sphereHighStress->SetName("p_highstress");
   
   vtkSmartPointer<vtkDoubleArray> spheresVelL = vtkSmartPointer<vtkDoubleArray>::New();
   spheresVelL->SetNumberOfComponents(3);
-  spheresVelL->SetName("velocity_lin");
+  spheresVelL->SetName("p_velocity_lin");
 
   vtkSmartPointer<vtkDoubleArray> spheresVelA = vtkSmartPointer<vtkDoubleArray>::New();
   spheresVelA->SetNumberOfComponents(3);
-  spheresVelA->SetName("velocity_ang");
+  spheresVelA->SetName("p_velocity_ang");
   
   vtkSmartPointer<vtkDoubleArray> vectorDr = vtkSmartPointer<vtkDoubleArray>::New();
   vectorDr->SetNumberOfComponents(3);
-  vectorDr->SetName("vector_dr");
+  vectorDr->SetName("p_vector_dr");
   
   vtkSmartPointer<vtkDoubleArray> vectorDz = vtkSmartPointer<vtkDoubleArray>::New();
   vectorDz->SetNumberOfComponents(3);
-  vectorDz->SetName("vector_dz");
+  vectorDz->SetName("p_vector_dz");
   
   vtkSmartPointer<vtkDoubleArray> vectorDf = vtkSmartPointer<vtkDoubleArray>::New();
   vectorDf->SetNumberOfComponents(3);
-  vectorDf->SetName("vector_df");
+  vectorDf->SetName("p_vector_df");
   
   vtkSmartPointer<vtkDoubleArray> posZyl = vtkSmartPointer<vtkDoubleArray>::New();
   posZyl->SetNumberOfComponents(3);
-  posZyl->SetName("posZyl");
-  
-  vtkSmartPointer<vtkIntArray> bandR = vtkSmartPointer<vtkIntArray>::New();
-  bandR->SetNumberOfComponents(1);
-  bandR->SetName("bandR");
-  
-  vtkSmartPointer<vtkIntArray> bandZ = vtkSmartPointer<vtkIntArray>::New();
-  bandZ->SetNumberOfComponents(1);
-  bandZ->SetName("bandZ");
-  
-  vtkSmartPointer<vtkIntArray> bandF = vtkSmartPointer<vtkIntArray>::New();
-  bandF->SetNumberOfComponents(1);
-  bandF->SetName("bandF");
-  
-  vtkSmartPointer<vtkIntArray> bandN = vtkSmartPointer<vtkIntArray>::New();
-  bandN->SetNumberOfComponents(1);
-  bandN->SetName("bandN");
-  
-  vtkSmartPointer<vtkDoubleArray> bandTau = vtkSmartPointer<vtkDoubleArray>::New();
-  bandTau->SetNumberOfComponents(1);
-  bandTau->SetName("bandTau");
-  
-  vtkSmartPointer<vtkDoubleArray> bandPress = vtkSmartPointer<vtkDoubleArray>::New();
-  bandPress->SetNumberOfComponents(1);
-  bandPress->SetName("bandPress");
-  
-  vtkSmartPointer<vtkDoubleArray> bandTensor = vtkSmartPointer<vtkDoubleArray>::New();
-  bandTensor->SetNumberOfComponents(9);
-  bandTensor->SetName("bandTensor");
-  
-  vtkSmartPointer<vtkDoubleArray> partTensor = vtkSmartPointer<vtkDoubleArray>::New();
-  partTensor->SetNumberOfComponents(9);
-  partTensor->SetName("partTensor");
+  posZyl->SetName("p_posZyl");
   
   vtkSmartPointer<vtkDoubleArray> bandTensorCap = vtkSmartPointer<vtkDoubleArray>::New();
   bandTensorCap->SetNumberOfComponents(9);
-  bandTensorCap->SetName("bandTensorCap");
+  bandTensorCap->SetName("b_TensorCap");
   
   vtkSmartPointer<vtkDoubleArray> partTensorCap = vtkSmartPointer<vtkDoubleArray>::New();
   partTensorCap->SetNumberOfComponents(9);
-  partTensorCap->SetName("partTensorCap");
-  
-  vtkSmartPointer<vtkDoubleArray> bandMu = vtkSmartPointer<vtkDoubleArray>::New();
-  bandMu->SetNumberOfComponents(1);
-  bandMu->SetName("bandMu");
-  
-  vtkSmartPointer<vtkDoubleArray> bandOmega = vtkSmartPointer<vtkDoubleArray>::New();
-  bandOmega->SetNumberOfComponents(1);
-  bandOmega->SetName("bandOmega");
-  
-  vtkSmartPointer<vtkIntArray> bandPartNum = vtkSmartPointer<vtkIntArray>::New();
-  bandPartNum->SetNumberOfComponents(1);
-  bandPartNum->SetName("bandPartNum");
-  
-  vtkSmartPointer<vtkDoubleArray> bandPartNumAVG = vtkSmartPointer<vtkDoubleArray>::New();
-  bandPartNumAVG->SetNumberOfComponents(1);
-  bandPartNumAVG->SetName("bandPartNumAVG");
-  
-  vtkSmartPointer<vtkDoubleArray> bandVol = vtkSmartPointer<vtkDoubleArray>::New();
-  bandVol->SetNumberOfComponents(1);
-  bandVol->SetName("bandVol");
-
-  vtkSmartPointer<vtkDoubleArray> bandVolFraction = vtkSmartPointer<vtkDoubleArray>::New();
-  bandVolFraction->SetNumberOfComponents(1);
-  bandVolFraction->SetName("bandVolFraction");
-
-  vtkSmartPointer<vtkDoubleArray> bandScherRate = vtkSmartPointer<vtkDoubleArray>::New();
-  bandScherRate->SetNumberOfComponents(1);
-  bandScherRate->SetName("bandScherRate");
-
-  vtkSmartPointer<vtkDoubleArray> bandContactNumAVG = vtkSmartPointer<vtkDoubleArray>::New();
-  bandContactNumAVG->SetNumberOfComponents(1);
-  bandContactNumAVG->SetName("bandContactNumAVG");
-  
-  vtkSmartPointer<vtkDoubleArray> bandVelLin = vtkSmartPointer<vtkDoubleArray>::New();
-  bandVelLin->SetNumberOfComponents(3);
-  bandVelLin->SetName("bandVelLin_rzf");
-  
-  vtkSmartPointer<vtkDoubleArray> bandWetContactsAVG = vtkSmartPointer<vtkDoubleArray>::New();
-  bandWetContactsAVG->SetNumberOfComponents(1);
-  bandWetContactsAVG->SetName("bandWetContactsAVG");
-  
-  vtkSmartPointer<vtkDoubleArray> bandWetContactDistanceAVG = vtkSmartPointer<vtkDoubleArray>::New();
-  bandWetContactDistanceAVG->SetNumberOfComponents(1);
-  bandWetContactDistanceAVG->SetName("bandWetContactDistanceAVG");
+  partTensorCap->SetName("p_TensorCap");
   
   vtkSmartPointer<vtkDoubleArray> stress3 = vtkSmartPointer<vtkDoubleArray>::New();
   stress3->SetNumberOfComponents(1);
-  stress3->SetName("stress3");
+  stress3->SetName("p_stress3");
   
   vtkSmartPointer<vtkDoubleArray> stress1 = vtkSmartPointer<vtkDoubleArray>::New();
   stress1->SetNumberOfComponents(1);
-  stress1->SetName("stress1");
+  stress1->SetName("p_stress1");
   
   vtkSmartPointer<vtkIntArray> contactNum = vtkSmartPointer<vtkIntArray>::New();
   contactNum->SetNumberOfComponents(1);
-  contactNum->SetName("contactNum");
+  contactNum->SetName("p_contactNum");
   
   vtkSmartPointer<vtkIntArray> wetContactNum = vtkSmartPointer<vtkIntArray>::New();
   wetContactNum->SetNumberOfComponents(1);
-  wetContactNum->SetName("wetContactNum");
+  wetContactNum->SetName("p_wetContactNum");
+  
+  // Parameters per band=====================================================
+  
+  vtkSmartPointer<vtkIntArray> bandR = vtkSmartPointer<vtkIntArray>::New();
+  bandR->SetNumberOfComponents(1);
+  bandR->SetName("b_R");
+  
+  vtkSmartPointer<vtkIntArray> bandZ = vtkSmartPointer<vtkIntArray>::New();
+  bandZ->SetNumberOfComponents(1);
+  bandZ->SetName("b_Z");
+  
+  vtkSmartPointer<vtkIntArray> bandF = vtkSmartPointer<vtkIntArray>::New();
+  bandF->SetNumberOfComponents(1);
+  bandF->SetName("b_F");
+  
+  vtkSmartPointer<vtkIntArray> bandN = vtkSmartPointer<vtkIntArray>::New();
+  bandN->SetNumberOfComponents(1);
+  bandN->SetName("b_N");
+  
+  vtkSmartPointer<vtkDoubleArray> bandTau = vtkSmartPointer<vtkDoubleArray>::New();
+  bandTau->SetNumberOfComponents(1);
+  bandTau->SetName("b_Tau");
+  
+  vtkSmartPointer<vtkDoubleArray> bandPress = vtkSmartPointer<vtkDoubleArray>::New();
+  bandPress->SetNumberOfComponents(1);
+  bandPress->SetName("b_Press");
+  
+  vtkSmartPointer<vtkDoubleArray> bandTensor = vtkSmartPointer<vtkDoubleArray>::New();
+  bandTensor->SetNumberOfComponents(9);
+  bandTensor->SetName("b_Tensor");
+  
+  vtkSmartPointer<vtkDoubleArray> partTensor = vtkSmartPointer<vtkDoubleArray>::New();
+  partTensor->SetNumberOfComponents(9);
+  partTensor->SetName("p_Tensor");
+  
+  vtkSmartPointer<vtkDoubleArray> bandMu = vtkSmartPointer<vtkDoubleArray>::New();
+  bandMu->SetNumberOfComponents(1);
+  bandMu->SetName("b_Mu");
+  
+  vtkSmartPointer<vtkDoubleArray> bandOmega = vtkSmartPointer<vtkDoubleArray>::New();
+  bandOmega->SetNumberOfComponents(1);
+  bandOmega->SetName("b_Omega");
+  
+  vtkSmartPointer<vtkIntArray> bandPartNum = vtkSmartPointer<vtkIntArray>::New();
+  bandPartNum->SetNumberOfComponents(1);
+  bandPartNum->SetName("b_PartNum");
+  
+  vtkSmartPointer<vtkDoubleArray> bandPartNumAVG = vtkSmartPointer<vtkDoubleArray>::New();
+  bandPartNumAVG->SetNumberOfComponents(1);
+  bandPartNumAVG->SetName("b_PartNumAVG");
+  
+  vtkSmartPointer<vtkDoubleArray> bandVol = vtkSmartPointer<vtkDoubleArray>::New();
+  bandVol->SetNumberOfComponents(1);
+  bandVol->SetName("b_Vol");
+
+  vtkSmartPointer<vtkDoubleArray> bandVolFraction = vtkSmartPointer<vtkDoubleArray>::New();
+  bandVolFraction->SetNumberOfComponents(1);
+  bandVolFraction->SetName("b_VolFraction");
+
+  vtkSmartPointer<vtkDoubleArray> bandScherRate = vtkSmartPointer<vtkDoubleArray>::New();
+  bandScherRate->SetNumberOfComponents(1);
+  bandScherRate->SetName("b_ScherRate");
+
+  vtkSmartPointer<vtkDoubleArray> bandContactNumAVG = vtkSmartPointer<vtkDoubleArray>::New();
+  bandContactNumAVG->SetNumberOfComponents(1);
+  bandContactNumAVG->SetName("b_ContactNumAVG");
+  
+  vtkSmartPointer<vtkDoubleArray> bandVelLin = vtkSmartPointer<vtkDoubleArray>::New();
+  bandVelLin->SetNumberOfComponents(3);
+  bandVelLin->SetName("b_velLin_rzf");
+  
+  vtkSmartPointer<vtkDoubleArray> bandWetContactsAVG = vtkSmartPointer<vtkDoubleArray>::New();
+  bandWetContactsAVG->SetNumberOfComponents(1);
+  bandWetContactsAVG->SetName("b_WetContactsAVG");
+  
+  vtkSmartPointer<vtkDoubleArray> bandWetContactDistanceAVG = vtkSmartPointer<vtkDoubleArray>::New();
+  bandWetContactDistanceAVG->SetNumberOfComponents(1);
+  bandWetContactDistanceAVG->SetName("b_wetContactDistanceAVG");
+  
   
   #ifdef ALGLIB
     vtkSmartPointer<vtkIntArray> bandShearBand = vtkSmartPointer<vtkIntArray>::New();
     bandShearBand->SetNumberOfComponents(1);
-    bandShearBand->SetName("bandShearBand");
+    bandShearBand->SetName("b_shearBand");
   #endif
 
   vtkSmartPointer<vtkUnstructuredGrid> spheresUg = vtkSmartPointer<vtkUnstructuredGrid>::New();
