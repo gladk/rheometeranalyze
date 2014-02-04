@@ -180,6 +180,22 @@ void exportclass::VTK() {
   bandWetContactDistanceAVG->SetNumberOfComponents(1);
   bandWetContactDistanceAVG->SetName("bandWetContactDistanceAVG");
   
+  vtkSmartPointer<vtkDoubleArray> stress3 = vtkSmartPointer<vtkDoubleArray>::New();
+  stress3->SetNumberOfComponents(1);
+  stress3->SetName("stress3");
+  
+  vtkSmartPointer<vtkDoubleArray> stress1 = vtkSmartPointer<vtkDoubleArray>::New();
+  stress1->SetNumberOfComponents(1);
+  stress1->SetName("stress1");
+  
+  vtkSmartPointer<vtkIntArray> contactNum = vtkSmartPointer<vtkIntArray>::New();
+  contactNum->SetNumberOfComponents(1);
+  contactNum->SetName("contactNum");
+  
+  vtkSmartPointer<vtkIntArray> wetContactNum = vtkSmartPointer<vtkIntArray>::New();
+  wetContactNum->SetNumberOfComponents(1);
+  wetContactNum->SetName("wetContactNum");
+  
   #ifdef ALGLIB
     vtkSmartPointer<vtkIntArray> bandShearBand = vtkSmartPointer<vtkIntArray>::New();
     bandShearBand->SetNumberOfComponents(1);
@@ -282,6 +298,15 @@ void exportclass::VTK() {
             spheresType->InsertNextValue(partTemp->type());
             sphereSnapshot->InsertNextValue(partTemp->snapshot());
             sphereHighStress->InsertNextValue(partTemp->highStress());
+            
+            stress1->InsertNextValue(partTemp->stressSigma1());
+            stress3->InsertNextValue(partTemp->stressSigma3());
+            
+            contactNum->InsertNextValue(partTemp->contacts());
+            wetContactNum->InsertNextValue(partTemp->wetContacts());
+            
+            
+            
             
             double vv[3] = {partTemp->v()[0], partTemp->v()[1], partTemp->v()[2]};
             spheresVelL->InsertNextTupleValue(vv);
@@ -393,6 +418,10 @@ void exportclass::VTK() {
         spheresUg->GetPointData()->AddArray(posZyl);
         spheresUg->GetPointData()->AddArray(sphereSnapshot);
         spheresUg->GetPointData()->AddArray(sphereHighStress);
+        spheresUg->GetPointData()->AddArray(stress1);
+        spheresUg->GetPointData()->AddArray(stress3);
+        spheresUg->GetPointData()->AddArray(contactNum);
+        spheresUg->GetPointData()->AddArray(wetContactNum);
       }
       
       spheresUg->GetPointData()->AddArray(spheresType);
