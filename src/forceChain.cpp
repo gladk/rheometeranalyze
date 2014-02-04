@@ -48,14 +48,10 @@ forceChain::forceChain (const std::vector <std::shared_ptr<particle> > & p, cons
   // Create pool of stressed particles, which are having >= 3 contacts with other 
   // highstressed particles
   
-  
   BOOST_FOREACH(std::shared_ptr <particle> i,  p) {
-    // std::cerr<<i->highStressedContacts()<<std::endl;
-    if (i->highStress()>0 and i->highStressedContacts() >= 3) {
+    if (not(i->disabled()) and i->highStress()>0 and i->highStressedContacts() >= 3) {
       i->highStress(i->highStressedContacts());
       _highStressPart.push_back(i);
     }
   }
-  
-  
 }
