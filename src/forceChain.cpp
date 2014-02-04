@@ -38,24 +38,24 @@ forceChain::forceChain (const std::vector <std::shared_ptr<particle> > & p, cons
     if (not(i->disabled())) acc_sigma3(fabs(i->stressSigma3()));
   }
   const double sigma3AVG = mean(acc_sigma3);
-  const double sigma3AVGfactor = sigma3AVG/2.0;
   
   // Mark highstressed particles
   
   BOOST_FOREACH(std::shared_ptr <particle> i,  p) {
-    if (not(i->disabled()) and i->stressSigma3()>=sigma3AVGfactor) i->highStress(1);
+    if (not(i->disabled()) and i->stressSigma3()>=sigma3AVG) i->highStress(1);
   }
   
   // Create pool of stressed particles, which are having >= 3 contacts with other 
   // highstressed particles
   
+  
   BOOST_FOREACH(std::shared_ptr <particle> i,  p) {
     // std::cerr<<i->highStressedContacts()<<std::endl;
-    if (i->highStressedContacts() >= 3) {
+    if (i->highStress()>0 and i->highStressedContacts() >= 3) {
       i->highStress(i->highStressedContacts());
       _highStressPart.push_back(i);
     }
   }
-     
+  
   
 }
