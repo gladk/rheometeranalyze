@@ -49,7 +49,7 @@ forceChain::forceChain (const std::vector <std::shared_ptr<particle> > & p, cons
   // highstressed particles
   
   BOOST_FOREACH(std::shared_ptr <particle> i,  p) {
-    if (not(i->disabled()) and i->highStress()>0 and i->highStressedContacts() >= 3) {
+    if (not(i->disabled()) and i->highStress()>0 and i->highStressedContacts() >= 2) {
       i->highStress(i->highStressedContacts());
       _highStressPart.push_back(i);
     }
