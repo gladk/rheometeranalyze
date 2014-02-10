@@ -75,4 +75,7 @@ class force {
     void set_dg(Eigen::Vector3d dg) {_dg=dg;};
     void setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateCC);
     void calculateStressTensor();
+    #ifdef ALGLIB
+    int shearBand();                                        // -1 - out of band, 0 - 50/50, 1 - inside band
+    #endif
 };

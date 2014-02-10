@@ -554,15 +554,35 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   _fileNameG  =  _cfg->FOutput();
   _fileNameG  +=  "/contacts";
   ofstream myfileG (_fileNameG.c_str());
-  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContNumber\t005_ContNumberAVG\t006_ForceAVG\n";
+  myfileG << "#001_id\t002_minDelta\t003_maxDelta\t004_ContNumber\t005_ContNumberAVG\t006_ForceAVG";
+  
+  #ifdef ALGLIB
+  myfileG << "\t007_ContNumberBand\t008_ContNumberBandAVG\t009_ForceBandAVG";
+  myfileG << "\t010_ContNumberBandOut\t011_ContNumberBandOutAVG\t012_ForceBandOutAVG";
+  #endif
+  
+  myfileG << "\n";
   
   std::vector <std::shared_ptr<force> >  deltas;
   std::vector <long long int>            deltasBin(bins);
   std::vector <double>                   forcesBin(bins);
+
+  #ifdef ALGLIB
+  std::vector <long long int>            deltasBinBand(bins);
+  std::vector <double>                   forcesBinBand(bins);
+  std::vector <long long int>            deltasBinOutBand(bins);
+  std::vector <double>                   forcesBinOutBand(bins);
+  #endif
   
   for(int x = 0; x < bins; ++x) {
     deltasBin[x] = 0;
     forcesBin[x] = 0;
+  #ifdef ALGLIB
+    deltasBinBand[x] = 0;
+    forcesBinBand[x] = 0;
+    deltasBinOutBand[x] = 0;
+    forcesBinOutBand[x] = 0;
+  #endif
   }
   
   double minDelta = 0.0;
@@ -600,16 +620,40 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   BOOST_FOREACH(std::shared_ptr<force> d, deltas) {
     deltasBin[int(floor((d->deltaN()-minDelta)/DDelta))] += 1;
     forcesBin[int(floor((d->deltaN()-minDelta)/DDelta))] += d->val().norm();
+     #ifdef ALGLIB
+      if (d->shearBand()>=0) {
+        deltasBinBand[int(floor((d->deltaN()-minDelta)/DDelta))] += 1;
+        forcesBinBand[int(floor((d->deltaN()-minDelta)/DDelta))] += d->val().norm();
+      } else {
+        deltasBinOutBand[int(floor((d->deltaN()-minDelta)/DDelta))] += 1;
+        forcesBinOutBand[int(floor((d->deltaN()-minDelta)/DDelta))] += d->val().norm();
+      }
+    #endif
   }
   
   for(unsigned int x = 0; x < deltasBin.size(); ++x) {
     double forceTmp = 0.0;
+    double forceBandTmp = 0.0;
+    double forceBandOutTmp = 0.0;
     if (deltasBin[x]!=0) {
       forceTmp = forcesBin[x]/deltasBin[x];
     }
+    #ifdef ALGLIB
+    if (deltasBinBand[x]!=0) {
+      forceBandTmp = forcesBinBand[x]/deltasBinBand[x];
+    }
+    if (deltasBinOutBand[x]!=0) {
+      forceBandOutTmp = forcesBinOutBand[x]/deltasBinOutBand[x];
+    }
+    #endif
     myfileG << x << " " <<minDelta + DDelta*x  << " " <<minDelta + DDelta*(x+1) 
             << " " <<  deltasBin[x] << " " <<  deltasBin[x]/snapshots->size() 
-            << " "<< forceTmp <<  "\n";
+            << " "<< forceTmp;
+    #ifdef ALGLIB
+    myfileG << " " <<  deltasBinBand[x] << " " <<  deltasBinBand[x]/snapshots->size() << " "<< forceBandTmp;
+    myfileG << " " <<  deltasBinOutBand[x] << " " <<  deltasBinOutBand[x]/snapshots->size() << " "<< forceBandOutTmp;
+    #endif
+    myfileG << "\n";
   }
   
   myfileG.close();

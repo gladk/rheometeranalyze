@@ -149,3 +149,15 @@ void force::setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateC
   this->calculateStressTensor();
 };
 
+#ifdef ALGLIB
+int force::shearBand() {
+  if (_part1->shearBand() and _part2->shearBand()) {
+    return 1;
+  } else if ( (not(_part1->shearBand()) and _part2->shearBand()) or 
+              (_part1->shearBand() and not(_part2->shearBand()))) {
+    return 0;
+  } else {
+    return -1;
+  }
+};
+#endif
