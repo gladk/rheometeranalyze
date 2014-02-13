@@ -225,6 +225,11 @@ void exportclass::VTK() {
     snapshot->SetNumberOfComponents(1);
     snapshot->SetName("snapshot");
     
+    vtkSmartPointer<vtkFloatArray> highstressed = vtkSmartPointer<vtkFloatArray>::New();
+    highstressed->SetNumberOfComponents(1);
+    highstressed->SetName("highstressed");
+    
+    
     #ifdef ALGLIB
     vtkSmartPointer<vtkIntArray> shearband = vtkSmartPointer<vtkIntArray>::New();
     shearband->SetNumberOfComponents(1);
@@ -235,7 +240,11 @@ void exportclass::VTK() {
     
     BOOST_FOREACH(std::shared_ptr <forceRow> fR,  _forceAll) {
       for(unsigned long long b=0; b<fR->arraySize(); b++) {
-        if (not(fR->getF(b)->part1()->disabled()) and not(fR->getF(b)->part2()->disabled()) ) {
+        const std::shared_ptr<particle> p1 = fR->getF(b)->part1();
+        const std::shared_ptr<particle> p2 = fR->getF(b)->part2();
+        
+        if (not(p1->disabled()) and not(p2->disabled()) ) {
+          
           partPos->InsertNextPoint(fR->getF(b)->pos1()(0), fR->getF(b)->pos1()(1), fR->getF(b)->pos1()(2));
           partPos->InsertNextPoint(fR->getF(b)->pos2()(0), fR->getF(b)->pos2()(1), fR->getF(b)->pos2()(2));
           
@@ -250,6 +259,12 @@ void exportclass::VTK() {
             wet->InsertNextValue(1);
           } else {
             wet->InsertNextValue(0);
+          }
+          
+          if (p1->highStressedContact(p2) and p1->highStress() and p2->highStress()) {
+            highstressed->InsertNextValue(fR->getF(b)->val().norm());
+          } else {
+            highstressed->InsertNextValue(0);
           }
           
           #ifdef ALGLIB
@@ -273,6 +288,7 @@ void exportclass::VTK() {
     fPd->GetCellData()->AddArray(force);
     fPd->GetCellData()->AddArray(wet);
     fPd->GetCellData()->AddArray(snapshot);
+    fPd->GetCellData()->AddArray(highstressed);
     #ifdef ALGLIB
     fPd->GetCellData()->AddArray(shearband);
     #endif
