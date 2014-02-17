@@ -575,6 +575,7 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   #ifdef ALGLIB
   myfileG << "\t007_ContNumberBand\t008_ContNumberBandAVG\t009_ForceBandAVG";
   myfileG << "\t010_ContNumberBandOut\t011_ContNumberBandOutAVG\t012_ForceBandOutAVG";
+  myfileG << "\t013_BandVolume\t014_OutBandVolume";
   #endif
   
   myfileG << "\n";
@@ -588,6 +589,8 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   std::vector <double>                   forcesBinBand(bins);
   std::vector <long long int>            deltasBinOutBand(bins);
   std::vector <double>                   forcesBinOutBand(bins);
+  const double bandVolume = _bandRow->shearBandVolume();
+  const double outBandVolume = _bandRow->totalVolume() - _bandRow->shearBandVolume();
   #endif
   
   for(int x = 0; x < bins; ++x) {
@@ -668,6 +671,7 @@ void exportclass::gnuplotContactAnalyze(int bins) {
     #ifdef ALGLIB
     myfileG << " " <<  deltasBinBand[x] << " " <<  deltasBinBand[x]/snapshots->size() << " "<< forceBandTmp;
     myfileG << " " <<  deltasBinOutBand[x] << " " <<  deltasBinOutBand[x]/snapshots->size() << " "<< forceBandOutTmp;
+    myfileG << " " <<  bandVolume << " " <<  outBandVolume;
     #endif
     myfileG << "\n";
   }

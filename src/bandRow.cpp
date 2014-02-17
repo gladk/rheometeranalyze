@@ -22,6 +22,7 @@
 #include "main.h"
 #include "bandRow.h"
 #include "math_custom.h"
+#include <boost/foreach.hpp>
 
 #ifdef ALGLIB
   #include "interpolation.h"
@@ -219,5 +220,23 @@ void bandRow::calculateValues () {
       }
     }
   #endif
+};
+
+double bandRow::totalVolume() {
+  double vol = 0.0;
+  BOOST_FOREACH(std::shared_ptr <band> b,  _bandAll) {
+    vol+=b->vol();
+  }
+  return vol;
+};
+
+double bandRow::shearBandVolume() {
+  double vol = 0.0;
+  BOOST_FOREACH(std::shared_ptr <band> b,  _bandAll) {
+    if (b->shearBand()) {
+      vol+=b->vol();
+    }
+  }
+  return vol;
 };
 

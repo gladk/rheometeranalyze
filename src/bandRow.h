@@ -43,5 +43,7 @@ class bandRow {
     std::shared_ptr<band> getBand(unsigned int id) {return _bandAll[id];}
     std::shared_ptr<band> getBand(unsigned int idR, unsigned int idZ) {return _bandAll[idZ*_cfg->SecRadial() + idR];}
     unsigned int size() {return _bandAll.size();}
+    double totalVolume();
+    double shearBandVolume();
 };
 
