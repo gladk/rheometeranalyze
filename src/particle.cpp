@@ -137,6 +137,10 @@ Eigen::Matrix3d particle::kinEnergie() {
   return _m*_vZylindrical*_vZylindrical.transpose();
 };
 
+double particle::kinEnergieDouble() {
+  return _m*_v.norm()*_v.norm()*0.5;
+};
+
 Eigen::Vector3d particle::vZyl() {
   if (not(_calculateVel)) { 
     std::cerr << "Zylindrical velocities are not set yet! Exiting..."<<std::endl; 

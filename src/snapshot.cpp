@@ -98,6 +98,28 @@ double snapshot::torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint,
   return torqueRet;
 };
 
+double snapshot::kinEnergy(int typeAnalyze) {
+  double totEnergy = 0.0;
+  
+  BOOST_FOREACH(std::shared_ptr<particle> p, _particles) {
+    if ((p->type() == typeAnalyze) and (not(p->disabled()))) {
+      totEnergy+=p->kinEnergieDouble();
+    }
+  }
+  return totEnergy;
+};
+
+double snapshot::potEnergy(int typeAnalyze) {
+  double totEnergy = 0.0;
+  
+   BOOST_FOREACH(std::shared_ptr<force> f, _forces) {
+    if ((f->part1()->type() == typeAnalyze) or (f->part1()->type() != f->part2()->type())) {
+      totEnergy+=f->potEnergyNorm();
+    }
+  }
+  return totEnergy;
+};
+
 std::shared_ptr<forceChain> snapshot::forceChainRet() {
   _forceChain = std::shared_ptr<forceChain> (new forceChain(_particles, _forces));
   return _forceChain;

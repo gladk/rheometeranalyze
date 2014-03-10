@@ -149,6 +149,14 @@ void force::setLocalCoord(Eigen::Vector3d loc, Eigen::Quaternion<double> rotateC
   this->calculateStressTensor();
 };
 
+double force::potEnergyNorm() {
+   if (_volWater<=0) {
+     return this->forceN().norm()*_val.norm()/2.0;
+   } else {
+     return 0;
+   }
+};
+
 #ifdef ALGLIB
 int force::shearBand() {
   if (_part1->shearBand() and _part2->shearBand()) {

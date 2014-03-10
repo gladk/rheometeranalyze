@@ -53,6 +53,8 @@ class snapshot {
     std::vector <std::shared_ptr<particle> > particles();
     std::vector <std::shared_ptr<force> > forces();
     double torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint, int typeAnalyze);
+    double kinEnergy(int typeAnalyze);
+    double potEnergy(int typeAnalyze);
     unsigned short id();
     void id(unsigned short id);
     std::shared_ptr<forceChain> forceChainRet();

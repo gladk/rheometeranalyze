@@ -1035,13 +1035,15 @@ void exportclass::torque() {
   _fileName  +=  "/torque";
   ofstream myfile2 (_fileName.c_str());
   
-  myfile2 << "#001_Id\t002_time\t003_torque\n";
+  myfile2 << "#001_Id\t002_time\t003_torque\t004_kinEnergy\t005_potEnergy\n";
   
   for(unsigned int i=0; i<snapshots->size(); i++) {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
     myfile2                                                             << i << "\t";  // 001_snapId
     myfile2                            << snapshotCur->timeStep()*_cfg->dT() << "\t";  // 002_time
-    myfile2 << snapshotCur->torque(_cfg->get_o(), _cfg->get_c(), _cfg->tR()) << "\n";  // 003_torque
+    myfile2 << snapshotCur->torque(_cfg->get_o(), _cfg->get_c(), _cfg->tR()) << "\t";  // 003_torque
+    myfile2 << snapshotCur->kinEnergy(_cfg->tR()) << "\t";                             // 004_kinEnergy
+    myfile2 << snapshotCur->potEnergy(_cfg->tR()) << "\n";                             // 005_potEnergy
   }
   myfile2.close();
 }

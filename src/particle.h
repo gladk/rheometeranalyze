@@ -88,6 +88,7 @@ class particle {
     void enable() {_disable=false;};
     bool disabled() { return _disable; }
     Eigen::Matrix3d kinEnergie();
+    double kinEnergieDouble();
     void addStress(Eigen::Matrix3d addStressTensor);
     void addStressCap(Eigen::Matrix3d addStressTensor);
     void addParticleContact(std::shared_ptr<particle> addParticle);
