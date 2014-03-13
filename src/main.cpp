@@ -297,9 +297,9 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     int beginSnapshotTemp = setBeginSnapshot;
     
     if (setSnapshotsNumb > 0){
-      if (setSnapshotsNumb <= filesParticle.size()) {
+      if ((unsigned) setSnapshotsNumb <= filesParticle.size()) {
         if (setBeginSnapshot>=0) {
-          if ((setBeginSnapshot+setSnapshotsNumb-1) > filesParticle.size()) {
+          if ((unsigned) (setBeginSnapshot+setSnapshotsNumb-1) > filesParticle.size()) {
             BOOST_LOG_SEV(lg, fatal)<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but starting from "
                       << setBeginSnapshot <<", it is only possible to have only "<< 
                       filesForces.size()-setBeginSnapshot + 1<<
@@ -307,14 +307,14 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
             exit (EXIT_FAILURE);
           }
         }
-      } else if (setSnapshotsNumb > filesParticle.size()){
+      } else if ((unsigned) setSnapshotsNumb > filesParticle.size()){
         BOOST_LOG_SEV(lg, fatal)<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but its total number is "
                       << filesForces.size() <<
                       "! Exiting.";
             exit (EXIT_FAILURE);
       }
     } else {
-      if ( (setBeginSnapshot>0) and (setBeginSnapshot > filesParticle.size()) ) {
+      if ( (setBeginSnapshot>0) and ((unsigned) setBeginSnapshot > filesParticle.size()) ) {
         BOOST_LOG_SEV(lg, fatal)<<"Requested starting snapshot is "<<setBeginSnapshot<<", but  but its total number is "
                  << filesParticle.size() <<
                  "! Exiting.";
@@ -340,7 +340,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       beginSnapshotTemp = filesParticle.size() - snapshotsNumbTemp + 1;
     }
     
-    if (filesParticle.size() > snapshotsNumbTemp) {
+    if (filesParticle.size() > (unsigned) snapshotsNumbTemp) {
       BOOST_LOG_SEV(lg, info)<<"Reducing the number of files from "<< filesParticle.size() <<" to " << snapshotsNumbTemp ;
     }
     BOOST_LOG_SEV(lg, info)<<"Starting analyze from snapshot "<< beginSnapshotTemp ;

@@ -996,7 +996,8 @@ void exportclass::intOri() {
     unsigned short ThetaI = M_PI/2.0;
     
     for (unsigned short PsiI=0; PsiI   < _cfg->intOri(); PsiI++) {
-      const double ThetaId = ThetaI*dAngle + d2Ang;
+      // const double ThetaId = ThetaI*dAngle + d2Ang;    // Not used for the moment
+      
       const double PsiId   = PsiI*dAngle + d2Ang - M_PI/2.0;
       Eigen::Vector2d SphXYZ = Eigen::Vector2d(cos(PsiId), sin(PsiId));
       

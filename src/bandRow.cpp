@@ -93,7 +93,7 @@ void bandRow::fillBands (){
 
         int bN = bZ*(_cfg->SecRadial()) + bR + (bF*(_cfg->SecRadial()*_cfg->SecZ()));
         
-        if ((bR>=0 and bZ>=0 and bF>=0 and bN>=0 and bN<_bandAll.size())) {
+        if ((bR>=0 and bZ>=0 and bF>=0 and bN>=0 and ((unsigned) bN < _bandAll.size()))) {
           _bandAll[bN]->addParticle(partTemp);
         } else {
           _pRow[i]->disable(z);    // Disable and remove particle, if they are out of bands
@@ -106,7 +106,7 @@ void bandRow::fillBands (){
   
   // Calculate stresses
   for (unsigned int i = 0; i < _fRow.size(); i++)  {
-    for (int j = 0; j<_fRow[i]->arraySize(); j++) {
+    for (unsigned int j = 0; j<_fRow[i]->arraySize(); j++) {
       std::shared_ptr<force> forceTemp = _fRow[i]->getF(j);
       
       forceTemp->set_dg(_cfg->get_g());
