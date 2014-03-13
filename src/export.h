@@ -24,7 +24,6 @@
 #include <Eigen/Dense>
 #include <memory>
 
-
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>
 #include <vtkDoubleArray.h>
@@ -38,10 +37,7 @@
 #include <vtkXMLUnstructuredGridWriter.h>
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkZLibDataCompressor.h>
-#include <vtkTriangle.h>
 #include <vtkLine.h>
-#include <vtkQuad.h>
-#include <vtkBitArray.h>
 
 #include "band.h"
 #include "bandRow.h"

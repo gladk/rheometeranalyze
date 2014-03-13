@@ -295,7 +295,12 @@ void exportclass::VTK() {
     vtkSmartPointer<vtkXMLPolyDataWriter> writer = vtkSmartPointer<vtkXMLPolyDataWriter>::New();
     
     writer->SetDataModeToAscii();
-    writer->SetInput(fPd);
+    
+    #ifdef VTK6
+      writer->SetInputData(fPd);
+    #else
+      writer->SetInput(fPd);
+    #endif
     
     writer->SetFileName(_fileNameVTP.c_str());
     writer->Write();
@@ -472,7 +477,12 @@ void exportclass::VTK() {
     }
     vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
     writer->SetDataModeToAscii();
-    writer->SetInput(spheresUg);
+    
+    #ifdef VTK6
+      writer->SetInputData(spheresUg);
+    #else
+      writer->SetInput(spheresUg);
+    #endif
     
     writer->SetFileName(_fileNameVTU.c_str());
     writer->Write();
