@@ -68,7 +68,7 @@ int main(int ac, char* av[])
   
   
   boost::shared_ptr< sinks::text_ostream_backend > backendScreen = boost::make_shared< sinks::text_ostream_backend >();
-  backendScreen->add_stream(boost::shared_ptr< std::ostream >(&std::clog, logging::empty_deleter()));
+  backendScreen->add_stream(boost::shared_ptr< std::ostream >(&std::clog, boost::empty_deleter()));
   backendScreen->auto_flush(true);
 
   // Wrap it into the frontend and register in the core.

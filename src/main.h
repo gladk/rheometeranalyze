@@ -38,7 +38,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/log/utility/empty_deleter.hpp>
+#include <boost/utility/empty_deleter.hpp>
 
 #include <iostream>
 #include <algorithm>
