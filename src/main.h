@@ -26,6 +26,7 @@
 #include <boost/program_options.hpp>
 #include <boost/regex.hpp>
 #include <boost/foreach.hpp>
+#include <boost/version.hpp>
 
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
@@ -38,7 +39,12 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/utility/empty_deleter.hpp>
+
+#if (BOOST_VERSION > 105400)
+  #include <boost/utility/empty_deleter.hpp>
+#else
+  #include <boost/log/utility/empty_deleter.hpp>
+#endif
 
 #include <iostream>
 #include <algorithm>
