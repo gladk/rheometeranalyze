@@ -121,6 +121,10 @@ void exportclass::VTK() {
   wetContactNum->SetNumberOfComponents(1);
   wetContactNum->SetName("p_wetContactNum");
   
+  vtkSmartPointer<vtkDoubleArray> volWater = vtkSmartPointer<vtkDoubleArray>::New();
+  volWater->SetNumberOfComponents(1);
+  volWater->SetName("p_volWater");
+  
   // Parameters per band=====================================================
   
   vtkSmartPointer<vtkIntArray> bandR = vtkSmartPointer<vtkIntArray>::New();
@@ -198,6 +202,10 @@ void exportclass::VTK() {
   vtkSmartPointer<vtkDoubleArray> bandWetContactDistanceAVG = vtkSmartPointer<vtkDoubleArray>::New();
   bandWetContactDistanceAVG->SetNumberOfComponents(1);
   bandWetContactDistanceAVG->SetName("b_wetContactDistanceAVG");
+  
+  vtkSmartPointer<vtkDoubleArray> bandVolWaterAVG = vtkSmartPointer<vtkDoubleArray>::New();
+  bandVolWaterAVG->SetNumberOfComponents(1);
+  bandVolWaterAVG->SetName("b_volWaterAVG");
   
   
   #ifdef ALGLIB
@@ -324,14 +332,13 @@ void exportclass::VTK() {
             sphereSnapshot->InsertNextValue(partTemp->snapshot());
             sphereHighStress->InsertNextValue(partTemp->highStress());
             
+            
             stress1->InsertNextValue(partTemp->stressSigma1());
             stress3->InsertNextValue(partTemp->stressSigma3());
             
             contactNum->InsertNextValue(partTemp->contacts());
             wetContactNum->InsertNextValue(partTemp->wetContacts());
-            
-            
-            
+            volWater->InsertNextValue(partTemp->volwater());
             
             double vv[3] = {partTemp->v()[0], partTemp->v()[1], partTemp->v()[2]};
             spheresVelL->InsertNextTupleValue(vv);
@@ -408,6 +415,7 @@ void exportclass::VTK() {
           bandMu->InsertNextValue(bandTMP->muAVG());
           bandWetContactDistanceAVG->InsertNextValue(bandTMP->wetContactDistanceAVG());
           bandWetContactsAVG->InsertNextValue(bandTMP->wetContactsAVG());
+          bandVolWaterAVG->InsertNextValue(bandTMP->volwater());
           
           double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
           bandVelLin->InsertNextTupleValue(VelLin);
@@ -447,6 +455,7 @@ void exportclass::VTK() {
         spheresUg->GetPointData()->AddArray(stress3);
         spheresUg->GetPointData()->AddArray(contactNum);
         spheresUg->GetPointData()->AddArray(wetContactNum);
+        spheresUg->GetPointData()->AddArray(volWater);
       }
       
       spheresUg->GetPointData()->AddArray(spheresType);
@@ -471,6 +480,7 @@ void exportclass::VTK() {
       spheresUg->GetPointData()->AddArray(partTensorCap);
       spheresUg->GetPointData()->AddArray(bandWetContactsAVG);
       spheresUg->GetPointData()->AddArray(bandWetContactDistanceAVG);
+      spheresUg->GetPointData()->AddArray(bandVolWaterAVG);
       #ifdef ALGLIB
       spheresUg->GetPointData()->AddArray(bandShearBand);
       #endif

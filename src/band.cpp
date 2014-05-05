@@ -112,6 +112,7 @@ void band::calculateValues (int numSnapshots) {
   accumulator_set<double, stats<tag::mean > > acc_contactNumAVG;
   accumulator_set<double, stats<tag::mean > > acc_wetContactsAVG;
   accumulator_set<double, stats<tag::mean > > acc_wetContactDistanceAVG;
+  accumulator_set<double, stats<tag::mean > > acc_volWaterAVG;
   accumulator_set<double, stats<tag::mean > > acc_typeAvg;
   
   
@@ -161,6 +162,7 @@ void band::calculateValues (int numSnapshots) {
       acc_wetContactsAVG(_allPart[p]->wetContacts());
       acc_wetContactDistanceAVG (_allPart[p]->wetContactsAverageDistance());
       acc_typeAvg (_allPart[p]->type());
+      acc_volWaterAVG (_allPart[p]->volwater());
       
       if (_cfg->intOri() > 0) {
         acc_normContOri.push_back(_allPart[p]->normContOri().cast<double>());
@@ -207,6 +209,7 @@ void band::calculateValues (int numSnapshots) {
     _wetContactsAVG = mean(acc_wetContactsAVG);
     _wetContactDistanceAVG = mean(acc_wetContactDistanceAVG);
     _typeAVG = mean(acc_typeAvg);
+    _volWaterAVG = mean(acc_volWaterAVG);
     
     _vavg = mean(acc_angVelTmpV);
     

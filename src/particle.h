@@ -34,6 +34,7 @@ class particle {
     double _rad;                  // Particle radius
     double _m;                    // Mass of the particle
     double _d;                    // Density of the particle
+    double _volwater;             // Water volume (loaded from data-file)
     
     unsigned short _snapshot;     // Snapshot
     
@@ -61,13 +62,17 @@ class particle {
     int _highStressed;
     
   public:
-    particle(unsigned long long, int, unsigned int, double, double, double, Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d);
+    particle(unsigned long long id, int type, unsigned int fileid, 
+             double rad, double mass, double dens, Eigen::Vector3d c, 
+             Eigen::Vector3d v, Eigen::Vector3d o, 
+             double volwater);
     particle();
     unsigned long long id() {return _id;};
     int type() {return _type;};
     double rad() {return _rad;};
     double mass() {return _m;};
     double density() {return _d;};
+    double volwater() {return _volwater;};
     unsigned int  fileId() {return _fileId;};
     double realAngular();    //_v.dot(df)
     Eigen::Vector3d c() {return _c;}

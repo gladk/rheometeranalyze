@@ -67,6 +67,7 @@ configopt::configopt(const std::string &filename) {
   _cR = pt.get<double>("Particle.cR"); _maxColumnCheck(_cR, 0);
   _cM = pt.get<double>("Particle.cM"); _maxColumnCheck(_cM, 0);
   _cD = pt.get<double>("Particle.cD"); _maxColumnCheck(_cD, 0);
+  _cVolWaterP = pt.get<double>("Particle.cVolWaterP"); _maxColumnCheck(_cVolWaterP, 0);
   
   
   //Force

@@ -54,6 +54,7 @@ class configopt {
     int _cR;                  // Column of radius
     int _cM;                  // Column of mass
     int _cD;                  // Column of density
+    int _cVolWaterP;          // Column of volWater value (for Particle)
     int _maxC;                // Maximal column number
     void _maxColumnCheck(int, int);    // Check whether the new column is maximal
     void _maxColumnCheckForce(int, int);    // Check whether the new column is maximal for Forces
@@ -110,6 +111,7 @@ class configopt {
     int cR(){return _cR;};
     int cD(){return _cD;};
     int cM(){return _cM;};
+    int cVolWaterP(){return _cVolWaterP;};
     int maxC(){return _maxC;};
     int maxCF(){return _maxCF;};
     int numSnapshot(){return _snapshotRow->size();};

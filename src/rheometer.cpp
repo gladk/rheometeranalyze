@@ -90,10 +90,11 @@ void rheometer::loadParticles() {
       
       int valInt;
       double valD;
-      double pR, pM, pD;
+      double pR, pM, pD, volWater=0.0;
       int pT;
       unsigned long long pId;
       Eigen::Vector3d pC, pV, pO;
+      
       if (curLine>=_cfg->nDat()) {
         for (int i=1; i<=_cfg->maxC(); i++) {
           if (i==_cfg->cId()) {
@@ -128,14 +129,17 @@ void rheometer::loadParticles() {
           } else if (i==_cfg->cD()) {
             linestream >> pD;
             //std::cerr<<pD;
-          } else {
+          } else if (i==_cfg->cVolWaterP()) {
+            linestream >> volWater;
+            //std::cerr<<"VolWaterP " << VolWaterP<<std::endl;
+          }  else {
             linestream >> valD;
           }
         }
         
         if (((_cfg->tC()>=0) and (pT == _cfg->tC())) or (_cfg->tC()<0)) {
           maxId = max(pId, maxId);
-          std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, partNumbCounter-1, pR, pM, pD, pC,pV, pO));
+          std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, partNumbCounter-1, pR, pM, pD, pC,pV, pO, volWater));
           if (_cfg->intOri() > 0) tmpParticle->createIntOri(_cfg->intOri());
           tmpPartVector.push_back(tmpParticle);
           snapshotCur->addParticle(tmpParticle);

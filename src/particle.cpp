@@ -24,7 +24,9 @@
 #include <iostream>
 #include <boost/foreach.hpp>
 
-particle::particle(unsigned long long id, int type, unsigned int fileid, double rad, double mass, double dens, Eigen::Vector3d c, Eigen::Vector3d v, Eigen::Vector3d o) {
+particle::particle(unsigned long long id, int type, unsigned int fileid, 
+                   double rad, double mass, double dens, Eigen::Vector3d c, 
+                   Eigen::Vector3d v, Eigen::Vector3d o, double volwater) {
   _id = id;
   _type = type;
   _rad = rad;
@@ -46,6 +48,7 @@ particle::particle(unsigned long long id, int type, unsigned int fileid, double 
   _shearBand = false;
   _highStressed = -1;
   _snapshot = -1;
+  _volwater = volwater;
 };
 
 particle::particle() {
