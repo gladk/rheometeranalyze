@@ -537,7 +537,8 @@ void exportclass::gnuplotSchearRate() {
   myfileG << "034_f\t035_fPos\t";
   myfileG << "036_strTensCapRR\t037_strTensCapRZ\t038_strTensCapRF\t";
   myfileG << "039_strTensCapZR\t040_strTensCapZZ\t041_strTensCapZF\t";
-  myfileG << "042_strTensCapFR\t043_strTensCapFZ\t044_strTensCapFF\t \n";
+  myfileG << "042_strTensCapFR\t043_strTensCapFZ\t044_strTensCapFF\t";
+  myfileG << "045_volWaterAVG\t046_volWaterSUM \n";
   for(unsigned int b=0; b<_bandRow->size(); b++) {
     std::shared_ptr<band> bT = _bandRow->getBand(b);
     myfileG << bT->id() << "\t";           // 001_id
@@ -584,6 +585,8 @@ void exportclass::gnuplotSchearRate() {
     myfileG << bT->TensorCapAVG()(6)<< "\t";  // 042_strTensCapFR
     myfileG << bT->TensorCapAVG()(7)<< "\t";  // 043_strTensCapFZ
     myfileG << bT->TensorCapAVG()(8)<< "\t";  // 044_strTensCapFF
+    myfileG << bT->volwaterAVG()<< "\t";      // 045_volWaterAVG
+    myfileG << bT->volwaterSUM()<< "\t";      // 046_volWaterSUM
     myfileG << " \n"; 
   }
         
