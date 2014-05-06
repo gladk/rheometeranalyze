@@ -51,7 +51,8 @@ class band {
     double _densAVG;                                      // Average particle denisty
     double _eta;                                          // Viscosity
     double _typeAVG;                                      // Average "type" of particles
-    double _volWaterAVG;                                  // Average "type" of particles
+    double _volWaterAVG;                                  // Average water volume of particles
+    double _volWaterSUM;                                  // Total water volume of particles
     bool _shearBand;                                      // True, if the band is in shearband
     std::shared_ptr<configopt> _cfg; 
     
@@ -92,7 +93,8 @@ class band {
     double density() { return _densAVG;}
     double eta() { return _eta;}
     double type() { return _typeAVG;}
-    double volwater() { return _volWaterAVG;}
+    double volwaterAVG() { return _volWaterAVG;}
+    double volwaterSUM() { return _volWaterSUM;}
     double wetContactDistanceAVG() { return _wetContactDistanceAVG;}
     double wetContactsAVG() { return _wetContactsAVG;}
     Eigen::Vector3d vZyl() { return _vZylavg;}

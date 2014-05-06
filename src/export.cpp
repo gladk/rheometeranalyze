@@ -47,55 +47,55 @@ void exportclass::VTK() {
   // Parameters per particle=====================================================
   vtkSmartPointer<vtkDoubleArray> radii = vtkSmartPointer<vtkDoubleArray>::New();
   radii->SetNumberOfComponents(1);
-  radii->SetName("p_radii");
+  radii->SetName("p_Radii");
 
   vtkSmartPointer<vtkDoubleArray> mass = vtkSmartPointer<vtkDoubleArray>::New();
   mass->SetNumberOfComponents(1);
-  mass->SetName("p_mass");
+  mass->SetName("p_Mass");
 
   vtkSmartPointer<vtkDoubleArray> density = vtkSmartPointer<vtkDoubleArray>::New();
   density->SetNumberOfComponents(1);
-  density->SetName("p_density");
+  density->SetName("p_Density");
   
   vtkSmartPointer<vtkIntArray> spheresId = vtkSmartPointer<vtkIntArray>::New();
   spheresId->SetNumberOfComponents(1);
-  spheresId->SetName("p_id");
+  spheresId->SetName("p_Id");
 
   vtkSmartPointer<vtkIntArray> spheresType = vtkSmartPointer<vtkIntArray>::New();
   spheresType->SetNumberOfComponents(1);
-  spheresType->SetName("p_type");
+  spheresType->SetName("p_Type");
   
   vtkSmartPointer<vtkIntArray> sphereSnapshot = vtkSmartPointer<vtkIntArray>::New();
   sphereSnapshot->SetNumberOfComponents(1);
-  sphereSnapshot->SetName("p_snapshot");
+  sphereSnapshot->SetName("p_Snapshot");
   
   vtkSmartPointer<vtkIntArray> sphereHighStress = vtkSmartPointer<vtkIntArray>::New();
   sphereHighStress->SetNumberOfComponents(1);
-  sphereHighStress->SetName("p_highstress");
+  sphereHighStress->SetName("p_Highstress");
   
   vtkSmartPointer<vtkDoubleArray> spheresVelL = vtkSmartPointer<vtkDoubleArray>::New();
   spheresVelL->SetNumberOfComponents(3);
-  spheresVelL->SetName("p_velocity_lin");
+  spheresVelL->SetName("p_Velocity_lin");
 
   vtkSmartPointer<vtkDoubleArray> spheresVelA = vtkSmartPointer<vtkDoubleArray>::New();
   spheresVelA->SetNumberOfComponents(3);
-  spheresVelA->SetName("p_velocity_ang");
+  spheresVelA->SetName("p_Velocity_ang");
   
   vtkSmartPointer<vtkDoubleArray> vectorDr = vtkSmartPointer<vtkDoubleArray>::New();
   vectorDr->SetNumberOfComponents(3);
-  vectorDr->SetName("p_vector_dr");
+  vectorDr->SetName("p_Vector_dr");
   
   vtkSmartPointer<vtkDoubleArray> vectorDz = vtkSmartPointer<vtkDoubleArray>::New();
   vectorDz->SetNumberOfComponents(3);
-  vectorDz->SetName("p_vector_dz");
+  vectorDz->SetName("p_Vector_dz");
   
   vtkSmartPointer<vtkDoubleArray> vectorDf = vtkSmartPointer<vtkDoubleArray>::New();
   vectorDf->SetNumberOfComponents(3);
-  vectorDf->SetName("p_vector_df");
+  vectorDf->SetName("p_Vector_df");
   
   vtkSmartPointer<vtkDoubleArray> posZyl = vtkSmartPointer<vtkDoubleArray>::New();
   posZyl->SetNumberOfComponents(3);
-  posZyl->SetName("p_posZyl");
+  posZyl->SetName("p_PosZyl");
   
   vtkSmartPointer<vtkDoubleArray> bandTensorCap = vtkSmartPointer<vtkDoubleArray>::New();
   bandTensorCap->SetNumberOfComponents(9);
@@ -107,23 +107,23 @@ void exportclass::VTK() {
   
   vtkSmartPointer<vtkDoubleArray> stress3 = vtkSmartPointer<vtkDoubleArray>::New();
   stress3->SetNumberOfComponents(1);
-  stress3->SetName("p_stress3");
+  stress3->SetName("p_Stress3");
   
   vtkSmartPointer<vtkDoubleArray> stress1 = vtkSmartPointer<vtkDoubleArray>::New();
   stress1->SetNumberOfComponents(1);
-  stress1->SetName("p_stress1");
+  stress1->SetName("p_Stress1");
   
   vtkSmartPointer<vtkIntArray> contactNum = vtkSmartPointer<vtkIntArray>::New();
   contactNum->SetNumberOfComponents(1);
-  contactNum->SetName("p_contactNum");
+  contactNum->SetName("p_ContactNum");
   
   vtkSmartPointer<vtkIntArray> wetContactNum = vtkSmartPointer<vtkIntArray>::New();
   wetContactNum->SetNumberOfComponents(1);
-  wetContactNum->SetName("p_wetContactNum");
+  wetContactNum->SetName("p_WetContactNum");
   
   vtkSmartPointer<vtkDoubleArray> volWater = vtkSmartPointer<vtkDoubleArray>::New();
   volWater->SetNumberOfComponents(1);
-  volWater->SetName("p_volWater");
+  volWater->SetName("p_VolWater");
   
   // Parameters per band=====================================================
   
@@ -193,7 +193,7 @@ void exportclass::VTK() {
   
   vtkSmartPointer<vtkDoubleArray> bandVelLin = vtkSmartPointer<vtkDoubleArray>::New();
   bandVelLin->SetNumberOfComponents(3);
-  bandVelLin->SetName("b_velLin_rzf");
+  bandVelLin->SetName("b_VelLin_rzf");
   
   vtkSmartPointer<vtkDoubleArray> bandWetContactsAVG = vtkSmartPointer<vtkDoubleArray>::New();
   bandWetContactsAVG->SetNumberOfComponents(1);
@@ -201,17 +201,21 @@ void exportclass::VTK() {
   
   vtkSmartPointer<vtkDoubleArray> bandWetContactDistanceAVG = vtkSmartPointer<vtkDoubleArray>::New();
   bandWetContactDistanceAVG->SetNumberOfComponents(1);
-  bandWetContactDistanceAVG->SetName("b_wetContactDistanceAVG");
+  bandWetContactDistanceAVG->SetName("b_WetContactDistanceAVG");
   
   vtkSmartPointer<vtkDoubleArray> bandVolWaterAVG = vtkSmartPointer<vtkDoubleArray>::New();
   bandVolWaterAVG->SetNumberOfComponents(1);
-  bandVolWaterAVG->SetName("b_volWaterAVG");
+  bandVolWaterAVG->SetName("b_VolWaterAVG");
+  
+  vtkSmartPointer<vtkDoubleArray> bandVolWaterSUM = vtkSmartPointer<vtkDoubleArray>::New();
+  bandVolWaterSUM->SetNumberOfComponents(1);
+  bandVolWaterSUM->SetName("b_VolWaterSUM");
   
   
   #ifdef ALGLIB
     vtkSmartPointer<vtkIntArray> bandShearBand = vtkSmartPointer<vtkIntArray>::New();
     bandShearBand->SetNumberOfComponents(1);
-    bandShearBand->SetName("b_shearBand");
+    bandShearBand->SetName("b_ShearBand");
   #endif
 
   vtkSmartPointer<vtkUnstructuredGrid> spheresUg = vtkSmartPointer<vtkUnstructuredGrid>::New();
@@ -415,7 +419,8 @@ void exportclass::VTK() {
           bandMu->InsertNextValue(bandTMP->muAVG());
           bandWetContactDistanceAVG->InsertNextValue(bandTMP->wetContactDistanceAVG());
           bandWetContactsAVG->InsertNextValue(bandTMP->wetContactsAVG());
-          bandVolWaterAVG->InsertNextValue(bandTMP->volwater());
+          bandVolWaterAVG->InsertNextValue(bandTMP->volwaterAVG());
+          bandVolWaterSUM->InsertNextValue(bandTMP->volwaterSUM());
           
           double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
           bandVelLin->InsertNextTupleValue(VelLin);
@@ -481,6 +486,7 @@ void exportclass::VTK() {
       spheresUg->GetPointData()->AddArray(bandWetContactsAVG);
       spheresUg->GetPointData()->AddArray(bandWetContactDistanceAVG);
       spheresUg->GetPointData()->AddArray(bandVolWaterAVG);
+      spheresUg->GetPointData()->AddArray(bandVolWaterSUM);
       #ifdef ALGLIB
       spheresUg->GetPointData()->AddArray(bandShearBand);
       #endif
