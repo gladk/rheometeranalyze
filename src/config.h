@@ -94,9 +94,9 @@ class configopt {
     double H(){return _H;};
     double aS(){return _aS;};
     double aE(){return _aE;};
-    int SecRadial(){return _SecRadial;};
-    int SecZ(){return _SecZ;};
-    int SecFi(){return _SecFi;};
+    unsigned int SecRadial(){return _SecRadial;};
+    unsigned int SecZ(){return _SecZ;};
+    unsigned int SecFi(){return _SecFi;};
     Eigen::Vector3d get_g(){return _g;};
     int nAt(){return _nAt;};
     int nPSt(){return _nPSt;};

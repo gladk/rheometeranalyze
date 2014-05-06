@@ -46,9 +46,9 @@ bandRow::bandRow (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<pa
   
   //Prepare band-vector
   
-  for (int f = 0; f < _cfg->SecFi(); f++) {
-    for (int z=0; z<_cfg->SecZ(); z++){
-      for (int r=0; r<_cfg->SecRadial(); r++){
+  for (unsigned int f = 0; f < _cfg->SecFi(); f++) {
+    for (unsigned int z=0; z<_cfg->SecZ(); z++){
+      for (unsigned int r=0; r<_cfg->SecRadial(); r++){
         const double dRmin = _cfg->Din()/2.0 + _cfg->dDr()*r;
         const double dRmax = _cfg->Din()/2.0 + _cfg->dDr()*(r+1);
         const double dZmin = _cfg->dDz()*z;
@@ -147,49 +147,51 @@ void bandRow::calculateValues () {
   for(unsigned int i=0; i<_bandAll.size(); i++) {
     _bandAll[i]->calculateValues(_cfg->numSnapshot());
   }
-  
-  for(unsigned int i=0; i<_bandAll.size()-1-_cfg->SecRadial(); i++) {
-    if (
-       (_bandAll[i+1]->idR() > _bandAll[i]->idR()) and 
-       (_bandAll[i+1]->idZ() == _bandAll[i]->idZ())) {
-      double _shearRateTmp, _shearRateTmpA, _shearRateTmpB;
-      // Calculate Scherrate
+  if (_bandAll.size() > _cfg->SecRadial()) {
+    for(unsigned int i=0; i<_bandAll.size()-1-_cfg->SecRadial(); i++) {
       
-      /*
-       * 
-       * The formula (16) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
-       * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
-       * 
-       */ 
-      
-      _shearRateTmpA = (_bandAll[i+1]->vZyl()(2) - _bandAll[i]->vZyl()(2))/
-                       (_bandAll[i+1]->midLinedR() - _bandAll[i]->midLinedR()) -
-                       _bandAll[i]->vZyl()(2)/_bandAll[i]->midLinedR();
-      
-      
-      _shearRateTmpB = (_bandAll[i+_cfg->SecRadial()]->vZyl()(2) - _bandAll[i]->vZyl()(2))/
-                       (_bandAll[i+_cfg->SecRadial()]->midLinedZ() - _bandAll[i]->midLinedZ());
-      
-      _shearRateTmp =  0.5*sqrt(_shearRateTmpA*_shearRateTmpA + _shearRateTmpB*_shearRateTmpB);
-      _bandAll[i]->set_scherRate(_shearRateTmp);    
-      
+      if (
+         (_bandAll[i+1]->idR() > _bandAll[i]->idR()) and 
+         (_bandAll[i+1]->idZ() == _bandAll[i]->idZ())) {
+        double _shearRateTmp = 0.0;
+        double _shearRateTmpA = 0.0;
+        double _shearRateTmpB = 0.0;
+        // Calculate Scherrate
+        
+        /*
+         * 
+         * The formula (16) in GraMat. Rheology of weakly wetted granular materials - a comparison of experimental and numerical data.
+         * Ruediger Schwarze · Anton Gladkyy · Fabian Uhlig · Stefan Luding, 2013
+         * 
+         */ 
+        
+        _shearRateTmpA = (_bandAll[i+1]->vZyl()(2) - _bandAll[i]->vZyl()(2))/
+                         (_bandAll[i+1]->midLinedR() - _bandAll[i]->midLinedR()) -
+                         _bandAll[i]->vZyl()(2)/_bandAll[i]->midLinedR();
+        
+       
+        _shearRateTmpB = (_bandAll[i+_cfg->SecRadial()]->vZyl()(2) - _bandAll[i]->vZyl()(2))/
+                         (_bandAll[i+_cfg->SecRadial()]->midLinedZ() - _bandAll[i]->midLinedZ());
+       
+        
+        _shearRateTmp =  0.5*sqrt(_shearRateTmpA*_shearRateTmpA + _shearRateTmpB*_shearRateTmpB);
+        _bandAll[i]->set_scherRate(_shearRateTmp);
+      }
     }
   }
-  
-  
   //Create vector of Create ShearBands
   
   #ifdef ALGLIB
     
     double omega0 = this->getBand(_cfg->SecRadial()-1,0)->omega(); 
-    for(int h=0; h<_cfg->SecZ(); h++) {
+    for(unsigned int h=0; h<_cfg->SecZ(); h++) {
       alglib::real_2d_array x;
       alglib::real_1d_array y;
       alglib::real_1d_array c = "[0.08, 0.0075]";
       x.setlength(_cfg->SecRadial(), 1);
       y.setlength(_cfg->SecRadial());
       
-      for(int r=0; r<_cfg->SecRadial(); r++) {
+      for(unsigned int r=0; r<_cfg->SecRadial(); r++) {
       
         double omega = this->getBand(r,h)->omega(); 
         double valT = 0.0;
@@ -212,7 +214,7 @@ void bandRow::calculateValues () {
       const double Rz = c(0);
       const double W = c(1);
       _shearBands.push_back(Eigen::Vector3d(Rz, W, this->getBand(0,h)->midLinedZ()));
-      for(int r=0; r<_cfg->SecRadial(); r++) {
+      for(unsigned int r=0; r<_cfg->SecRadial(); r++) {
         double const Rt = this->getBand(r,h)->midLinedR();
         if ((Rt>=(Rz-W)) and (Rt<=(Rz+W))) {
           this->getBand(r,h)->shearBandOn();
