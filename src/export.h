@@ -74,6 +74,7 @@ class exportclass {
     void gnuplotContactAnalyze(int bins);
     void gnuplotContactWet();
     void gnuplotContactFollow();
+    void gnuplotWetParticles(int bins);
     void Utwente();
     void intOri();
     void torque();

@@ -60,6 +60,10 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
     exp->intOri();
   }
   
+  if (_cfg->wetParticle()) {
+    exp->gnuplotWetParticles(10);
+  }
+  
 };
 
 void rheometer::loadParticles() {

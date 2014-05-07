@@ -84,6 +84,7 @@ class configopt {
     bool  _utwente;            // True, if UTwente-files will be created
     bool  _contact;            // True, if contact-analyze should be performed
     bool  _followContact;      // True, if contact-follow-analyze should be performed
+    bool  _wetParticle;        // True, if the particle wet analyze should be performed
     
   public:
     configopt(const std::string &);
@@ -154,6 +155,10 @@ class configopt {
     void setFollowContact() {_followContact=true;} 
     void unSetFollowContact() {_followContact=false;} 
     bool followContact() {return _followContact;}  
+    
+    void setWetParticle() {_wetParticle=true;} 
+    void unSetWetParticle() {_wetParticle=false;} 
+    bool wetParticle() {return _wetParticle;}  
     
     void setIntOri(int intOri) {_intOri=intOri;} 
     void unSetIntOri() {_intOri=-1;} 

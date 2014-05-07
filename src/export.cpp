@@ -1085,3 +1085,70 @@ void exportclass::forceChain() {
     snapshotCur->forceChainRet();
   }
 }
+
+
+void exportclass::gnuplotWetParticles(int bins) {  
+  // Calculates, how much particles have liquid, sorted by water volume
+  std::string _fileNameG;
+  _fileNameG  =  _cfg->FOutput();
+  _fileNameG  +=  "/wetParticles";
+  ofstream myfileG (_fileNameG.c_str());
+  myfileG << "#001_id\t002_minWat\t003_maxWat\t004_partNumber\t005_waterVolumeAVG\t006_waterVolumeSUM";
+  
+  myfileG << "\n";
+  
+  std::vector <long long int>            deltasBin(bins);
+  std::vector <double>                   waterBin(bins);
+  
+  for(int x = 0; x < bins; ++x) {
+    deltasBin[x] = 0;
+    waterBin[x]  = 0;
+  }
+  
+  double minWat = 0.0;
+  double maxWat = 0.0;
+    
+  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+  for(unsigned int i=0; i<snapshots->size(); i++) {
+    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+    std::vector <std::shared_ptr<particle> > particles = snapshotCur->particles();
+    
+    BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
+      if (p->disabled() or p->volwater()<=0) {continue;}
+      
+      if  (minWat == maxWat and minWat == 0 ) {
+        minWat = p->volwater();
+        maxWat = p->volwater();
+      }
+      minWat = std::min(minWat, p->volwater());
+      maxWat = std::max(maxWat, p->volwater());
+    }
+  }
+  
+  double DDelta = (maxWat - minWat)/bins;
+  for(unsigned int i=0; i<snapshots->size(); i++) {
+    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+    std::vector <std::shared_ptr<particle> > particles = snapshotCur->particles();
+    
+    BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
+      if (p->disabled() or p->volwater()<=0) {continue;}
+      
+      deltasBin[int(floor((p->volwater()-minWat)/DDelta))] += 1;
+      waterBin [int(floor((p->volwater()-minWat)/DDelta))] += p->volwater();
+    }
+  }
+  
+  for(unsigned int x = 0; x < deltasBin.size(); ++x) {
+    double volWaterTmp = 0.0;
+    if (deltasBin[x]!=0) {
+      volWaterTmp = waterBin[x]/deltasBin[x];
+    }
+    myfileG << x << "\t" << minWat + DDelta*x << "\t" <<  minWat + DDelta*(x+1) 
+            <<      "\t" << deltasBin[x]      << "\t" <<  deltasBin[x]/snapshots->size() 
+            <<      "\t" << volWaterTmp;
+    myfileG << "\n";
+  }
+  
+  
+  myfileG.close();
+};

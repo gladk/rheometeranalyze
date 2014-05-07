@@ -96,6 +96,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   bool setUtwente = false;
   bool setContact = false;
   bool setFollowContact = false;
+  bool setWetParticle = false;
   int setSnapshotsNumb;
   int setBeginSnapshot;
   int setIntOri;
@@ -106,10 +107,11 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("config,c", po::value<string>(), "configuration file")
       ("particle,p", po::value<string>(), "particles dump file")
       ("force,f", po::value<string>(), "forces dump file")
-      ("vtk,v", po::value<unsigned short>(&setVtk)->default_value(0), "create VTK-file (0 - no export by default, 1 - all data to export, 2 - only band-data to export)")
+      ("vtk,v", po::value<unsigned short>(&setVtk)->default_value(0), "create VTK-file (0 - no export by default, 1 - all data to export, 2 - only band-data to export, 3 - force (interactions) to export)")
       ("utwente,u", "create export files for UTwente, OFF by default")
       ("contact", "perform contact analyze and creating corresponding files, OFF by default")
       ("fcontact", "perform follow-contact analyze and creating corresponding files, OFF by default")
+      ("wetparticle", "perform analyze of wet particle and creating corresponding files, OFF by default")
       ("intori",po::value<int>(&setIntOri)->default_value(-1), "perform analyze of interaction orientations, set number of slots, OFF by default (-1)")
       ("snapshots,s",po::value<int>(&setSnapshotsNumb)->default_value(-1), "number of snapshots to analyze, ALL by default (-1)")
       ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
@@ -160,6 +162,13 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       setFollowContact = true;
     } else {
       BOOST_LOG_SEV(lg, info) << "Follow-contact-analyze will NOT be performed" ;
+    }
+
+    if (vm.count("wetparticle")) {
+      BOOST_LOG_SEV(lg, info) << "Wetparticle-analyze will be performed" ;
+      setWetParticle = true;
+    } else {
+      BOOST_LOG_SEV(lg, info) << "Wetparticle-analyze will NOT be performed" ;
     }
     
     if (vm.count("config")) {
@@ -373,6 +382,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setVtk > 0) configParams->setVtk(setVtk);
   if (setContact) configParams->setContact();
   if (setFollowContact) configParams->setFollowContact();
+  if (setWetParticle) configParams->setWetParticle();
   if (setUtwente) configParams->setUtwente();
   if (setIntOri>0) configParams->setIntOri(setIntOri);
   
