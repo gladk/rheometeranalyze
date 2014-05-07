@@ -254,6 +254,14 @@ bool particle::highStressedContact(std::shared_ptr <particle> p) {
   return false;
 };
 
+double particle::relativeWaterVol() {
+  if (this->volwater()>0) {
+    return this->volwater()/this->vol();
+  } else {
+    return 0;
+  }
+};
+
 InteractionsMatrix particle::normContOri() {
   return _normContOri->interactions();
 };

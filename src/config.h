@@ -75,6 +75,7 @@ class configopt {
     int _cDistCurr;           // Column of cDistCurr value
     int _cDistCrit;           // Column of cDistCrit value
     int _maxCF;               // Maximal column number for forces
+    int _wetParticle;         // Number of slots for the particle wet analyze
     
     int _intOri;              // Number of slots for analyze the orientation of interactions
   
@@ -84,7 +85,6 @@ class configopt {
     bool  _utwente;            // True, if UTwente-files will be created
     bool  _contact;            // True, if contact-analyze should be performed
     bool  _followContact;      // True, if contact-follow-analyze should be performed
-    bool  _wetParticle;        // True, if the particle wet analyze should be performed
     
   public:
     configopt(const std::string &);
@@ -156,9 +156,9 @@ class configopt {
     void unSetFollowContact() {_followContact=false;} 
     bool followContact() {return _followContact;}  
     
-    void setWetParticle() {_wetParticle=true;} 
-    void unSetWetParticle() {_wetParticle=false;} 
-    bool wetParticle() {return _wetParticle;}  
+    void setWetParticle(int i = 0) {_wetParticle=i;} 
+    void unSetWetParticle() {_wetParticle=-1;} 
+    int wetParticle() {return _wetParticle;}  
     
     void setIntOri(int intOri) {_intOri=intOri;} 
     void unSetIntOri() {_intOri=-1;} 

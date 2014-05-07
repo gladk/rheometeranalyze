@@ -89,6 +89,7 @@ class particle {
     double dist() { return _posZyl(0);};
     double height() { return _posZyl(1);};
     double vol() { return 4.0/3.0*M_PI*_rad*_rad*_rad;};
+    double relativeWaterVol();
     void disable() {_disable=true;};
     void enable() {_disable=false;};
     bool disabled() { return _disable; }

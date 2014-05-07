@@ -28,6 +28,7 @@ configopt::configopt(const std::string &filename) {
   boost::property_tree::ini_parser::read_ini(filename, pt);
   _maxC = -1;
   _maxCF = -1;
+  _wetParticle = -1;
   
   _c = Eigen::Vector3d(pt.get<double>("Rheometer.cX"), pt.get<double>("Rheometer.cY"), pt.get<double>("Rheometer.cZ"));
   _o = Eigen::Vector3d(pt.get<double>("Rheometer.oX"), pt.get<double>("Rheometer.oY"), pt.get<double>("Rheometer.oZ"));
