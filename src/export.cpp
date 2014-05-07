@@ -1112,7 +1112,7 @@ void exportclass::gnuplotWetParticles(int bins) {
     std::vector <std::shared_ptr<particle> > particles = snapshotCur->particles();
     
     BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
-      if (p->disabled() or p->volwater()<0) {continue;}
+      if (p->disabled() or p->volwater()<=0) {continue;}
       
       if  (minWat == maxWat and minWat == 0 ) {
         minWat = p->relativeWaterVol();
@@ -1130,7 +1130,7 @@ void exportclass::gnuplotWetParticles(int bins) {
     std::vector <std::shared_ptr<particle> > particles = snapshotCur->particles();
     
     BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
-      if (p->disabled() or p->volwater()<0) {continue;}
+      if (p->disabled() or p->volwater()<=0) {continue;}
       
       deltasBin[int(floor((p->relativeWaterVol()-minWat)/DDelta))] += 1;
       partNumb++;
