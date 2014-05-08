@@ -1093,7 +1093,7 @@ void exportclass::gnuplotWetParticles(int bins) {
   _fileNameG  =  _cfg->FOutput();
   _fileNameG  +=  "/wetParticles";
   ofstream myfileG (_fileNameG.c_str());
-  myfileG << "#001_id\t002_minWat\t003_maxWat\t004_partNumber\t005_partNumber\t006_relPartNumber";
+  myfileG << "#001_id\t002_minWat\t003_maxWat\t004_partNumber\t005_relPartNumber";
   
   myfileG << "\n";
   
