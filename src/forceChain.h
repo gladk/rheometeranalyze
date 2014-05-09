@@ -31,7 +31,6 @@ class forceChain {
     
     class forceChainEl {
       private:
-        bool StartElem=false, EndElem=false; 
         std::shared_ptr <particle> pPrev, pNext, p;
         std::shared_ptr <force>    fPrev, fNext;
     };
