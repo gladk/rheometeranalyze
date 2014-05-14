@@ -87,10 +87,8 @@ double snapshot::torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint,
   rotationAxis.normalize();
   
   BOOST_FOREACH(std::shared_ptr<force> f, _forces) {
-    if ((f->part1()->type() == typeAnalyze) and (f->part1()->type() != f->part2()->type())) {
-      const Eigen::Vector3d radiusVector = rotationAxis.cross(rotationAxis.cross(zeroPoint - f->cP()));
-      torqueRet += (radiusVector.cross(f->val())).norm();
-    } else if ((f->part2()->type() == typeAnalyze) and (f->part1()->type() != f->part2()->type())) {
+    if (((f->part1()->type() == typeAnalyze) or (f->part2()->type() == typeAnalyze)) 
+      and (f->part1()->type() != f->part2()->type())) {
       const Eigen::Vector3d radiusVector = rotationAxis.cross(rotationAxis.cross(zeroPoint - f->cP()));
       torqueRet += (radiusVector.cross(f->val())).norm();
     }
