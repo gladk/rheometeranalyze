@@ -1072,8 +1072,8 @@ void exportclass::torque() {
     myfile2                                                             << i << "\t";  // 001_snapId
     myfile2                            << snapshotCur->timeStep()*_cfg->dT() << "\t";  // 002_time
     myfile2 << snapshotCur->torque(_cfg->get_o(), _cfg->get_c(), _cfg->tR()) << "\t";  // 003_torque
-    myfile2 << snapshotCur->kinEnergy(_cfg->tR()) << "\t";                             // 004_kinEnergy
-    myfile2 << snapshotCur->potEnergy(_cfg->tR()) << "\n";                             // 005_potEnergy
+    myfile2 << snapshotCur->kinEnergy(_cfg->tC()) << "\t";                             // 004_kinEnergy
+    myfile2 << snapshotCur->potEnergy(_cfg->tC()) << "\n";                             // 005_potEnergy
   }
   myfile2.close();
 }

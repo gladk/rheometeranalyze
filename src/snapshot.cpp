@@ -100,7 +100,7 @@ double snapshot::kinEnergy(int typeAnalyze) {
   double totEnergy = 0.0;
   
   BOOST_FOREACH(std::shared_ptr<particle> p, _particles) {
-    if ((p->type() == typeAnalyze) and (not(p->disabled()))) {
+    if ((p->type() == typeAnalyze or typeAnalyze<0) and (not(p->disabled()))) {
       totEnergy+=p->kinEnergieDouble();
     }
   }
@@ -111,7 +111,7 @@ double snapshot::potEnergy(int typeAnalyze) {
   double totEnergy = 0.0;
   
    BOOST_FOREACH(std::shared_ptr<force> f, _forces) {
-    if ((f->part1()->type() == typeAnalyze) or (f->part1()->type() != f->part2()->type())) {
+    if ((f->part1()->type() == typeAnalyze) or (f->part1()->type() != f->part2()->type()) or typeAnalyze<0) {
       totEnergy+=f->potEnergyNorm();
     }
   }
