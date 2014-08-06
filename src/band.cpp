@@ -293,3 +293,11 @@ InteractionsMatrixD band::capiContOri() {
   return _capiContOri;
 };
 
+double band::omegaNorm() const {
+  if (_omega0 != 0) {
+    return _vavg/_omega0;
+  } else {
+    return 0;
+  }
+};
+

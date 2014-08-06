@@ -57,6 +57,7 @@ class band {
     std::shared_ptr<configopt> _cfg; 
     
     double _dOmegadR=0.0;                                 // dOmega/dr
+    double _omega0=0.0;                                   // omega0, value is needed to get a normalized velocity profile (see Fenistein)
     
     InteractionsMatrixD  _normContOri, _capiContOri;      // Interaction orientations
 
@@ -79,18 +80,19 @@ class band {
     double dZ() {return (_dZmax - _dZmin);};
     long long partNumb () {return _partNumb;};
     std::shared_ptr<particle> getPart (long long id) { return _allPart[id];}
-    int id() {return _id;}
-    int idZ() {return _idZ;}
-    int idR() {return _idR;}
-    int idF() {return _idF;}
+    int id() const {return _id;}
+    int idZ() const {return _idZ;}
+    int idR() const {return _idR;}
+    int idF() const {return _idF;}
     double tau() {return _tauavg;}
-    double press() {return _pavg;}
-    double muAVG() {return _muAVG;}                            
-    double omega() {return _vavg;}
+    double press() const {return _pavg;}
+    double muAVG() const {return _muAVG;}                            
+    double omega() const {return _vavg;}
+    double omegaNorm() const;
     double omegaStDev() {return _vavgStDev;}
     void set_scherRate(double );
     void set_I(double I) {_I = I;}
-    double scherRate() { return _scherRate;}
+    double scherRate() const { return _scherRate;}
     double I() { return _I;}
     double density() { return _densAVG;}
     double eta() { return _eta;}
@@ -109,4 +111,6 @@ class band {
     void setShearBand(const bool shearb);
     void setdOmegadR(double dOmegadR) {_dOmegadR = dOmegadR;};
     double dOmegadR() const {return _dOmegadR;};
+    void omega0(const double omega0) {_omega0 = omega0;};
+    double omega0() const {return _omega0;};
 };

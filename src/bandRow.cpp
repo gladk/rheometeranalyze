@@ -170,6 +170,7 @@ void bandRow::calculateValues () {
   // Common values
   for(unsigned int i=0; i<_bandAll.size(); i++) {
     _bandAll[i]->calculateValues(_cfg->numSnapshot());
+    _bandAll[i]->omega0(_omega0AVG);
   }
   if (_bandAll.size() > _cfg->SecRadial()) {
     for(unsigned int i=0; i<_bandAll.size()-1-_cfg->SecRadial(); i++) {
@@ -200,7 +201,9 @@ void bandRow::calculateValues () {
         
         _shearRateTmp =  0.5*sqrt(_shearRateTmpA*_shearRateTmpA + _shearRateTmpB*_shearRateTmpB);
         _bandAll[i]->set_scherRate(_shearRateTmp);
-        
+      }
+      
+      if (_bandAll[i+1]->idR() > _bandAll[i]->idR()) {
         /*
          * Set dOmega/dR
          */
@@ -213,8 +216,6 @@ void bandRow::calculateValues () {
   //Create vector of ShearBands
   
   #ifdef ALGLIB
-    
-    double omega0 = this->getBand(_cfg->SecRadial()-1,0)->omega(); 
     for(unsigned int h=0; h<_cfg->SecZ(); h++) {
       alglib::real_2d_array x;
       alglib::real_1d_array y;
@@ -223,12 +224,8 @@ void bandRow::calculateValues () {
       y.setlength(_cfg->SecRadial());
       
       for(unsigned int r=0; r<_cfg->SecRadial(); r++) {
-      
-        double omega = this->getBand(r,h)->omega(); 
-        double valT = 0.0;
-        if (omega0!=0) valT = omega/omega0;
         x(r,0) = (this->getBand(r,0))->midLinedR();
-        y(r) = valT;
+        y(r) = this->getBand(r,h)->omegaNorm();
       }
       double epsf = 0;
       double epsx = 0.0000001;

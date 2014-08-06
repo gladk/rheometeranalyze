@@ -211,6 +211,14 @@ void exportclass::VTK() {
   bandVolWaterSUM->SetNumberOfComponents(1);
   bandVolWaterSUM->SetName("b_VolWaterSUM");
   
+  vtkSmartPointer<vtkDoubleArray> bandDOmegaDR = vtkSmartPointer<vtkDoubleArray>::New();
+  bandDOmegaDR->SetNumberOfComponents(1);
+  bandDOmegaDR->SetName("b_DOmegaDR");
+  
+  vtkSmartPointer<vtkDoubleArray> bandOmegaNorm = vtkSmartPointer<vtkDoubleArray>::New();
+  bandOmegaNorm->SetNumberOfComponents(1);
+  bandOmegaNorm->SetName("b_OmegaNorm");
+  
   
   #ifdef ALGLIB
     vtkSmartPointer<vtkIntArray> bandShearBand = vtkSmartPointer<vtkIntArray>::New();
@@ -421,6 +429,8 @@ void exportclass::VTK() {
           bandWetContactsAVG->InsertNextValue(bandTMP->wetContactsAVG());
           bandVolWaterAVG->InsertNextValue(bandTMP->volwaterAVG());
           bandVolWaterSUM->InsertNextValue(bandTMP->volwaterSUM());
+          bandDOmegaDR->InsertNextValue(bandTMP->dOmegadR());
+          bandOmegaNorm->InsertNextValue(bandTMP->omegaNorm());
           
           double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
           bandVelLin->InsertNextTupleValue(VelLin);
@@ -487,6 +497,8 @@ void exportclass::VTK() {
       spheresUg->GetPointData()->AddArray(bandWetContactDistanceAVG);
       spheresUg->GetPointData()->AddArray(bandVolWaterAVG);
       spheresUg->GetPointData()->AddArray(bandVolWaterSUM);
+      spheresUg->GetPointData()->AddArray(bandDOmegaDR);
+      spheresUg->GetPointData()->AddArray(bandOmegaNorm);
       #ifdef ALGLIB
       spheresUg->GetPointData()->AddArray(bandShearBand);
       #endif
@@ -538,7 +550,8 @@ void exportclass::gnuplotSchearRate() {
   myfileG << "036_strTensCapRR\t037_strTensCapRZ\t038_strTensCapRF\t";
   myfileG << "039_strTensCapZR\t040_strTensCapZZ\t041_strTensCapZF\t";
   myfileG << "042_strTensCapFR\t043_strTensCapFZ\t044_strTensCapFF\t";
-  myfileG << "045_volWaterAVG\t046_volWaterSUM \n";
+  myfileG << "045_volWaterAVG\t046_volWaterSUM \t";
+  myfileG << "047_dOmegadR 048_Omega0 049_dOmegadR \n";
   for(unsigned int b=0; b<_bandRow->size(); b++) {
     std::shared_ptr<band> bT = _bandRow->getBand(b);
     myfileG << bT->id() << "\t";           // 001_id
@@ -587,7 +600,10 @@ void exportclass::gnuplotSchearRate() {
     myfileG << bT->TensorCapAVG()(8)<< "\t";  // 044_strTensCapFF
     myfileG << bT->volwaterAVG()<< "\t";      // 045_volWaterAVG
     myfileG << bT->volwaterSUM()<< "\t";      // 046_volWaterSUM
-    myfileG << " \n"; 
+    myfileG << bT->dOmegadR()<< "\t";         // 047_dOmegadR
+    myfileG << bT->omega0()<< "\t";           // 048_Omega0
+    myfileG << bT->dOmegadR()<< "\t";         // 049_dOmegadR
+    myfileG << " \n";
   }
         
   myfileG.close();
