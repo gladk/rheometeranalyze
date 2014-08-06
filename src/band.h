@@ -56,6 +56,8 @@ class band {
     bool _shearBand;                                      // True, if the band is in shearband
     std::shared_ptr<configopt> _cfg; 
     
+    double _dOmegadR=0.0;                                 // dOmega/dr
+    
     InteractionsMatrixD  _normContOri, _capiContOri;      // Interaction orientations
 
   public:
@@ -105,4 +107,6 @@ class band {
     InteractionsMatrixD normContOri();
     InteractionsMatrixD capiContOri();
     void setShearBand(const bool shearb);
+    void setdOmegadR(double dOmegadR) {_dOmegadR = dOmegadR;};
+    double dOmegadR() const {return _dOmegadR;};
 };

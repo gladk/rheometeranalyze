@@ -24,6 +24,10 @@
 #include "math_custom.h"
 #include <boost/foreach.hpp>
 
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
+
 #ifdef ALGLIB
   #include "interpolation.h"
   void function_cx_1_func(const alglib::real_1d_array &c, const alglib::real_1d_array &x, double &func, void *ptr) 
@@ -142,6 +146,26 @@ int bandRow::getBandF(double angle) {
 };
 
 void bandRow::calculateValues () {
+  //==============================================
+  //Find and set omega0
+  using namespace boost::accumulators;
+  const int tR = _cfg->tR();
+  for (unsigned int i = 0; i < _pRow.size(); i++) {
+    accumulator_set<double, stats<tag::mean > > acc_omega0;
+    for (unsigned int z = 0; z<_pRow[i]->arraySize(); z++) {
+      if (_pRow[i]->particleReal(z) and _pRow[i]->getP(z)->type()== tR) {
+        acc_omega0(_pRow[i]->getP(z)->realAngular());
+      }
+    }
+    _omega0.push_back(mean(acc_omega0));
+  }
+  
+  accumulator_set<double, stats<tag::mean > > acc_omega0AVG;
+  BOOST_FOREACH(double o,  _omega0) {
+    acc_omega0AVG(o);
+  }
+  _omega0AVG = mean(acc_omega0AVG);
+  //==============================================
   
   // Common values
   for(unsigned int i=0; i<_bandAll.size(); i++) {
@@ -176,10 +200,17 @@ void bandRow::calculateValues () {
         
         _shearRateTmp =  0.5*sqrt(_shearRateTmpA*_shearRateTmpA + _shearRateTmpB*_shearRateTmpB);
         _bandAll[i]->set_scherRate(_shearRateTmp);
+        
+        /*
+         * Set dOmega/dR
+         */
+        const double dOmegadR = (_bandAll[i+1]->omega() - _bandAll[i]->omega())/
+                                (_bandAll[i+1]->midLinedR() - _bandAll[i]->midLinedR());
+        _bandAll[i]->setdOmegadR(dOmegadR);
       }
     }
   }
-  //Create vector of Create ShearBands
+  //Create vector of ShearBands
   
   #ifdef ALGLIB
     
@@ -240,5 +271,9 @@ double bandRow::shearBandVolume() {
     }
   }
   return vol;
+};
+
+double bandRow::omega0AVG() const {
+  return _omega0AVG;
 };
 

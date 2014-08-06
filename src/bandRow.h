@@ -31,6 +31,8 @@ class bandRow {
     std::shared_ptr<configopt> _cfg; 
     std::vector<std::shared_ptr<particleRow>> _pRow;
     std::vector<std::shared_ptr<forceRow>> _fRow;
+    std::vector<double> _omega0;
+    double _omega0AVG=0.0;
   public:
     bandRow (std::shared_ptr<configopt>, std::vector<std::shared_ptr <particleRow>>, std::vector<std::shared_ptr <forceRow>>);
     void fillBands();
@@ -45,5 +47,6 @@ class bandRow {
     unsigned int size() {return _bandAll.size();}
     double totalVolume();
     double shearBandVolume();
+    double omega0AVG() const;
 };
 
