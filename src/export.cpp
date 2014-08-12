@@ -682,15 +682,16 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   
   double DDelta = (maxDelta - minDelta)/bins;
   BOOST_FOREACH(std::shared_ptr<force> d, deltas) {
-    deltasBin[int(floor((d->deltaN()-minDelta)/DDelta))] += 1;
-    forcesBin[int(floor((d->deltaN()-minDelta)/DDelta))] += d->val().norm();
+    const int binTmp = int(floor((d->deltaN()-minDelta)/DDelta));
+    deltasBin[binTmp] += 1;
+    forcesBin[binTmp] += d->val().norm();
      #ifdef ALGLIB
       if (d->shearBand()>=0) {
-        deltasBinBand[int(floor((d->deltaN()-minDelta)/DDelta))] += 1;
-        forcesBinBand[int(floor((d->deltaN()-minDelta)/DDelta))] += d->val().norm();
+        deltasBinBand[binTmp] += 1;
+        forcesBinBand[binTmp] += d->val().norm();
       } else {
-        deltasBinOutBand[int(floor((d->deltaN()-minDelta)/DDelta))] += 1;
-        forcesBinOutBand[int(floor((d->deltaN()-minDelta)/DDelta))] += d->val().norm();
+        deltasBinOutBand[binTmp] += 1;
+        forcesBinOutBand[binTmp] += d->val().norm();
       }
     #endif
   }
