@@ -384,6 +384,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       // Create symlinks to VTK-files in one directory
       const string outputFolderNew = outputFolder + std::string("/VTK");
       createOutputDir(outputFolderNew, lg);
+      createOutputDir(outputFolderNew+"_NUM", lg);
     }
     for(unsigned int i=0; i<filesParticle.size(); i++) {
       BOOST_LOG_SEV(lg, info)<<"Discrete analyze " << i+1 <<"/"<<filesParticle.size()<<"====================";
@@ -398,8 +399,13 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       
       std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
       if (setVtk) {
+        stringstream ss;
+        ss << setw(7) << setfill('0') << i;
+        string s = ss.str();
         fs::create_symlink("../" + filesParticle[i].stem().string() + std::string("/output.vtu"), 
           outputFolder + std::string("/VTK/") + filesParticle[i].stem().string() + std::string(".vtu"));
+        fs::create_symlink("../" + filesParticle[i].stem().string() + std::string("/output.vtu"), 
+          outputFolder + std::string("/VTK_NUM/v_") + s + std::string(".vtu"));
       }
     }
   } else {
