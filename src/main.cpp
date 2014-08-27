@@ -380,7 +380,13 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setWetParticle>0) configParams->setWetParticle(setWetParticle);
   
   if (discreteAnalyze) {
+    if (setVtk) {
+      // Create symlinks to VTK-files in one directory
+      const string outputFolderNew = outputFolder + std::string("/VTK");
+      createOutputDir(outputFolderNew, lg);
+    }
     for(unsigned int i=0; i<filesParticle.size(); i++) {
+      BOOST_LOG_SEV(lg, info)<<"Discrete analyze " << i+1 <<"/"<<filesParticle.size()<<"====================";
       const string outputFolderNew = outputFolder + '/' + filesParticle[i].stem().string();
       createOutputDir(outputFolderNew, lg);
       std::shared_ptr<snapshotRow> snapshots (new snapshotRow());
@@ -391,6 +397,10 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       configParams->FOutput(outputFolderNew);
       
       std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
+      if (setVtk) {
+        fs::create_symlink("../" + filesParticle[i].stem().string() + std::string("/output.vtu"), 
+          outputFolder + std::string("/VTK/") + filesParticle[i].stem().string() + std::string(".vtu"));
+      }
     }
   } else {
     std::shared_ptr<snapshotRow> snapshots (new snapshotRow());
