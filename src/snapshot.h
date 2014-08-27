@@ -34,7 +34,8 @@ class snapshot {
   private:
     fs::path _particlesFileName;
     fs::path _forcesFileName;
-    unsigned long long _timeStep;
+    unsigned long long _timeStep=0;
+    double _time=0;
     unsigned short _id;
     std::vector <std::shared_ptr<particle> > _particles;
     std::vector <std::shared_ptr<force> > _forces;
@@ -44,8 +45,9 @@ class snapshot {
     snapshot(fs::path particlesFileName, fs::path forcesFileName, unsigned long long timeStep);
     void setParticlesFileName(fs::path particlesFileName);
     void setForcesFileName(fs::path forcesFileName);
-    void setTimeStep(unsigned long long timeStep);
-    unsigned long long timeStep();
+    void setTimeStep(const unsigned long long timeStep, const double dT);
+    unsigned long long timeStep() const;
+    double time() const;
     fs::path getParticleFile();
     fs::path getForceFile();
     void addParticle(std::shared_ptr<particle> particleTmp);

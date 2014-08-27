@@ -42,3 +42,35 @@ void snapshotRow::sortRow() {
   }
 };
 
+unsigned long long snapshotRow::timeStepMin() const {
+  return _snapshotRow[0]->timeStep();
+};
+
+unsigned long long snapshotRow::timeStepMax() const {
+  return _snapshotRow[_snapshotRow.size()-1]->timeStep();
+};
+
+unsigned long long snapshotRow::timeStepAvg() const {
+  if (_snapshotRow.size()==1) {
+    return timeStepMin();
+  } else {
+    return (timeStepMin() + timeStepMax())/2.0;
+  }
+};
+
+double snapshotRow::timeMin() const {
+  return _snapshotRow[0]->time();
+};
+
+double snapshotRow::timeMax() const {
+  return _snapshotRow[_snapshotRow.size()-1]->time();
+};
+
+double snapshotRow::timeAvg() const {
+  if (_snapshotRow.size()==1) {
+    return timeMin();
+  } else {
+    return (timeMin() + timeMax())/2.0;
+  }
+};
+

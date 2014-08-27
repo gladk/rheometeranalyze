@@ -219,6 +219,10 @@ void exportclass::VTK() {
   bandOmegaNorm->SetNumberOfComponents(1);
   bandOmegaNorm->SetName("b_OmegaNorm");
   
+  vtkSmartPointer<vtkDoubleArray> bandGamma = vtkSmartPointer<vtkDoubleArray>::New();
+  bandGamma->SetNumberOfComponents(1);
+  bandGamma->SetName("b_Gamma");
+  
   
   #ifdef ALGLIB
     vtkSmartPointer<vtkIntArray> bandShearBand = vtkSmartPointer<vtkIntArray>::New();
@@ -431,6 +435,7 @@ void exportclass::VTK() {
           bandVolWaterSUM->InsertNextValue(bandTMP->volwaterSUM());
           bandDOmegaDR->InsertNextValue(bandTMP->dOmegadR());
           bandOmegaNorm->InsertNextValue(bandTMP->omegaNorm());
+          bandGamma->InsertNextValue(bandTMP->gamma());
           
           double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
           bandVelLin->InsertNextTupleValue(VelLin);
@@ -499,6 +504,7 @@ void exportclass::VTK() {
       spheresUg->GetPointData()->AddArray(bandVolWaterSUM);
       spheresUg->GetPointData()->AddArray(bandDOmegaDR);
       spheresUg->GetPointData()->AddArray(bandOmegaNorm);
+      spheresUg->GetPointData()->AddArray(bandGamma);
       #ifdef ALGLIB
       spheresUg->GetPointData()->AddArray(bandShearBand);
       #endif

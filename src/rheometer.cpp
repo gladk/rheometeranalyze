@@ -26,12 +26,14 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   _cfg = cfg;
   _particleNum = 0;
   _forceNum = 0;
+  _snapshots = _cfg->snapshot();
   
   loadParticles();
   
   //Create bands
-  std::shared_ptr <bandRow> bandRowTMP (new bandRow(_cfg, _particleAll,  _forceRow));
-  std::shared_ptr <bandRow> _bandRow = bandRowTMP;
+  _bandRow = std::shared_ptr<bandRow> ( new bandRow (_cfg, _particleAll,  _forceRow));
+  
+  calculateLocalDeformations();
   
   std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow, _forceRow));
   
@@ -74,11 +76,10 @@ void rheometer::loadParticles() {
   
   
   unsigned int partNumbCounter  = 1;
-  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
   
-  for(unsigned int i=0; i<snapshots->size(); i++) {
+  for(unsigned int i=0; i<_snapshots->size(); i++) {
     
-    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+    std::shared_ptr<snapshot> snapshotCur = _snapshots->getSnapshot(i);
     
     std::ifstream _file;
     _file.open(snapshotCur->getParticleFile().string());
@@ -151,10 +152,10 @@ void rheometer::loadParticles() {
   
       } else if (curLine == _cfg->nAt()) {
         linestream >> valInt;
-        BOOST_LOG_SEV(lg, info)<<"File "<<partNumbCounter<<"/"<<snapshots->size()<< " (" << snapshotCur->getParticleFile() << "); " <<"Expected particles "<<valInt;
+        BOOST_LOG_SEV(lg, info)<<"File "<<partNumbCounter<<"/"<<_snapshots->size()<< " (" << snapshotCur->getParticleFile() << "); " <<"Expected particles "<<valInt;
       } else if (curLine == _cfg->nPSt()) {
         linestream >> valInt;
-        snapshotCur->setTimeStep(valInt);
+        snapshotCur->setTimeStep(valInt, _cfg->dT());
       }
       curLine++;
     };
@@ -172,7 +173,7 @@ void rheometer::loadParticles() {
     this->loadForces(snapshotCur);
   
   }
-  snapshots->sortRow();
+  _snapshots->sortRow();
   BOOST_LOG_SEV(lg, info)<<"The total number of added particles is "<<_particleNum;
   BOOST_LOG_SEV(lg, info)<<"The total number of added forces is "<<_forceNum;
 };
@@ -282,3 +283,20 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
     BOOST_LOG_SEV(lg, info)<<_forceRow[forceRowNumbTMP]->elementsNum()<<" forces added.";
     _forceNum+=_forceRow[forceRowNumbTMP]->elementsNum();
 };
+
+bool rheometer::calculateLocalDeformations() {
+  if (not(_particleAll.size()) or not(_forceRow.size()) or not(_bandRow->size()) or not(_snapshots->size())) {
+    return false;
+  } else {
+    // Calculate local strain, deformations according to Sakaie(5)
+    const double r = _cfg->Dout()/2.0;
+    const double N = _bandRow->omega0AVG()*_snapshots->timeAvg()/(2*M_PI);
+    const double TwoPiNr = 2*M_PI*N*r;
+    for(unsigned int b=0; b<_bandRow->size(); b++) {
+      std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
+      const double gamma =  TwoPiNr*bandTMP->dOmegadR();
+      bandTMP->gamma(gamma);
+    }
+    return true;
+  }
+}

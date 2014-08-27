@@ -28,7 +28,13 @@ class snapshotRow {
   public:
     snapshotRow(){};
     void addSnapshot(std::shared_ptr<snapshot> snapshotTmp){_snapshotRow.push_back(snapshotTmp);};
-    unsigned int size(){  return _snapshotRow.size();};
+    unsigned int size() const {  return _snapshotRow.size();};
     std::shared_ptr<snapshot> getSnapshot(unsigned int i);
     void sortRow();
+    unsigned long long timeStepMin() const;
+    unsigned long long timeStepMax() const;
+    unsigned long long timeStepAvg() const;
+    double timeMin() const;
+    double timeMax() const;
+    double timeAvg() const;
 };

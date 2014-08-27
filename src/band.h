@@ -59,6 +59,8 @@ class band {
     double _dOmegadR=0.0;                                 // dOmega/dr
     double _omega0=0.0;                                   // omega0, value is needed to get a normalized velocity profile (see Fenistein)
     
+    double _gamma=0.0;                                    // local strain, deformations according to Sakaie(5)
+    
     InteractionsMatrixD  _normContOri, _capiContOri;      // Interaction orientations
 
   public:
@@ -113,4 +115,6 @@ class band {
     double dOmegadR() const {return _dOmegadR;};
     void omega0(const double omega0) {_omega0 = omega0;};
     double omega0() const {return _omega0;};
+    void gamma(const double gamma) {_gamma = gamma;}
+    double gamma() const {return _gamma;}
 };

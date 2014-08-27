@@ -39,12 +39,17 @@ void snapshot::setForcesFileName(fs::path forcesFileName) {
   _forcesFileName = forcesFileName;
 };
 
-void snapshot::setTimeStep(unsigned long long timeStep) {
+void snapshot::setTimeStep(const unsigned long long timeStep, const double dT) {
   _timeStep = timeStep;
+  _time = _timeStep*dT;
 };
 
-unsigned long long snapshot::timeStep() {
+unsigned long long snapshot::timeStep() const {
   return _timeStep;
+};
+
+double snapshot::time() const {
+  return _time;
 };
 
 fs::path snapshot::getParticleFile() {
