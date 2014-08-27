@@ -35,6 +35,16 @@ bool sortFileTimeCreate(fs::path i, fs::path j) {
   return (fs::last_write_time(i) < fs::last_write_time(j));
 }
 
+
+void createOutputDir(const string & outputFolder, src::severity_logger< logging::trivial::severity_level > & lg) {
+  if (not fs::is_directory(outputFolder)) {
+    BOOST_LOG_SEV(lg, logging::trivial::info)<<"The directory " << outputFolder<< " does not exists. Creating.";
+    if (fs::create_directories(outputFolder)) {
+      BOOST_LOG_SEV(lg, logging::trivial::info)<<"The directory " << outputFolder<< " created.";
+    }
+  }  
+}
+
 using namespace std;
 
 int main(int ac, char* av[])
@@ -96,6 +106,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   bool setUtwente = false;
   bool setContact = false;
   bool setFollowContact = false;
+  bool discreteAnalyze = false;
   int setWetParticle;
   int setSnapshotsNumb;
   int setBeginSnapshot;
@@ -116,6 +127,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("snapshots,s",po::value<int>(&setSnapshotsNumb)->default_value(-1), "number of snapshots to analyze, ALL by default (-1)")
       ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
       ("output,o", po::value<string>()->default_value("output"), "output folder")
+      ("discrete,d", "use discrete analyze, each snapshot will be analyzed separately")
     ;
     
     po::positional_options_description p;
@@ -173,7 +185,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     configFileName = vm["config"].as<string>();
     
     if (vm.count("output")) {
-      BOOST_LOG_SEV(lg, info) << "output folder: " << vm["output"].as<string>() ;
+      BOOST_LOG_SEV(lg, info) << "output base folder: " << vm["output"].as<string>() ;
     }
     outputFolder = vm["output"].as<string>();
 
@@ -193,7 +205,13 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       exit (EXIT_FAILURE);
     }
     forcesFileName = vm["force"].as<string>();
-
+    
+        
+    if (vm.count("discrete")) {
+      BOOST_LOG_SEV(lg, info) << "Discrete analyze will be done" ;
+      discreteAnalyze = true;
+    }
+    
   }
   catch(exception& e) {
       BOOST_LOG_SEV(lg, fatal) << "error: " << e.what() ;
@@ -285,14 +303,6 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   sort(filesForces.begin(), filesForces.end(), sortFileTimeCreate); 
   
   //=====================================================
-  if (not fs::is_directory(outputFolder)) {
-    BOOST_LOG_SEV(lg, info)<<"The directory " << outputFolder<< " does not exists. Creating.";
-    if (fs::create_directory(outputFolder)) {
-      BOOST_LOG_SEV(lg, info)<<"The directory " << outputFolder<< " created.";
-    }
-  }
-  
-  //=====================================================
   
   if (filesParticle.size() != filesForces.size()) {
     BOOST_LOG_SEV(lg, fatal)<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting.";
@@ -357,20 +367,9 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     filesForces.erase(filesForces.begin(), filesForces.begin() + beginSnapshotTemp - 1);
     filesForces.erase(filesForces.begin() + snapshotsNumbTemp, filesForces.end());
   }
-  
   //=====================================================
   
-  std::shared_ptr<snapshotRow> snapshots (new snapshotRow());
-  
-  for(unsigned int i=0; i<filesParticle.size(); i++) {
-    std::shared_ptr<snapshot> snapshotTmp (new snapshot(filesParticle[i], filesForces[i], 0));
-    snapshots->addSnapshot(snapshotTmp);
-  }
-  
-  
   std::shared_ptr<configopt> configParams (new configopt(configFileName));
-  configParams->setSnapshot(snapshots);
-  configParams->FOutput(outputFolder);
   
   if (setVtk > 0) configParams->setVtk(setVtk);
   if (setContact) configParams->setContact();
@@ -380,9 +379,32 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setIntOri>0) configParams->setIntOri(setIntOri);
   if (setWetParticle>0) configParams->setWetParticle(setWetParticle);
   
-  
-  std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
-  
+  if (discreteAnalyze) {
+    for(unsigned int i=0; i<filesParticle.size(); i++) {
+      const string outputFolderNew = outputFolder + '/' + filesParticle[i].stem().string();
+      createOutputDir(outputFolderNew, lg);
+      std::shared_ptr<snapshotRow> snapshots (new snapshotRow());
+      std::shared_ptr<snapshot> snapshotTmp (new snapshot(filesParticle[i], filesForces[i], 0));
+      snapshots->addSnapshot(snapshotTmp);
+      
+      configParams->setSnapshot(snapshots);
+      configParams->FOutput(outputFolderNew);
+      
+      std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
+    }
+  } else {
+    std::shared_ptr<snapshotRow> snapshots (new snapshotRow());
+    createOutputDir(outputFolder, lg);
+    for(unsigned int i=0; i<filesParticle.size(); i++) {
+      std::shared_ptr<snapshot> snapshotTmp (new snapshot(filesParticle[i], filesForces[i], 0));
+      snapshots->addSnapshot(snapshotTmp);
+    }
+    
+    configParams->setSnapshot(snapshots);
+    configParams->FOutput(outputFolder);
+    
+    std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
+  }
   fs::rename("rheometer.log", outputFolder + "/rheometer.log");
   return 0;
 }
