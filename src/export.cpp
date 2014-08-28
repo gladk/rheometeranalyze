@@ -557,7 +557,7 @@ void exportclass::gnuplotSchearRate() {
   myfileG << "039_strTensCapZR\t040_strTensCapZZ\t041_strTensCapZF\t";
   myfileG << "042_strTensCapFR\t043_strTensCapFZ\t044_strTensCapFF\t";
   myfileG << "045_volWaterAVG\t046_volWaterSUM \t";
-  myfileG << "047_dOmegadR 048_Omega0 049_dOmegadR \n";
+  myfileG << "047_dOmegadR 048_Omega0 049_dOmegadR 050_Gamma \n";
   for(unsigned int b=0; b<_bandRow->size(); b++) {
     std::shared_ptr<band> bT = _bandRow->getBand(b);
     myfileG << bT->id() << "\t";           // 001_id
@@ -609,6 +609,7 @@ void exportclass::gnuplotSchearRate() {
     myfileG << bT->dOmegadR()<< "\t";         // 047_dOmegadR
     myfileG << bT->omega0()<< "\t";           // 048_Omega0
     myfileG << bT->dOmegadR()<< "\t";         // 049_dOmegadR
+    myfileG << bT->gamma()<< "\t";            // 050_Gamma
     myfileG << " \n";
   }
         
