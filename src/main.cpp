@@ -106,7 +106,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   bool setUtwente = false;
   bool setContact = false;
   bool setFollowContact = false;
-  bool discreteAnalyze = false;
+  unsigned short discreteAnalyze = 0;
   int setWetParticle;
   int setSnapshotsNumb;
   int setBeginSnapshot;
@@ -127,7 +127,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("snapshots,s",po::value<int>(&setSnapshotsNumb)->default_value(-1), "number of snapshots to analyze, ALL by default (-1)")
       ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
       ("output,o", po::value<string>()->default_value("output"), "output folder")
-      ("discrete,d", "use discrete analyze, each snapshot will be analyzed separately")
+      ("discrete,d", po::value<unsigned short>(&discreteAnalyze)->default_value(-1),  "use discrete analyze, each snapshot will be analyzed separately")
     ;
     
     po::positional_options_description p;
@@ -206,10 +206,8 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     }
     forcesFileName = vm["force"].as<string>();
     
-        
-    if (vm.count("discrete")) {
-      BOOST_LOG_SEV(lg, info) << "Discrete analyze will be done" ;
-      discreteAnalyze = true;
+    if (discreteAnalyze > 0) {
+      BOOST_LOG_SEV(lg, info) << "Discrete analyze will be done, number of snapshots per analyze "<< discreteAnalyze;
     }
     
   }
@@ -379,20 +377,25 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setIntOri>0) configParams->setIntOri(setIntOri);
   if (setWetParticle>0) configParams->setWetParticle(setWetParticle);
   
-  if (discreteAnalyze) {
+  if (discreteAnalyze > 0) {
     if (setVtk) {
       // Create symlinks to VTK-files in one directory
       const string outputFolderNew = outputFolder + std::string("/VTK");
       createOutputDir(outputFolderNew, lg);
       createOutputDir(outputFolderNew+"_NUM", lg);
     }
-    for(unsigned int i=0; i<filesParticle.size(); i++) {
+    for(unsigned int i=0; i<filesParticle.size(); i+=discreteAnalyze) {
       BOOST_LOG_SEV(lg, info)<<"Discrete analyze " << i+1 <<"/"<<filesParticle.size()<<"====================";
       const string outputFolderNew = outputFolder + '/' + filesParticle[i].stem().string();
       createOutputDir(outputFolderNew, lg);
+      
       std::shared_ptr<snapshotRow> snapshots (new snapshotRow());
-      std::shared_ptr<snapshot> snapshotTmp (new snapshot(filesParticle[i], filesForces[i], 0));
-      snapshots->addSnapshot(snapshotTmp);
+      
+      for(unsigned int z=i; (z<(i+discreteAnalyze) and z<filesParticle.size()); z++) {
+        BOOST_LOG_SEV(lg, info)<<"Discrete analyze, adding fileName: " << filesParticle[z];
+        std::shared_ptr<snapshot> snapshotTmp (new snapshot(filesParticle[z], filesForces[z], 0));
+        snapshots->addSnapshot(snapshotTmp);
+      }
       
       configParams->setSnapshot(snapshots);
       configParams->FOutput(outputFolderNew);

@@ -291,6 +291,7 @@ bool rheometer::calculateLocalDeformations() {
     // Calculate local strain, deformations according to Sakaie(5)
     const double r = _cfg->Dout()/2.0;
     const double N = _bandRow->omega0AVG()*_snapshots->timeAvg()/(2*M_PI);
+    
     const double TwoPiNr = 2*M_PI*N*r;
     for(unsigned int b=0; b<_bandRow->size(); b++) {
       std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
