@@ -86,6 +86,8 @@ class configopt {
     bool  _contact;            // True, if contact-analyze should be performed
     bool  _followContact;      // True, if contact-follow-analyze should be performed
     
+    double _omega0;            // Rotating velocity
+    
   public:
     configopt(const std::string &);
     Eigen::Vector3d get_c(){return _c;};
@@ -160,7 +162,11 @@ class configopt {
     void unSetWetParticle() {_wetParticle=-1;} 
     int wetParticle() {return _wetParticle;}  
     
-    void setIntOri(int intOri) {_intOri=intOri;} 
-    void unSetIntOri() {_intOri=-1;} 
-    int intOri() {return _intOri;}  
+    void setIntOri(int intOri) {_intOri=intOri;}
+    void unSetIntOri() {_intOri=-1;}
+    int intOri() {return _intOri;}
+    
+    void setOmega0(double omega0) {_omega0=omega0;}
+    void unSetOmega0() {_omega0=0;}
+    double omega0() const {return _omega0;}
 };

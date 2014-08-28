@@ -90,6 +90,7 @@ configopt::configopt(const std::string &filename) {
   _contact = false;
   _followContact = false;
   _intOri = -1;
+  _omega0 = 0;
 };
 
 void configopt::_maxColumnCheck(int col, int addN) {

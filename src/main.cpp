@@ -107,6 +107,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   bool setContact = false;
   bool setFollowContact = false;
   unsigned short discreteAnalyze = 0;
+  double setOmega0 = 0;
   int setWetParticle;
   int setSnapshotsNumb;
   int setBeginSnapshot;
@@ -128,6 +129,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
       ("output,o", po::value<string>()->default_value("output"), "output folder")
       ("discrete,d", po::value<unsigned short>(&discreteAnalyze)->default_value(-1),  "use discrete analyze, each snapshot will be analyzed separately")
+      ("omega0", po::value<double>(&setOmega0)->default_value(0), "rotational velocity of the rheometer. If not set, will be calculated during analyze.")
     ;
     
     po::positional_options_description p;
@@ -208,6 +210,10 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     
     if (discreteAnalyze > 0) {
       BOOST_LOG_SEV(lg, info) << "Discrete analyze will be done, number of snapshots per analyze "<< discreteAnalyze;
+    }
+    
+    if (setOmega0 != 0) {
+      BOOST_LOG_SEV(lg, info) << "Set omega0 "<< setOmega0;
     }
     
   }
@@ -376,6 +382,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setUtwente) configParams->setUtwente();
   if (setIntOri>0) configParams->setIntOri(setIntOri);
   if (setWetParticle>0) configParams->setWetParticle(setWetParticle);
+  if (setOmega0!=0) configParams->setOmega0(setOmega0);
   
   if (discreteAnalyze > 0) {
     if (setVtk) {

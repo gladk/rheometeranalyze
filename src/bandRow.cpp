@@ -148,23 +148,27 @@ int bandRow::getBandF(double angle) {
 void bandRow::calculateValues () {
   //==============================================
   //Find and set omega0
-  using namespace boost::accumulators;
-  const int tR = _cfg->tR();
-  for (unsigned int i = 0; i < _pRow.size(); i++) {
-    accumulator_set<double, stats<tag::mean > > acc_omega0;
-    for (unsigned int z = 0; z<_pRow[i]->arraySize(); z++) {
-      if (_pRow[i]->particleReal(z) and _pRow[i]->getP(z)->type()== tR) {
-        acc_omega0(_pRow[i]->getP(z)->realAngular());
+  if (_cfg->omega0() == 0) {
+    using namespace boost::accumulators;
+    const int tR = _cfg->tR();
+    for (unsigned int i = 0; i < _pRow.size(); i++) {
+      accumulator_set<double, stats<tag::mean > > acc_omega0;
+      for (unsigned int z = 0; z<_pRow[i]->arraySize(); z++) {
+        if (_pRow[i]->particleReal(z) and _pRow[i]->getP(z)->type()== tR) {
+          acc_omega0(_pRow[i]->getP(z)->realAngular());
+        }
       }
+      _omega0.push_back(mean(acc_omega0));
     }
-    _omega0.push_back(mean(acc_omega0));
+    
+    accumulator_set<double, stats<tag::mean > > acc_omega0AVG;
+    BOOST_FOREACH(double o,  _omega0) {
+      acc_omega0AVG(o);
+    }
+    _omega0AVG = mean(acc_omega0AVG);
+  } else {
+    _omega0AVG = _cfg->omega0();
   }
-  
-  accumulator_set<double, stats<tag::mean > > acc_omega0AVG;
-  BOOST_FOREACH(double o,  _omega0) {
-    acc_omega0AVG(o);
-  }
-  _omega0AVG = mean(acc_omega0AVG);
   //==============================================
   
   // Common values
