@@ -21,6 +21,10 @@
 
 #include "rheometer.h"
 #include "snapshot.h"
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
+#include <boost/iostreams/filter/bzip2.hpp>
+#include <boost/algorithm/string.hpp>
 
 rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   _cfg = cfg;
@@ -82,87 +86,108 @@ void rheometer::loadParticles() {
     std::shared_ptr<snapshot> snapshotCur = _snapshots->getSnapshot(i);
     
     std::ifstream _file;
-    _file.open(snapshotCur->getParticleFile().string());
+    boost::iostreams::filtering_istream in;
+    _file.open(snapshotCur->getParticleFile().string(), std::ios_base::in | std::ios_base::binary);
     
-    std::string   line;
+    if ((snapshotCur->getParticleFile()).extension().string()==".bz2") {
+      in.push(boost::iostreams::bzip2_decompressor());
+    } else if ((snapshotCur->getParticleFile()).extension().string()==".gz") {
+      in.push(boost::iostreams::gzip_decompressor());
+    }
+    
+    in.push(_file);
+    std::string  line;
     int curLine = 1;
     unsigned long long maxId = 0;
+    unsigned long long expectedParticles = 0;
     std::vector <std::shared_ptr<particle> > tmpPartVector;
-  
-    while(std::getline(_file, line)) {
-      std::stringstream linestream(line);
-      std::string data;
-      
-      int valInt;
-      double valD;
-      double pR, pM, pD, volWater=0.0;
-      int pT;
-      unsigned long long pId;
-      Eigen::Vector3d pC, pV, pO;
-      
-      if (curLine>=_cfg->nDat()) {
-        for (int i=1; i<=_cfg->maxC(); i++) {
-          if (i==_cfg->cId()) {
-            linestream >> pId;
-          } else if (i==_cfg->cT()) {
-            linestream >> pT;
-            //std::cerr<<pT;
-          } else if (i==_cfg->cC()) {
-            linestream >> pC[0];
-            linestream >> pC[1];
-            linestream >> pC[2];
-            i+=2;
-            //std::cerr<<pC<<std::endl;
-          } else if (i==_cfg->cV()) {
-            linestream >> pV[0];
-            linestream >> pV[1];
-            linestream >> pV[2];
-            i+=2;
-            //std::cerr<<pV<<std::endl;
-          } else if (i==_cfg->cO()) {
-            linestream >> pO[0];
-            linestream >> pO[1];
-            linestream >> pO[2];
-            i+=2;
-            //std::cerr<<pO<<std::endl;
-          } else if (i==_cfg->cR()) {
-            linestream >> pR;
-            //std::cerr<<pR;
-          } else if (i==_cfg->cM()) {
-            linestream >> pM;
-            //std::cerr<<pM;
-          } else if (i==_cfg->cD()) {
-            linestream >> pD;
-            //std::cerr<<pD;
-          } else if (i==_cfg->cVolWaterP()) {
-            linestream >> volWater;
-            //std::cerr<<"VolWaterP " << VolWaterP<<std::endl;
-          }  else {
-            linestream >> valD;
-          }
-        }
+    
+    while(std::getline(in, line)) {
+      boost::algorithm::trim(line);
+      if (not(line.empty())) {
+        std::stringstream linestream(line);
+        std::string data;
         
-        if (((_cfg->tC()>=0) and (pT == _cfg->tC())) or (_cfg->tC()<0)) {
-          maxId = max(pId, maxId);
-          std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, partNumbCounter-1, pR, pM, pD, pC,pV, pO, volWater));
-          if (_cfg->intOri() > 0) tmpParticle->createIntOri(_cfg->intOri());
-          tmpPartVector.push_back(tmpParticle);
-          snapshotCur->addParticle(tmpParticle);
+        int valInt=0;
+        double valD=0;
+        double pR, pM, pD, volWater=0.0;
+        int pT=0;
+        unsigned long long pId=0;
+        Eigen::Vector3d pC=Eigen::Vector3d::Zero();
+        Eigen::Vector3d pV=Eigen::Vector3d::Zero();
+        Eigen::Vector3d pO=Eigen::Vector3d::Zero();
+        
+        bool addId = false;   // flag shows, that Id has been added
+        bool addC  = false;   // flag shows, that center coordinates have been added
+        
+        if (curLine>=_cfg->nDat()) {
+          for (int i=1; i<=_cfg->maxC(); i++) {
+            if (i==_cfg->cId()) {
+              linestream >> pId;
+              addId = true;
+            } else if (i==_cfg->cT()) {
+              linestream >> pT;
+              //std::cerr<<pT;
+            } else if (i==_cfg->cC()) {
+              linestream >> pC[0];
+              linestream >> pC[1];
+              linestream >> pC[2];
+              i+=2;
+              addC = true;
+              //std::cerr<<pC<<std::endl;
+            } else if (i==_cfg->cV()) {
+              linestream >> pV[0];
+              linestream >> pV[1];
+              linestream >> pV[2];
+              i+=2;
+              //std::cerr<<pV<<std::endl;
+            } else if (i==_cfg->cO()) {
+              linestream >> pO[0];
+              linestream >> pO[1];
+              linestream >> pO[2];
+              i+=2;
+              //std::cerr<<pO<<std::endl;
+            } else if (i==_cfg->cR()) {
+              linestream >> pR;
+              //std::cerr<<pR;
+            } else if (i==_cfg->cM()) {
+              linestream >> pM;
+              //std::cerr<<pM;
+            } else if (i==_cfg->cD()) {
+              linestream >> pD;
+              //std::cerr<<pD;
+            } else if (i==_cfg->cVolWaterP()) {
+              linestream >> volWater;
+              //std::cerr<<"VolWaterP " << VolWaterP<<std::endl;
+            }  else {
+              linestream >> valD;
+            }
+          }
+          
+          if ((((_cfg->tC()>=0) and (pT == _cfg->tC())) or (_cfg->tC()<0)) and 
+             ((expectedParticles>0) and (tmpPartVector.size()<expectedParticles)) and
+             (addId and addC)) {
+            maxId = max(pId, maxId);
+            std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, partNumbCounter-1, pR, pM, pD, pC,pV, pO, volWater));
+            if (_cfg->intOri() > 0) tmpParticle->createIntOri(_cfg->intOri());
+            tmpPartVector.push_back(tmpParticle);
+            snapshotCur->addParticle(tmpParticle);
+          }
+    
+        } else if (curLine == _cfg->nAt()) {
+          linestream >> expectedParticles;
+          BOOST_LOG_SEV(lg, info)<<"File "<<partNumbCounter<<"/"<<_snapshots->size()<< " (" << snapshotCur->getParticleFile() << "); " <<"Expected particles "<<expectedParticles;
+        } else if (curLine == _cfg->nPSt()) {
+          linestream >> valInt;
+          snapshotCur->setTimeStep(valInt, _cfg->dT());
         }
-  
-      } else if (curLine == _cfg->nAt()) {
-        linestream >> valInt;
-        BOOST_LOG_SEV(lg, info)<<"File "<<partNumbCounter<<"/"<<_snapshots->size()<< " (" << snapshotCur->getParticleFile() << "); " <<"Expected particles "<<valInt;
-      } else if (curLine == _cfg->nPSt()) {
-        linestream >> valInt;
-        snapshotCur->setTimeStep(valInt, _cfg->dT());
       }
       curLine++;
     };
     std::shared_ptr<particleRow> particleTMP ( new particleRow(maxId+1));
     _particleAll.push_back(particleTMP);
-    
     unsigned int partNumbTMP  = _particleAll.size()-1;
+    
     BOOST_FOREACH( std::shared_ptr<particle> p, tmpPartVector) {
        _particleAll[partNumbTMP]->addP(p);
     }
@@ -186,12 +211,18 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
   src::severity_logger< severity_level > lg;
   
     std::ifstream _file;
-    _file.open(loadSnap->getForceFile().string());
+    boost::iostreams::filtering_istream in;
+    _file.open(loadSnap->getForceFile().string(), std::ios_base::in | std::ios_base::binary);
     
+    if ((loadSnap->getForceFile()).extension().string()==".bz2") {
+      in.push(boost::iostreams::bzip2_decompressor());
+    } else if ((loadSnap->getForceFile()).extension().string()==".gz") {
+      in.push(boost::iostreams::gzip_decompressor());
+    }
+    
+    in.push(_file);
     std::string   line;
     int curLine = 1;
-    
-    //std::vector <std::shared_ptr<particle> > tmpPartVector;
     
     int valInt;
     double valD;
@@ -201,7 +232,8 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
     unsigned int forceRowNumbTMP  = _forceRow.size()-1;
     
     
-    while(std::getline(_file, line)) {
+    while(std::getline(in, line)) {
+      boost::algorithm::trim(line);
       std::stringstream linestream(line);
       std::string data;
       
