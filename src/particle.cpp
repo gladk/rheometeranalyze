@@ -213,8 +213,8 @@ void particle::addParticleContactWet(std::shared_ptr<particle> addParticle) {
 
 void particle::createIntOri(unsigned short intNumb) {
   _sizeIntOri = intNumb;
-  _normContOri = std::shared_ptr<interactionori> ( new interactionori (intNumb));
-  _capiContOri = std::shared_ptr<interactionori> ( new interactionori (intNumb));
+  _normContOri = std::make_shared<interactionori>(intNumb);
+  _capiContOri = std::make_shared<interactionori>(intNumb);;
 };
 
 double particle::stressSigma1() {

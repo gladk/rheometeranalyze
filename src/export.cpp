@@ -811,7 +811,7 @@ void exportclass::gnuplotContactFollow() {
     std::vector <std::shared_ptr<force> > forces = snapshotCur->forces();
     
     BOOST_FOREACH(std::shared_ptr<force> f, forces) {
-      std::shared_ptr<contactFollow> tmpCntFolw ( new contactFollow (f, snapshotCur));
+      std::shared_ptr<contactFollow> tmpCntFolw = std::make_shared<contactFollow>(f, snapshotCur);
       cntFolw.push_back(tmpCntFolw);
     }
   }

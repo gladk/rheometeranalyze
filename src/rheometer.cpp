@@ -35,11 +35,11 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   loadParticles();
   
   //Create bands
-  _bandRow = std::shared_ptr<bandRow> ( new bandRow (_cfg, _particleAll,  _forceRow));
+  _bandRow = std::make_shared<bandRow>(_cfg, _particleAll,  _forceRow);
   
   calculateLocalDeformations();
   
-  std::shared_ptr <exportclass> exp (new exportclass(_cfg, _bandRow, _forceRow));
+  std::shared_ptr <exportclass> exp = std::make_shared<exportclass>(_cfg, _bandRow, _forceRow);
   
   // ==========================ForceChain
   
@@ -168,7 +168,7 @@ void rheometer::loadParticles() {
              ((expectedParticles>0) and (tmpPartVector.size()<expectedParticles)) and
              (addId and addC)) {
             maxId = max(pId, maxId);
-            std::shared_ptr<particle> tmpParticle ( new particle (pId, pT, partNumbCounter-1, pR, pM, pD, pC,pV, pO, volWater));
+            std::shared_ptr<particle> tmpParticle = std::make_shared<particle>(pId, pT, partNumbCounter-1, pR, pM, pD, pC,pV, pO, volWater);
             if (_cfg->intOri() > 0) tmpParticle->createIntOri(_cfg->intOri());
             tmpPartVector.push_back(tmpParticle);
             snapshotCur->addParticle(tmpParticle);
@@ -184,7 +184,7 @@ void rheometer::loadParticles() {
       }
       curLine++;
     };
-    std::shared_ptr<particleRow> particleTMP ( new particleRow(maxId+1));
+    std::shared_ptr<particleRow> particleTMP = std::make_shared<particleRow>(maxId+1);
     _particleAll.push_back(particleTMP);
     unsigned int partNumbTMP  = _particleAll.size()-1;
     
@@ -227,7 +227,7 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
     int valInt;
     double valD;
     
-    std::shared_ptr<forceRow> forceTMP ( new forceRow());
+    std::shared_ptr<forceRow> forceTMP = std::make_shared<forceRow>();
     _forceRow.push_back(forceTMP);
     unsigned int forceRowNumbTMP  = _forceRow.size()-1;
     
@@ -294,7 +294,7 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
                (_cfg->tF()<0)
              )
            ) {
-          std::shared_ptr<force> tmpForce ( new force (_particleAll[forceRowNumbTMP]->getP(pid1), _particleAll[forceRowNumbTMP]->getP(pid2), forceRowNumbTMP, pos1, pos2, val, volWater, distCurr, distCrit));
+          std::shared_ptr<force> tmpForce = std::make_shared<force>(_particleAll[forceRowNumbTMP]->getP(pid1), _particleAll[forceRowNumbTMP]->getP(pid2), forceRowNumbTMP, pos1, pos2, val, volWater, distCurr, distCrit);
           _forceRow[forceRowNumbTMP]->addF(tmpForce);
           loadSnap->addForce(tmpForce);
         }

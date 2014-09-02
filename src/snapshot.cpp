@@ -124,6 +124,6 @@ double snapshot::potEnergy(int typeAnalyze) {
 };
 
 std::shared_ptr<forceChain> snapshot::forceChainRet() {
-  _forceChain = std::shared_ptr<forceChain> (new forceChain(_particles, _forces));
+  _forceChain = std::make_shared<forceChain>(_particles, _forces);
   return _forceChain;
 };

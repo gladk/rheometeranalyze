@@ -23,7 +23,7 @@
 #include <iostream>
 
 particleRow::particleRow(long long partN ) {
-   _tmpP = std::shared_ptr <particle> (new particle());
+  _tmpP = std::make_shared<particle>();
   _realPartNum = 0;
   _allPart.assign( partN, _tmpP ); 
 };

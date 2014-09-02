@@ -373,7 +373,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   }
   //=====================================================
   
-  std::shared_ptr<configopt> configParams (new configopt(configFileName));
+  std::shared_ptr<configopt> configParams = std::make_shared<configopt>(configFileName);
   
   if (setVtk > 0) configParams->setVtk(setVtk);
   if (setContact) configParams->setContact();
@@ -383,6 +383,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setIntOri>0) configParams->setIntOri(setIntOri);
   if (setWetParticle>0) configParams->setWetParticle(setWetParticle);
   if (setOmega0!=0) configParams->setOmega0(setOmega0);
+  std::shared_ptr<snapshotRow> snapshots = std::make_shared<snapshotRow>();
   
   if (discreteAnalyze > 0) {
     if (setVtk) {
@@ -396,18 +397,18 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       const string outputFolderNew = outputFolder + '/' + filesParticle[i].stem().string();
       createOutputDir(outputFolderNew, lg);
       
-      std::shared_ptr<snapshotRow> snapshots (new snapshotRow());
+      
       
       for(unsigned int z=i; (z<(i+discreteAnalyze) and z<filesParticle.size()); z++) {
         BOOST_LOG_SEV(lg, info)<<"Discrete analyze, adding fileName: " << filesParticle[z];
-        std::shared_ptr<snapshot> snapshotTmp (new snapshot(filesParticle[z], filesForces[z], 0));
+        std::shared_ptr<snapshot> snapshotTmp = std::make_shared<snapshot>(filesParticle[z], filesForces[z], 0);
         snapshots->addSnapshot(snapshotTmp);
       }
       
       configParams->setSnapshot(snapshots);
       configParams->FOutput(outputFolderNew);
       
-      std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
+      rheometer curRheom (configParams);
       if (setVtk) {
         stringstream ss;
         ss << setw(7) << setfill('0') << i;
@@ -419,17 +420,17 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       }
     }
   } else {
-    std::shared_ptr<snapshotRow> snapshots (new snapshotRow());
+    
     createOutputDir(outputFolder, lg);
     for(unsigned int i=0; i<filesParticle.size(); i++) {
-      std::shared_ptr<snapshot> snapshotTmp (new snapshot(filesParticle[i], filesForces[i], 0));
+      std::shared_ptr<snapshot> snapshotTmp = std::make_shared<snapshot>(filesParticle[i], filesForces[i], 0);
       snapshots->addSnapshot(snapshotTmp);
     }
     
     configParams->setSnapshot(snapshots);
     configParams->FOutput(outputFolder);
     
-    std::shared_ptr<rheometer> curRheom (new rheometer(configParams));
+    rheometer curRheom (configParams);
   }
   fs::rename("rheometer.log", outputFolder + "/rheometer.log");
   return 0;
