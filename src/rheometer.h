@@ -31,12 +31,12 @@ class rheometer {
   private:
     std::shared_ptr<configopt> _cfg;
     
-    unsigned long long  _particleNum;
+    unsigned long long _particleNum;
     unsigned long long _forceNum;
     std::vector<std::shared_ptr <particleRow>> _particleAll;
     std::vector<std::shared_ptr <forceRow>> _forceRow;
-    std::shared_ptr <bandRow>    _bandRow;
-    std::shared_ptr<snapshotRow> _snapshots;
+    std::shared_ptr <bandRow>     _bandRow;
+    std::shared_ptr <snapshotRow> _snapshots;
   public:
     rheometer(std::shared_ptr<configopt>);
     void loadParticles();

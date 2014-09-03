@@ -22,7 +22,6 @@
 #include <boost/foreach.hpp>
 #include "snapshot.h"
 
-
 snapshot::snapshot(fs::path particlesFileName, fs::path forcesFileName, 
                    unsigned long long timeStep) {
   _particlesFileName = particlesFileName;

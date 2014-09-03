@@ -277,4 +277,3 @@ double bandRow::shearBandVolume() {
 double bandRow::omega0AVG() const {
   return _omega0AVG;
 };
-

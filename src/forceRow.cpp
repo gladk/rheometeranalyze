@@ -37,4 +37,3 @@ unsigned long long forceRow::elementsNum() {
 std::shared_ptr<force> forceRow::getF(unsigned long long id) {
   return _allForce[id];
 };
-

@@ -25,6 +25,7 @@
 #include <memory>
 #include <vector>
 #include "interactionori.h"
+#include <iostream>
 
 class particle {
   private:
@@ -47,8 +48,8 @@ class particle {
     bool _calculateVel;           // Whether the velocity matrix was calculated
     Eigen::Vector3d _vZylindrical;// Linear velocity in zylindrical coordinates (dR, dZ, dF)
     Eigen::Vector3d _posZyl;      // Position in zylindrical coordinates (Rho, Z, phi)
-    std::vector <std::shared_ptr<particle> > _contactParticles;     // Vector, where all contacting particles (pointers) are saved
-    std::vector <std::shared_ptr<particle> > _contactParticlesWet;  // Vector, where only wet contacting particles (pointers) are saved
+    std::vector <std::weak_ptr<particle> > _contactParticles;     // Vector, where all contacting particles (pointers) are saved
+    std::vector <std::weak_ptr<particle> > _contactParticlesWet;  // Vector, where only wet contacting particles (pointers) are saved
     
     std::shared_ptr<interactionori> _normContOri;  // Orientation of normal contacts
     std::shared_ptr<interactionori> _capiContOri;  // Orientation of capillary contacts

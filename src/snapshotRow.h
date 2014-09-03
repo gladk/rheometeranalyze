@@ -26,7 +26,6 @@ class snapshotRow {
   private:
     std::vector <std::shared_ptr<snapshot>> _snapshotRow;
   public:
-    snapshotRow(){};
     void addSnapshot(std::shared_ptr<snapshot> snapshotTmp){_snapshotRow.push_back(snapshotTmp);};
     unsigned int size() const {  return _snapshotRow.size();};
     std::shared_ptr<snapshot> getSnapshot(unsigned int i);

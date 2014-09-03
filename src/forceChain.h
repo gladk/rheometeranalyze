@@ -28,15 +28,7 @@
 
 class forceChain {
   private:
-    
-    class forceChainEl {
-      private:
-        std::shared_ptr <particle> pPrev, pNext, p;
-        std::shared_ptr <force>    fPrev, fNext;
-    };
-    
     std::vector <std::shared_ptr<particle> > _highStressPart;
-
   public:
     forceChain (const std::vector <std::shared_ptr<particle> > & p, const std::vector <std::shared_ptr<force> > & f);
 };

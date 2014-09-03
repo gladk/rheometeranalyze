@@ -163,7 +163,7 @@ unsigned int particle::wetContacts() {
 double particle::wetContactsAverageDistance() {
   double wetContactsAverageDistance = 0.0;
   for (unsigned int i = 0; i < _contactParticlesWet.size(); i++) {
-    std::shared_ptr<particle> tmpParticle = _contactParticles[i];
+    std::shared_ptr<particle> tmpParticle = _contactParticles[i].lock();
     double tmpDist = (_c - tmpParticle->c()).norm() - (_rad + tmpParticle->rad());
     wetContactsAverageDistance += tmpDist;
   }
@@ -188,8 +188,8 @@ void particle::addParticleContact(std::shared_ptr<particle> addParticle) {
     exit (EXIT_FAILURE);
   }
   for (unsigned int i = 0; i < _contactParticles.size(); i++) {
-    if (_contactParticles[i]->id()==addParticle->id()) {
-      std::cerr << "The Force between particles "<<_contactParticles[i]->id()<< " and "<< addParticle->id() << " has been added 2 times! Exiting..."<<std::endl; 
+    if (((_contactParticles[i]).lock())->id()==addParticle->id()) {
+      std::cerr << "The Force between particles "<<((_contactParticles[i]).lock())->id()<< " and "<< addParticle->id() << " has been added 2 times! Exiting..."<<std::endl; 
       exit (EXIT_FAILURE);
     }
   }
@@ -232,23 +232,23 @@ double particle::stressSigma3() {
 };
 
 bool particle::wetContact(std::shared_ptr <particle> p) {
-  BOOST_FOREACH(std::shared_ptr <particle> j,  _contactParticlesWet) {
-    if (p==j) return true;
+  BOOST_FOREACH(std::weak_ptr <particle> j,  _contactParticlesWet) {
+    if (p==(j.lock())) return true;
   }
   return false;
 };
 
 int particle::highStressedContacts() {
   int highStressedContactsTMP = 0;
-  BOOST_FOREACH(std::shared_ptr <particle> p,  _contactParticles) {
-    if (this->highStressedContact(p) and not(p->disabled()) and not(this->disabled())) highStressedContactsTMP++;
+  BOOST_FOREACH(std::weak_ptr <particle> p,  _contactParticles) {
+    if (this->highStressedContact((p.lock())) and not((p.lock())->disabled()) and not(this->disabled())) highStressedContactsTMP++;
   }
   return highStressedContactsTMP;
 };
 
 bool particle::highStressedContact(std::shared_ptr <particle> p) {
-  BOOST_FOREACH(std::shared_ptr <particle> j,  _contactParticles) {
-    if ((p==j) and (p->highStress()>0) and 
+  BOOST_FOREACH(std::weak_ptr <particle> j,  _contactParticles) {
+    if ((p==(j.lock())) and (p->highStress()>0) and 
         not(this->wetContact(p))) return true;
   }
   return false;

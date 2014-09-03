@@ -383,7 +383,6 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setIntOri>0) configParams->setIntOri(setIntOri);
   if (setWetParticle>0) configParams->setWetParticle(setWetParticle);
   if (setOmega0!=0) configParams->setOmega0(setOmega0);
-  std::shared_ptr<snapshotRow> snapshots = std::make_shared<snapshotRow>();
   
   if (discreteAnalyze > 0) {
     if (setVtk) {
@@ -393,6 +392,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       createOutputDir(outputFolderNew+"_NUM", lg);
     }
     for(unsigned int i=0; i<filesParticle.size(); i+=discreteAnalyze) {
+      std::shared_ptr<snapshotRow> snapshots = std::make_shared<snapshotRow>();
       BOOST_LOG_SEV(lg, info)<<"Discrete analyze " << i+1 <<"/"<<filesParticle.size()<<"====================";
       const string outputFolderNew = outputFolder + '/' + filesParticle[i].stem().string();
       createOutputDir(outputFolderNew, lg);
@@ -409,6 +409,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       configParams->FOutput(outputFolderNew);
       
       rheometer curRheom (configParams);
+      configParams->unSetSnapshot();
       if (setVtk) {
         stringstream ss;
         ss << setw(7) << setfill('0') << i;
@@ -420,7 +421,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       }
     }
   } else {
-    
+    std::shared_ptr<snapshotRow> snapshots = std::make_shared<snapshotRow>();
     createOutputDir(outputFolder, lg);
     for(unsigned int i=0; i<filesParticle.size(); i++) {
       std::shared_ptr<snapshot> snapshotTmp = std::make_shared<snapshot>(filesParticle[i], filesForces[i], 0);

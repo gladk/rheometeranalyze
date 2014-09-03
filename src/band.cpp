@@ -300,4 +300,3 @@ double band::omegaNorm() const {
     return 0;
   }
 };
-
