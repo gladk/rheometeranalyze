@@ -28,12 +28,11 @@
 #include "config.h"
 #include "particle.h"
 
-class band {
-  private:
+class bandBase {
+  protected:
     int _id, _idZ, _idR, _idF;                            // Band ids
     double _dZmin, _dZmax, _dRmin, _dRmax, _dFmin, _dFmax;// Band minimal and maximal sizes
     long long _partNumb;                                  // Number of particles
-    std::vector <std::shared_ptr<particle> > _allPart;    // Vector of particles;
     
     Eigen::Matrix3d _stressTensorAVG, _stressTensorCapAVG;
     
@@ -64,9 +63,7 @@ class band {
     InteractionsMatrixD  _normContOri, _capiContOri;      // Interaction orientations
 
   public:
-    band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg );
-    void addParticle(std::shared_ptr<particle>);
-    void calculateValues(int numSnapshots);
+    bandBase(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ); 
     double TauAVG() {return _tauavg;};
     double PressAVG() {return _pavg;};
     Eigen::Matrix3d TensorAVG() {return _stressTensorAVG;};
@@ -81,7 +78,6 @@ class band {
     double dR() {return (_dRmax - _dRmin);};
     double dZ() {return (_dZmax - _dZmin);};
     long long partNumb () {return _partNumb;};
-    std::shared_ptr<particle> getPart (long long id) { return _allPart[id];}
     int id() const {return _id;}
     int idZ() const {return _idZ;}
     int idR() const {return _idR;}
@@ -105,16 +101,29 @@ class band {
     double wetContactsAVG() { return _wetContactsAVG;}
     Eigen::Vector3d vZyl() { return _vZylavg;}
     double vDf() { return _vZylavg(2);}
-    void shearBandOn() { setShearBand(true);}
-    void shearBandOff() { setShearBand(false);}
     bool shearBand() { return _shearBand;}
     InteractionsMatrixD normContOri();
     InteractionsMatrixD capiContOri();
-    void setShearBand(const bool shearb);
     void setdOmegadR(double dOmegadR) {_dOmegadR = dOmegadR;};
     double dOmegadR() const {return _dOmegadR;};
     void omega0(const double omega0) {_omega0 = omega0;};
     double omega0() const {return _omega0;};
     void gamma(const double gamma) {_gamma = gamma;}
     double gamma() const {return _gamma;}
+};
+  
+class band : public bandBase {
+  private:
+    std::vector <std::shared_ptr<particle> > _allPart;    // Vector of particles;
+  
+  public:
+      band    (int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ) :
+      bandBase(id, idZ, idR, idF, dRmin, dRmax, dZmin, dZmax, dFmin, dFmax, cfg ) {};
+    
+    void addParticle(std::shared_ptr<particle>);
+    std::shared_ptr<particle> getPart (long long id) { return _allPart[id];}
+    void calculateValues(int numSnapshots);
+    void shearBandOn() { setShearBand(true);}
+    void shearBandOff() { setShearBand(false);}
+    void setShearBand(const bool shearb);
 };

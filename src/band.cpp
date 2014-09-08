@@ -27,7 +27,7 @@
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 
-band::band(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ) {
+bandBase::bandBase(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ) {
   _id = id;
   _idZ = idZ;
   _idR = idR;
@@ -76,7 +76,7 @@ void band::addParticle(std::shared_ptr<particle> tmpPart) {
   _partNumb ++;
 };
 
-void band::set_scherRate(double scherRate) {
+void bandBase::set_scherRate(double scherRate) {
   _scherRate = fabs(scherRate);
   /*
   * 
@@ -285,15 +285,15 @@ void band::setShearBand(const bool shearb) {
   }
 }
 
-InteractionsMatrixD band::normContOri() {
+InteractionsMatrixD bandBase::normContOri() {
   return _normContOri;
 };
 
-InteractionsMatrixD band::capiContOri() {
+InteractionsMatrixD bandBase::capiContOri() {
   return _capiContOri;
 };
 
-double band::omegaNorm() const {
+double bandBase::omegaNorm() const {
   if (_omega0 != 0) {
     return _vavg/_omega0;
   } else {
