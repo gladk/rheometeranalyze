@@ -167,6 +167,10 @@ void exportclass::VTK() {
   bandOmega->SetNumberOfComponents(1);
   bandOmega->SetName("b_Omega");
   
+  vtkSmartPointer<vtkDoubleArray> bandOmegaCoefVar = vtkSmartPointer<vtkDoubleArray>::New();
+  bandOmegaCoefVar->SetNumberOfComponents(1);
+  bandOmegaCoefVar->SetName("b_OmegaCoefVar");
+  
   vtkSmartPointer<vtkIntArray> bandPartNum = vtkSmartPointer<vtkIntArray>::New();
   bandPartNum->SetNumberOfComponents(1);
   bandPartNum->SetName("b_PartNum");
@@ -422,6 +426,7 @@ void exportclass::VTK() {
           bandTau->InsertNextValue(bandTMP->tau());
           bandPress->InsertNextValue(bandTMP->press());
           bandOmega->InsertNextValue(bandTMP->omega());
+          bandOmegaCoefVar->InsertNextValue(bandTMP->omegaCoefVar());
           bandPartNum->InsertNextValue(bandTMP->partNumb());
           bandPartNumAVG->InsertNextValue(bandTMP->partNumb()/bandTMP->vol());
           bandVol->InsertNextValue(bandTMP->vol());
@@ -486,6 +491,7 @@ void exportclass::VTK() {
       spheresUg->GetPointData()->AddArray(bandTau);
       spheresUg->GetPointData()->AddArray(bandPress);
       spheresUg->GetPointData()->AddArray(bandOmega);
+      spheresUg->GetPointData()->AddArray(bandOmegaCoefVar);
       spheresUg->GetPointData()->AddArray(bandPartNum);
       spheresUg->GetPointData()->AddArray(bandPartNumAVG);
       spheresUg->GetPointData()->AddArray(bandVol);
@@ -556,8 +562,8 @@ void exportclass::gnuplotSchearRate() {
   myfileG << "036_strTensCapRR\t037_strTensCapRZ\t038_strTensCapRF\t";
   myfileG << "039_strTensCapZR\t040_strTensCapZZ\t041_strTensCapZF\t";
   myfileG << "042_strTensCapFR\t043_strTensCapFZ\t044_strTensCapFF\t";
-  myfileG << "045_volWaterAVG\t046_volWaterSUM \t";
-  myfileG << "047_dOmegadR 048_Omega0 049_dOmegadR 050_Gamma \n";
+  myfileG << "045_volWaterAVG\t046_volWaterSUM\t";
+  myfileG << "047_dOmegadR\t048_Omega0\t049_dOmegadR\t050_Gamma\t051_OmegaCoefVar\n";
   for(unsigned int b=0; b<_bandRow->size(); b++) {
     std::shared_ptr<band> bT = _bandRow->getBand(b);
     myfileG << bT->id() << "\t";           // 001_id
@@ -610,6 +616,7 @@ void exportclass::gnuplotSchearRate() {
     myfileG << bT->omega0()<< "\t";           // 048_Omega0
     myfileG << bT->dOmegadR()<< "\t";         // 049_dOmegadR
     myfileG << bT->gamma()<< "\t";            // 050_Gamma
+    myfileG << bT->omegaCoefVar()<< "\t";     // 051_OmegaCoefVar
     myfileG << " \n";
   }
         

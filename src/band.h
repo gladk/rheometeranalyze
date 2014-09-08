@@ -88,6 +88,7 @@ class bandBase {
     double omega() const {return _vavg;}
     double omegaNorm() const;
     double omegaStDev() {return _vavgStDev;}
+    double omegaCoefVar();
     void set_scherRate(double );
     void set_I(double I) {_I = I;}
     double scherRate() const { return _scherRate;}

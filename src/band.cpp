@@ -26,6 +26,7 @@
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
+#include <boost/accumulators/statistics/variance.hpp>
 
 bandBase::bandBase(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ) {
   _id = id;
@@ -123,7 +124,7 @@ void band::calculateValues (int numSnapshots) {
   
   unsigned long long i = 0;
   std::vector<double> angVelTmpV;
-  accumulator_set<double, stats<tag::mean > > acc_angVelTmpV;
+  accumulator_set<double, stats<tag::variance > > acc_angVelTmpV;
   accumulator_set<double, stats<tag::mean > > acc_radTMPV;
   accumulator_set<double, stats<tag::mean > > acc_densTMP;
   
@@ -215,6 +216,7 @@ void band::calculateValues (int numSnapshots) {
     _volWaterSUM =  sum(acc_volWaterSUM);
     
     _vavg = mean(acc_angVelTmpV);
+    _vavgStDev = variance(acc_angVelTmpV);
     
     /*
      * 
@@ -285,13 +287,21 @@ void band::setShearBand(const bool shearb) {
   }
 }
 
+double bandBase::omegaCoefVar() {
+if (_vavg) {
+    return _vavgStDev/_vavg;
+  } else {
+    return 0;
+  }
+}
+    
 InteractionsMatrixD bandBase::normContOri() {
   return _normContOri;
-};
+}
 
 InteractionsMatrixD bandBase::capiContOri() {
   return _capiContOri;
-};
+}
 
 double bandBase::omegaNorm() const {
   if (_omega0 != 0) {
@@ -299,4 +309,4 @@ double bandBase::omegaNorm() const {
   } else {
     return 0;
   }
-};
+}
