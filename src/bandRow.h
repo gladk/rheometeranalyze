@@ -24,29 +24,34 @@
 #include "forceRow.h"
 #include "particleRow.h"
 
-class bandRow {
-  private:
+class bandRowBase {
+  protected:
     std::vector<std::shared_ptr<band> > _bandAll;
     std::vector<Eigen::Vector3d> _shearBands;       //[Rz, W, H]
-    std::shared_ptr<configopt> _cfg; 
-    std::vector<std::shared_ptr<particleRow>> _pRow;
-    std::vector<std::shared_ptr<forceRow>> _fRow;
+    std::shared_ptr<configopt> _cfg;
     std::vector<double> _omega0;
     double _omega0AVG=0.0;
   public:
-    bandRow (std::shared_ptr<configopt>, std::vector<std::shared_ptr <particleRow>>, std::vector<std::shared_ptr <forceRow>>);
-    void fillBands();
     int getBandR(double);
     int getBandZ(double);
     int getBandF(double);
     unsigned int shearBandSize() {return _shearBands.size();};
     Eigen::Vector3d shearBand(unsigned int i) {return _shearBands[i];};
-    void calculateValues();
     std::shared_ptr<band> getBand(unsigned int id) {return _bandAll[id];}
     std::shared_ptr<band> getBand(unsigned int idR, unsigned int idZ) {return _bandAll[idZ*_cfg->SecRadial() + idR];}
     unsigned int size() {return _bandAll.size();}
     double totalVolume();
     double shearBandVolume();
     double omega0AVG() const;
+};
+
+class bandRow : public bandRowBase{
+  private:
+    std::vector<std::shared_ptr<particleRow>> _pRow;
+    std::vector<std::shared_ptr<forceRow>> _fRow;
+  public:
+    bandRow     (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<particleRow>> pRow, std::vector<std::shared_ptr<forceRow>> fRow);
+    void fillBands();
+    void calculateValues();
 };
 

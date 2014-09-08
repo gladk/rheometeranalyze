@@ -121,7 +121,7 @@ void bandRow::fillBands (){
 };
 
 
-int bandRow::getBandR(double dist) {
+int bandRowBase::getBandR(double dist) {
   if ((dist>=_cfg->Din()/2.0) and (dist<=_cfg->Dout()/2.0)) {
     return floor((dist - _cfg->Din()/2.0)/_cfg->dDr());
   } else {
@@ -129,7 +129,7 @@ int bandRow::getBandR(double dist) {
   }
 };
 
-int bandRow::getBandZ(double height) {
+int bandRowBase::getBandZ(double height) {
   if ((height>=0) and (height<=_cfg->H())) {
     return floor((height)/_cfg->dDz());
   } else {
@@ -137,7 +137,7 @@ int bandRow::getBandZ(double height) {
   }
 };
 
-int bandRow::getBandF(double angle) {
+int bandRowBase::getBandF(double angle) {
   if ((angle>=0) and (_cfg->aE()>0.0) and (angle>_cfg->aS()) and (angle<_cfg->aE())) {
     return floor((angle-_cfg->aS())/_cfg->dDf());
   } else {
@@ -256,7 +256,7 @@ void bandRow::calculateValues () {
   #endif
 };
 
-double bandRow::totalVolume() {
+double bandRowBase::totalVolume() {
   double vol = 0.0;
   BOOST_FOREACH(std::shared_ptr <band> b,  _bandAll) {
     vol+=b->vol();
@@ -264,7 +264,7 @@ double bandRow::totalVolume() {
   return vol;
 };
 
-double bandRow::shearBandVolume() {
+double bandRowBase::shearBandVolume() {
   double vol = 0.0;
   BOOST_FOREACH(std::shared_ptr <band> b,  _bandAll) {
     if (b->shearBand()) {
@@ -274,6 +274,6 @@ double bandRow::shearBandVolume() {
   return vol;
 };
 
-double bandRow::omega0AVG() const {
+double bandRowBase::omega0AVG() const {
   return _omega0AVG;
 };
