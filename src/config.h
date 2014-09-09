@@ -175,4 +175,5 @@ class configopt {
     std::vector<double> _gamma;
     // current time step
     double _timeCur = -1.0;
+    unsigned long long _timeStepCur = 0;
 };

@@ -325,6 +325,8 @@ void rheometer::calculateLocalDeformations() {
     dT = (_snapshots->timeMax() - _snapshots->timeMin());
     _cfg->_timeCur += dT;
   }
+  _cfg->_timeStepCur = _snapshots->timeStepAvg();
+  
   for(unsigned int b=0; b<_bandRow->size(); b++) {
     std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
     
