@@ -384,6 +384,8 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setWetParticle>0) configParams->setWetParticle(setWetParticle);
   if (setOmega0!=0) configParams->setOmega0(setOmega0);
   
+  std::vector<std::shared_ptr<bandRowBase> > bandRows;
+  
   if (discreteAnalyze > 0) {
     if (setVtk) {
       // Create symlinks to VTK-files in one directory
@@ -397,8 +399,6 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       const string outputFolderNew = outputFolder + '/' + filesParticle[i].stem().string();
       createOutputDir(outputFolderNew, lg);
       
-      
-      
       for(unsigned int z=i; (z<(i+discreteAnalyze) and z<filesParticle.size()); z++) {
         BOOST_LOG_SEV(lg, info)<<"Discrete analyze, adding fileName: " << filesParticle[z];
         std::shared_ptr<snapshot> snapshotTmp = std::make_shared<snapshot>(filesParticle[z], filesForces[z], 0);
@@ -410,6 +410,10 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       
       rheometer curRheom (configParams);
       configParams->unSetSnapshot();
+      
+      //std::shared_ptr<bandRowBase> curBandRow = std::make_shared<bandRowBase>(curRheom.getBandRowBase());
+      
+      
       if (setVtk) {
         stringstream ss;
         ss << setw(7) << setfill('0') << i;

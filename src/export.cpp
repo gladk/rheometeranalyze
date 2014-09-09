@@ -619,7 +619,6 @@ void exportclass::gnuplotSchearRate() {
     myfileG << bT->omegaCoefVar()<< "\t";     // 051_OmegaCoefVar
     myfileG << " \n";
   }
-        
   myfileG.close();
 };
 

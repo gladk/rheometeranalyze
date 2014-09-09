@@ -41,5 +41,5 @@ class rheometer {
     rheometer(std::shared_ptr<configopt>);
     void loadParticles();
     void loadForces(std::shared_ptr<snapshot> loadSnap);
-    bool calculateLocalDeformations();
+    void calculateLocalDeformations();
 };

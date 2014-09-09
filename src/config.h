@@ -170,4 +170,9 @@ class configopt {
     void setOmega0(double omega0) {_omega0=omega0;}
     void unSetOmega0() {_omega0=0;}
     double omega0() const {return _omega0;}
+    
+    // vector, containing local deformations, gamma
+    std::vector<double> _gamma;
+    // current time step
+    double _timeCur = -1.0;
 };

@@ -54,4 +54,3 @@ class bandRow : public bandRowBase{
     void fillBands();
     void calculateValues();
 };
-

@@ -91,6 +91,10 @@ configopt::configopt(const std::string &filename) {
   _followContact = false;
   _intOri = -1;
   _omega0 = 0;
+  
+  for (int i = 0; i < _SecRadial*_SecZ*_SecFi; i++) {
+    _gamma.push_back(0);
+  }
 };
 
 void configopt::_maxColumnCheck(int col, int addN) {

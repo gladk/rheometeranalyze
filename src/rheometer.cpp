@@ -316,20 +316,26 @@ void rheometer::loadForces(std::shared_ptr<snapshot> loadSnap) {
     _forceNum+=_forceRow[forceRowNumbTMP]->elementsNum();
 };
 
-bool rheometer::calculateLocalDeformations() {
-  if (not(_particleAll.size()) or not(_forceRow.size()) or not(_bandRow->size()) or not(_snapshots->size())) {
-    return false;
+void rheometer::calculateLocalDeformations() {
+  double dT;
+  if (_cfg->_timeCur < 0) {
+    dT = (_snapshots->timeMax() - _snapshots->timeMin())/2.0;
+    _cfg->_timeCur = dT;
   } else {
-    // Calculate local strain, deformations according to Sakaie(5)
-    const double r = _cfg->Dout()/2.0;
-    const double N = _bandRow->omega0AVG()*_snapshots->timeAvg()/(2*M_PI);
+    dT = (_snapshots->timeMax() - _snapshots->timeMin());
+    _cfg->_timeCur += dT;
+  }
+  for(unsigned int b=0; b<_bandRow->size(); b++) {
+    std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
     
-    const double TwoPiNr = 2*M_PI*N*r;
-    for(unsigned int b=0; b<_bandRow->size(); b++) {
-      std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
-      const double gamma =  TwoPiNr*bandTMP->dOmegadR();
-      bandTMP->gamma(gamma);
-    }
-    return true;
+    /* Calculate local strain, deformations according to Sakaie(5)
+     * const double r = _cfg->Dout()/2.0;
+     * const double N = _bandRow->omega0AVG()*_snapshots->timeAvg()/(2*M_PI);
+     * const double gamma =  TwoPiNr*bandTMP->dOmegadR();
+    */
+    
+    const double gamma =  _cfg->_gamma[b] + bandTMP->scherRate()*dT;
+    bandTMP->gamma(gamma);
+    _cfg->_gamma[b] = gamma;
   }
 }
