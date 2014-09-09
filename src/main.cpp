@@ -411,8 +411,10 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       rheometer curRheom (configParams);
       configParams->unSetSnapshot();
       
-      //std::shared_ptr<bandRowBase> curBandRow = std::make_shared<bandRowBase>(curRheom.getBandRowBase());
-      
+      // Join all gnuplot_daten files into a single one
+      std::ifstream  infile_gnuplot(outputFolderNew+"/gnuplot_daten", std::ios::in);
+      std::ofstream outfile_gnuplot(outputFolder + "/gnuplot_daten_common", std::ios_base::app);
+      outfile_gnuplot << infile_gnuplot.rdbuf();
       
       if (setVtk) {
         stringstream ss;
