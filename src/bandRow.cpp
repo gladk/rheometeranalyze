@@ -177,7 +177,7 @@ void bandRow::calculateValues () {
     _bandAll[i]->omega0(_omega0AVG);
   }
   if (_bandAll.size() > _cfg->SecRadial()) {
-    for(unsigned int i=0; i<_bandAll.size()-1-_cfg->SecRadial(); i++) {
+    for(unsigned int i=0; i<_bandAll.size()-1; i++) {
       
       if (
          (_bandAll[i+1]->idR() > _bandAll[i]->idR()) and 
@@ -199,9 +199,10 @@ void bandRow::calculateValues () {
                          _bandAll[i]->vZyl()(2)/_bandAll[i]->midLinedR();
         
        
-        _shearRateTmpB = (_bandAll[i+_cfg->SecRadial()]->vZyl()(2) - _bandAll[i]->vZyl()(2))/
-                         (_bandAll[i+_cfg->SecRadial()]->midLinedZ() - _bandAll[i]->midLinedZ());
-       
+        if ((i+_cfg->SecRadial()) < _bandAll.size()) {
+          _shearRateTmpB = (_bandAll[i+_cfg->SecRadial()]->vZyl()(2)   - _bandAll[i]->vZyl()(2))/
+                           (_bandAll[i+_cfg->SecRadial()]->midLinedZ() - _bandAll[i]->midLinedZ());
+        }
         
         _shearRateTmp =  0.5*sqrt(_shearRateTmpA*_shearRateTmpA + _shearRateTmpB*_shearRateTmpB);
         _bandAll[i]->set_scherRate(_shearRateTmp);
