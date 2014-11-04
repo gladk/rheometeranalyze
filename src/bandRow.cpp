@@ -221,6 +221,7 @@ void bandRow::calculateValues () {
   //Create vector of ShearBands
   
   #ifdef ALGLIB
+  if (not(_cfg->noShearBand())) {
     for(unsigned int h=0; h<_cfg->SecZ(); h++) {
       alglib::real_2d_array x;
       alglib::real_1d_array y;
@@ -254,6 +255,7 @@ void bandRow::calculateValues () {
         }
       }
     }
+  }
   #endif
 };
 

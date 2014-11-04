@@ -85,6 +85,7 @@ class configopt {
     bool  _utwente;            // True, if UTwente-files will be created
     bool  _contact;            // True, if contact-analyze should be performed
     bool  _followContact;      // True, if contact-follow-analyze should be performed
+    bool  _noShearBand=false;  // True, if we do not need shear bands
     
     double _omega0;            // Rotating velocity
     
@@ -170,6 +171,10 @@ class configopt {
     void setOmega0(double omega0) {_omega0=omega0;}
     void unSetOmega0() {_omega0=0;}
     double omega0() const {return _omega0;}
+    
+    void setNoShearBand() {_noShearBand=true;}
+    void unSetNoShearBand() {_noShearBand=false;}
+    bool noShearBand() const {return _noShearBand;}
     
     // vector, containing local deformations, gamma
     std::vector<double> _gamma;

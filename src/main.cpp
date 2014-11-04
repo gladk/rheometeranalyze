@@ -106,6 +106,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   bool setUtwente = false;
   bool setContact = false;
   bool setFollowContact = false;
+  bool setNoShearBand = false;
   unsigned short discreteAnalyze = 0;
   double setOmega0 = 0;
   int setWetParticle;
@@ -130,6 +131,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("output,o", po::value<string>()->default_value("output"), "output folder")
       ("discrete,d", po::value<unsigned short>(&discreteAnalyze)->default_value(-1),  "use discrete analyze, each snapshot will be analyzed separately")
       ("omega0", po::value<double>(&setOmega0)->default_value(0), "rotational velocity of the rheometer. If not set, will be calculated during analyze.")
+      ("noshearband", "do not perform shear band analyze, OFF by default")
     ;
     
     po::positional_options_description p;
@@ -169,6 +171,13 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       setContact = true;
     } else {
       BOOST_LOG_SEV(lg, info) << "Contact-analyze will NOT be performed" ;
+    }
+
+    if (vm.count("noshearband")) {
+      BOOST_LOG_SEV(lg, info) << "Shearband-analyze will NOT be performed" ;
+      setNoShearBand = true;
+    } else {
+      BOOST_LOG_SEV(lg, info) << "Shearband-analyze will be performed" ;
     }
 
     if (vm.count("fcontact")) {
@@ -383,6 +392,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setIntOri>0) configParams->setIntOri(setIntOri);
   if (setWetParticle>0) configParams->setWetParticle(setWetParticle);
   if (setOmega0!=0) configParams->setOmega0(setOmega0);
+  if (setNoShearBand) configParams->setNoShearBand();
   
   std::vector<std::shared_ptr<bandRowBase> > bandRows;
   
