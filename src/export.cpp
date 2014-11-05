@@ -379,7 +379,8 @@ void exportclass::VTK() {
             posZyl->InsertNextTupleValue(posZ);
             
           } else if (_cfg->Vtk()==2 and (bandTMP->partNumb() > 0)) {    // Small VTK-file only with bands, averaged
-            pid[0] = spheresPos->InsertNextPoint(bandTMP->midLinedR(), bandTMP->midLinedF(), bandTMP->midLinedZ());
+            const Eigen::Vector3d posP = Eigen::Vector3d (bandTMP->midLinedR() * cos(bandTMP->midLinedF()), bandTMP->midLinedR() * sin(bandTMP->midLinedF()), bandTMP->midLinedZ());
+            pid[0] = spheresPos->InsertNextPoint(posP[0], posP[1], posP[2]);
             radii->InsertNextValue(bandTMP->radAvg());
             density->InsertNextValue(bandTMP->density());
             spheresType->InsertNextValue(bandTMP->type());
