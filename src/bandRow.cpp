@@ -158,7 +158,12 @@ void bandRow::calculateValues () {
           acc_omega0(_pRow[i]->getP(z)->realAngular());
         }
       }
-      _omega0.push_back(mean(acc_omega0));
+      const auto meanOmega0 = mean(acc_omega0);
+      if (std::isnan(meanOmega0)) {
+        _omega0.push_back(0.);
+      } else {
+        _omega0.push_back(mean(acc_omega0));
+      }
     }
     
     accumulator_set<double, stats<tag::mean > > acc_omega0AVG;
