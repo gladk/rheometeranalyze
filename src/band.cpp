@@ -127,7 +127,7 @@ void band::calculateValues (int numSnapshots) {
   accumulator_set<double, stats<tag::variance > > acc_angVelTmpV;
   accumulator_set<double, stats<tag::mean > > acc_radTMPV;
   accumulator_set<double, stats<tag::mean > > acc_densTMP;
-  
+  accumulator_set<double, stats<tag::mean > > acc_d50MTMPV;
   
   std::vector<Eigen::Vector3d> velZylTMP;
   
@@ -147,6 +147,7 @@ void band::calculateValues (int numSnapshots) {
       velZylTMP.push_back(_allPart[p]->vZyl()*_allPart[p]->vol());
       
       acc_radTMPV(_allPart[p]->rad());
+      acc_d50MTMPV(std::pow(_allPart[p]->rad(), 3));
       acc_densTMP(_allPart[p]->density());
       
       _volPart  += _allPart[p]->vol();
@@ -246,6 +247,8 @@ void band::calculateValues (int numSnapshots) {
     _tauavg = sqrt(_stressTensorAVG(2)*_stressTensorAVG(2) + _stressTensorAVG(5)*_stressTensorAVG(5));
     
     _radAvg = mean(acc_radTMPV);
+    
+    _d50M   = std::pow(mean(acc_d50MTMPV), 1.0/3.0);
     
     _densAVG = mean(acc_densTMP);
     

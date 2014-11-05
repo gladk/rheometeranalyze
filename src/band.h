@@ -61,6 +61,8 @@ class bandBase {
     double _gamma=0.0;                                    // local strain, deformations according to Sakaie(5)
     
     InteractionsMatrixD  _normContOri, _capiContOri;      // Interaction orientations
+    
+    double _d50M=0.0;                                     // Average diameter in respect to mass (volume)
 
   public:
     bandBase(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ); 
@@ -111,6 +113,7 @@ class bandBase {
     double omega0() const {return _omega0;};
     void gamma(const double gamma) {_gamma = gamma;}
     double gamma() const {return _gamma;}
+    double d50M() const {return _d50M;}
 };
   
 class band : public bandBase {

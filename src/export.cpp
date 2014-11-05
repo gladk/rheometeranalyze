@@ -227,6 +227,14 @@ void exportclass::VTK() {
   bandGamma->SetNumberOfComponents(1);
   bandGamma->SetName("b_Gamma");
   
+  vtkSmartPointer<vtkDoubleArray> bandD50 = vtkSmartPointer<vtkDoubleArray>::New();
+  bandD50->SetNumberOfComponents(1);
+  bandD50->SetName("b_D50");
+  
+  vtkSmartPointer<vtkDoubleArray> bandRadAVG = vtkSmartPointer<vtkDoubleArray>::New();
+  bandRadAVG->SetNumberOfComponents(1);
+  bandRadAVG->SetName("b_RadAVG");
+  
   
   #ifdef ALGLIB
     vtkSmartPointer<vtkIntArray> bandShearBand = vtkSmartPointer<vtkIntArray>::New();
@@ -442,6 +450,8 @@ void exportclass::VTK() {
           bandDOmegaDR->InsertNextValue(bandTMP->dOmegadR());
           bandOmegaNorm->InsertNextValue(bandTMP->omegaNorm());
           bandGamma->InsertNextValue(bandTMP->gamma());
+          bandD50->InsertNextValue(bandTMP->d50M());
+          bandRadAVG->InsertNextValue(bandTMP->radAvg());
           
           double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
           bandVelLin->InsertNextTupleValue(VelLin);
@@ -512,6 +522,8 @@ void exportclass::VTK() {
       spheresUg->GetPointData()->AddArray(bandDOmegaDR);
       spheresUg->GetPointData()->AddArray(bandOmegaNorm);
       spheresUg->GetPointData()->AddArray(bandGamma);
+      spheresUg->GetPointData()->AddArray(bandD50);
+      spheresUg->GetPointData()->AddArray(bandRadAVG);
       #ifdef ALGLIB
       spheresUg->GetPointData()->AddArray(bandShearBand);
       #endif
