@@ -49,6 +49,8 @@ configopt::configopt(const std::string &filename) {
   
   _aS = pt.get<double>("Rheometer.aS"); _aS *=M_PI/180.0;
   _aE = pt.get<double>("Rheometer.aE"); _aE *=M_PI/180.0;
+  _aDiff = _aE - _aS;
+  
   if (_aS>_aE) {
     std::cerr<<"aS cannot be more, than aE. Exiting."<<std::endl;
     exit (EXIT_FAILURE);

@@ -60,6 +60,7 @@ class configopt {
     void _maxColumnCheckForce(int, int);    // Check whether the new column is maximal for Forces
     std::string _FOutput;          //Folder for output files
     double _aS, _aE;           // Angle to analyze in degrees, aStart and aEnd
+    double _aDiff;             // Range in degrees
     
     // Forces
     int _fAt;                 // Number of forces string
@@ -93,32 +94,33 @@ class configopt {
     configopt(const std::string &);
     Eigen::Vector3d get_c(){return _c;};
     Eigen::Vector3d get_o(){return _o;};
-    double Din(){return _Din;};
-    double Dout(){return _Dout;};
-    double H(){return _H;};
-    double aS(){return _aS;};
-    double aE(){return _aE;};
+    double Din() const {return _Din;};
+    double Dout() const {return _Dout;};
+    double H()  const {return _H;};
+    double aS() const {return _aS;};
+    double aE() const {return _aE;};
+    double aDiff() const {return _aDiff;};
     unsigned int SecRadial(){return _SecRadial;};
     unsigned int SecZ(){return _SecZ;};
     unsigned int SecFi(){return _SecFi;};
     Eigen::Vector3d get_g(){return _g;};
-    int nAt(){return _nAt;};
-    int nPSt(){return _nPSt;};
-    int nDat(){return _nDat;};
-    int cId(){return _cId;};
-    int cT(){return _cT;};
-    int tC(){return _tC;};
-    int tR(){return _tR;};
-    int cC(){return _cC;};
-    int cV(){return _cV;};
-    int cO(){return _cO;};
-    int cR(){return _cR;};
-    int cD(){return _cD;};
-    int cM(){return _cM;};
-    int cVolWaterP(){return _cVolWaterP;};
-    int maxC(){return _maxC;};
-    int maxCF(){return _maxCF;};
-    int numSnapshot(){return _snapshotRow->size();};
+    int nAt() const {return _nAt;};
+    int nPSt() const {return _nPSt;};
+    int nDat() const {return _nDat;};
+    int cId() const {return _cId;};
+    int cT() const {return _cT;};
+    int tC() const {return _tC;};
+    int tR() const {return _tR;};
+    int cC() const {return _cC;};
+    int cV() const {return _cV;};
+    int cO() const {return _cO;};
+    int cR() const {return _cR;};
+    int cD() const {return _cD;};
+    int cM() const {return _cM;};
+    int cVolWaterP() const {return _cVolWaterP;};
+    int maxC() const {return _maxC;};
+    int maxCF() const {return _maxCF;};
+    int numSnapshot() const {return _snapshotRow->size();};
     void setSnapshot(std::shared_ptr<snapshotRow> snapshotRowTMP) {_snapshotRow = snapshotRowTMP;}
     void unSetSnapshot() {_snapshotRow = nullptr;}
     std::shared_ptr<snapshotRow> snapshot() {return _snapshotRow;}

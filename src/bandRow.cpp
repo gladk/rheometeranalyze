@@ -140,6 +140,8 @@ int bandRowBase::getBandZ(double height) {
 int bandRowBase::getBandF(double angle) {
   if ((angle>=0) and (_cfg->aE()>0.0) and (angle>_cfg->aS()) and (angle<_cfg->aE())) {
     return floor((angle-_cfg->aS())/_cfg->dDf());
+  } else if ((angle>=0) and (_cfg->aE()>0.0) and (angle<_cfg->aS())) {
+    return floor((angle + 2* M_PI - _cfg->aS())/_cfg->dDf());
   } else {
     return -1;
   }
