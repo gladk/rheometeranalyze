@@ -72,6 +72,7 @@ class exportclass {
     void VTK();
     void gnuplotSchearRate();
     void gnuplotContactAnalyze(int bins);
+    void gnuplotContactNumberAnalyze();
     void gnuplotContactWet();
     void gnuplotContactFollow();
     void gnuplotWetParticles(int bins);

@@ -755,6 +755,41 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   myfileG.close();
 };
 
+void exportclass::gnuplotContactNumberAnalyze() {  
+  // Calculates, the distribution of contacts per particle
+  std::string _fileNameG;
+  _fileNameG  =  _cfg->FOutput();
+  _fileNameG  +=  "/contactsNum";
+  ofstream myfileG (_fileNameG.c_str());
+  myfileG << "#001_ContNum\t002_PartNum\t003_PartNumNorm\t004_PartTotal";
+  
+  myfileG << "\n";
+  
+  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+  std::vector <long long int> contactsCalc;
+  long long int partNumTotal = 0;
+  
+  for(unsigned int i=0; i<snapshots->size(); i++) {
+    auto snapshotCur = snapshots->getSnapshot(i);
+    auto particlesV = snapshotCur->particles();
+    
+    for (auto p : particlesV) {
+      if ((p->contacts()+1) > contactsCalc.size()) {
+        contactsCalc.resize(p->contacts()+1, 0);
+      }
+      contactsCalc[p->contacts()]++;
+      partNumTotal++;
+    }
+  }
+  
+  for (unsigned int i=0; i < contactsCalc.size(); i++) {
+    const double normC = (double) contactsCalc[i] / (double) partNumTotal;
+    myfileG << i  << "\t" <<  contactsCalc[i] << "\t" <<  normC
+                  << "\t" <<  partNumTotal << "\n";
+  }
+  myfileG.close();
+};
+
 void exportclass::gnuplotContactWet() {  
   // Calculates, how many contacts are having the corresponding distance Delta
   std::string _fileNameG;

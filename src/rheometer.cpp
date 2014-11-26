@@ -55,6 +55,7 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   exp->torque();
   if (_cfg->contact()) {
     exp->gnuplotContactAnalyze(100);
+    exp->gnuplotContactNumberAnalyze();
     exp->gnuplotContactWet();
   }
   
