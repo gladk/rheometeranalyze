@@ -653,6 +653,8 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   myfileG << "\t013_BandVolume\t014_OutBandVolume";
   #endif
   
+  myfileG << "\t015_ContactsTotal";
+  
   myfileG << "\n";
   
   std::vector <std::shared_ptr<force> >  deltas;
@@ -709,12 +711,13 @@ void exportclass::gnuplotContactAnalyze(int bins) {
       }
     }
   }
-  
+  long long int allContactsTotal = 0;
   double DDelta = (maxDelta - minDelta)/bins;
   BOOST_FOREACH(std::shared_ptr<force> d, deltas) {
     const int binTmp = int(floor((d->deltaN()-minDelta)/DDelta));
     deltasBin[binTmp] += 1;
     forcesBin[binTmp] += d->val().norm();
+    allContactsTotal++;
      #ifdef ALGLIB
       if (d->shearBand()>=0) {
         deltasBinBand[binTmp] += 1;
@@ -749,6 +752,7 @@ void exportclass::gnuplotContactAnalyze(int bins) {
     myfileG << " " <<  deltasBinOutBand[x] << " " <<  deltasBinOutBand[x]/snapshots->size() << " "<< forceBandOutTmp;
     myfileG << " " <<  bandVolume << " " <<  outBandVolume;
     #endif
+    myfileG << " "<< allContactsTotal;
     myfileG << "\n";
   }
   
