@@ -1,9 +1,9 @@
 /*
     This file is part of Rheometeranalyze.
     Rheometeranalyze is the programm to analyze the DEM-simulations of rheometer.
-    Copyright (C) 2013, 2014 TU Bergakademie Freiberg, Institute for Mechanics and Fluid Dynamics
+    Copyright (C) 2013, 2014, 2015 TU Bergakademie Freiberg, Institute for Mechanics and Fluid Dynamics
 
-    Author: 2013, 2014 Anton Gladky <gladky.anton@gmail.com>
+    Author: 2013, 2014, 2015 Anton Gladky <gladky.anton@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -98,7 +98,7 @@ int main(int ac, char* av[])
   
   std::cout<<"\n\
 Rheometeranalyze\n\
-Copyright (C) 2013, 2014 TU Bergakademie Freiberg\nInstitute for Mechanics and Fluid Dynamics\n\
+Copyright (C) 2013, 2014, 2015 TU Bergakademie Freiberg\nInstitute for Mechanics and Fluid Dynamics\n\
 This program comes with ABSOLUTELY NO WARRANTY.\n\
 ";
   
