@@ -435,6 +435,18 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
         fs::create_symlink("../" + filesParticle[i].stem().string() + std::string("/output.vtu"), 
           outputFolder + std::string("/VTK_NUM/v_") + s + std::string(".vtu"));
       }
+      if (configParams->contact()) {
+        
+        if (fs::is_symlink(outputFolder + std::string("/contacts"))) {
+          fs::remove(outputFolder + std::string("/contacts"));
+        }
+        fs::create_symlink(filesParticle[i].stem().string() + std::string("/contacts"), outputFolder + std::string("/contacts"));
+        
+        if (fs::is_symlink(outputFolder + std::string("/contactsNum"))) {
+          fs::remove(outputFolder + std::string("/contactsNum"));
+        }
+        fs::create_symlink(filesParticle[i].stem().string() + std::string("/contactsNum"), outputFolder + std::string("/contactsNum"));
+      }
     }
   } else {
     std::shared_ptr<snapshotRow> snapshots = std::make_shared<snapshotRow>();
