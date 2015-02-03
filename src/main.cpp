@@ -124,7 +124,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("utwente,u", "create export files for UTwente, OFF by default")
       ("contact", "perform contact analyze and creating corresponding files, OFF by default")
       ("fcontact", "perform follow-contact analyze and creating corresponding files, OFF by default")
-      ("wetparticle",po::value<int>(&setWetParticle)->default_value(-1), "perform analyze of wet particle and creating corresponding files, OFF by default")
+      ("wetparticle",po::value<int>(&setWetParticle)->default_value(-1), "perform analyze of wet particle and creating corresponding files, argument - number of bins for analysis, OFF by default")
       ("intori",po::value<int>(&setIntOri)->default_value(-1), "perform analyze of interaction orientations, set number of slots, OFF by default (-1)")
       ("snapshots,s",po::value<int>(&setSnapshotsNumb)->default_value(-1), "number of snapshots to analyze, ALL by default (-1)")
       ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
@@ -446,7 +446,22 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
           fs::remove(outputFolder + std::string("/contactsNum"));
         }
         fs::create_symlink(filesParticle[i].stem().string() + std::string("/contactsNum"), outputFolder + std::string("/contactsNum"));
+        
       }
+      
+      
+      if (configParams->wetParticle() > 0) {
+        if (fs::is_symlink(outputFolder + std::string("/contactsWet"))) {
+          fs::remove(outputFolder + std::string("/contactsWet"));
+        }
+        fs::create_symlink(filesParticle[i].stem().string() + std::string("/contactsWet"), outputFolder + std::string("/contactsWet"));
+        
+        if (fs::is_symlink(outputFolder + std::string("/wetParticles"))) {
+          fs::remove(outputFolder + std::string("/wetParticles"));
+        }
+        fs::create_symlink(filesParticle[i].stem().string() + std::string("/wetParticles"), outputFolder + std::string("/wetParticles"));
+      }
+      
     }
   } else {
     std::shared_ptr<snapshotRow> snapshots = std::make_shared<snapshotRow>();
