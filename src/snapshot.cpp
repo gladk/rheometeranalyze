@@ -74,7 +74,7 @@ void snapshot::id(unsigned short id) {
   }
 };
 
-unsigned short snapshot::id() {
+unsigned short snapshot::id() const {
   return _id;
 };
 

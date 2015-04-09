@@ -57,7 +57,7 @@ class snapshot {
     double torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint, int typeAnalyze);
     double kinEnergy(int typeAnalyze);
     double potEnergy(int typeAnalyze);
-    unsigned short id();
+    unsigned short id() const;
     void id(unsigned short id);
     std::shared_ptr<forceChain> forceChainRet();
 };
