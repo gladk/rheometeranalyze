@@ -22,6 +22,7 @@
 #include "export.h"
 #include <boost/foreach.hpp>
 #include <cmath>
+#include <boost/unordered_map.hpp>
 
 exportclass::exportclass(const std::shared_ptr<configopt> cfg, const std::shared_ptr <bandRow> bandAll, const std::vector<std::shared_ptr <forceRow>> forceAll) {
   _cfg = cfg;
@@ -670,6 +671,7 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   const double outBandVolume = _bandRow->totalVolume() - _bandRow->shearBandVolume();
   #endif
   
+  // Prepare bins for contact analyze (histogramm, force values)
   for(int x = 0; x < bins; ++x) {
     deltasBin[x] = 0;
     forcesBin[x] = 0;
@@ -683,7 +685,18 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   
   double minDelta = 0.0;
   double maxDelta = 0.0;
-    
+  
+  // Contact way analyze
+  // map for contact way analyze
+  /////////////////////////////////////////////////
+  typedef boost::unordered_map<std::pair<long long, long long>, 
+                       std::vector<std::pair<std::shared_ptr<snapshot>, std::shared_ptr<force>>> >
+                       ContactWayMapType;
+  
+  ContactWayMapType contactsWay;
+  long unsigned int maxVectorSize=0;
+  /////////////////////////////////////////////////
+  
   std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
   for(unsigned int i=0; i<snapshots->size(); i++) {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
@@ -708,9 +721,84 @@ void exportclass::gnuplotContactAnalyze(int bins) {
         }
         minDelta = std::min(minDelta, f->deltaN());
         maxDelta = std::max(maxDelta, f->deltaN());
+        
+        // Contact way analyze
+        /////////////////////////////////////////////////
+        const auto contactPair = std::make_pair(std::min(f->pid1(), f->pid2()), std::max(f->pid1(), f->pid2()));
+        const auto contactSnapshotForce = std::make_pair(snapshotCur, f);
+        ContactWayMapType::iterator gotPair = contactsWay.find(contactPair);
+        if ( gotPair == contactsWay.end() ) {
+          std::vector<std::pair<std::shared_ptr<snapshot>, std::shared_ptr<force> > > newContactVector;
+          newContactVector.push_back(contactSnapshotForce);
+          contactsWay.insert(std::make_pair(contactPair, newContactVector));
+          if (not(maxVectorSize)) maxVectorSize = 1;
+        } else {
+          auto tempVector = & gotPair->second;
+          (*tempVector).push_back(contactSnapshotForce);
+          maxVectorSize = std::max(maxVectorSize,(*tempVector).size());
+        }
+        /////////////////////////////////////////////////
       }
     }
   }
+  
+  // Contact way analyze
+  /////////////////////////////////////////////////
+  
+  // create histogram of contact time
+  std::vector<unsigned short> histContacts;
+  for (long unsigned int i=0; i<maxVectorSize; i++) {histContacts.push_back(0);};
+  
+  for (const auto i : contactsWay ) {
+    const auto tmpVector = & i.second;
+    
+    // Check, whether the contact was active during whole analyze-period
+    unsigned int unbreakable_time = 0;
+    
+    if ((*tmpVector).size()> 1) {
+      for (unsigned int d = 1 ; d < (*tmpVector).size(); d++) {
+        const auto snap1 = (*tmpVector)[d].first;
+        const auto snap0 = (*tmpVector)[d-1].first;
+        if ((snap1->id() - snap0->id()) > 1) {
+          histContacts[unbreakable_time]++;
+          unbreakable_time = 0;
+        } else {
+          unbreakable_time++;
+        }
+      }
+    }
+    
+    histContacts[unbreakable_time]++;
+  }
+  
+  for (unsigned short i = histContacts.size()-1; i > 0 ; i--) {
+    if (histContacts[i] == 0) {
+      histContacts.erase(histContacts.begin()+i);
+    } else {
+      break;
+    }
+  }
+  
+  unsigned long int totContNumb = 0;
+  for (const auto i : histContacts) {
+    totContNumb+=i;
+  }
+  
+  
+  std::string _fileNameA;
+  _fileNameA  =  _cfg->FOutput();
+  _fileNameA  +=  "/contactsDuration";
+  ofstream myfileA (_fileNameA.c_str());
+  myfileA << "#001_stepTime\t002_ContNumber\t003_ContNumberAVG\n";
+  unsigned int d = 1;
+  for (const auto i : histContacts) {
+    myfileA << d << "\t" << i  << "\t" << double(i)/double(totContNumb) <<"\n";
+    d++;
+  }
+  myfileA.close();
+  
+  /////////////////////////////////////////////////
+  
   long long int allContactsTotal = 0;
   double DDelta = (maxDelta - minDelta)/bins;
   BOOST_FOREACH(std::shared_ptr<force> d, deltas) {
