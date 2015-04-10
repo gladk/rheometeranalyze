@@ -687,8 +687,8 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   double maxDelta = 0.0;
   
   // Contact way analyze
-  // map for contact way analyze
   /////////////////////////////////////////////////
+  // map for contact way analyze
   typedef boost::unordered_map<std::pair<long long, long long>, 
                        std::vector<std::pair<std::shared_ptr<snapshot>, std::shared_ptr<force>>> >
                        ContactWayMapType;
@@ -789,10 +789,10 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   _fileNameA  =  _cfg->FOutput();
   _fileNameA  +=  "/contactsDuration";
   ofstream myfileA (_fileNameA.c_str());
-  myfileA << "#001_stepTime\t002_ContNumber\t003_ContNumberAVG\n";
+  myfileA << "#001_stepTime\t002_ContNumber\t003_ContNumberAVG\t004_ContNumberNorm\t005_ContNumberTotal\n";
   unsigned int d = 1;
   for (const auto i : histContacts) {
-    myfileA << d << "\t" << i  << "\t" << double(i)/double(totContNumb) <<"\n";
+    myfileA << d << "\t" << i  << "\t" << i/snapshots->size() << "\t" << double(i)/double(totContNumb) <<"\t" << totContNumb <<"\n";
     d++;
   }
   myfileA.close();
