@@ -228,6 +228,10 @@ void exportclass::VTK() {
   bandGamma->SetNumberOfComponents(1);
   bandGamma->SetName("b_Gamma");
   
+  vtkSmartPointer<vtkDoubleArray> bandEta = vtkSmartPointer<vtkDoubleArray>::New();
+  bandEta->SetNumberOfComponents(1);
+  bandEta->SetName("b_Eta");
+  
   vtkSmartPointer<vtkDoubleArray> bandD50 = vtkSmartPointer<vtkDoubleArray>::New();
   bandD50->SetNumberOfComponents(1);
   bandD50->SetName("b_D50");
@@ -451,6 +455,7 @@ void exportclass::VTK() {
           bandDOmegaDR->InsertNextValue(bandTMP->dOmegadR());
           bandOmegaNorm->InsertNextValue(bandTMP->omegaNorm());
           bandGamma->InsertNextValue(bandTMP->gamma());
+          bandEta->InsertNextValue(bandTMP->eta());
           bandD50->InsertNextValue(bandTMP->d50M());
           bandRadAVG->InsertNextValue(bandTMP->radAvg());
           
@@ -523,6 +528,7 @@ void exportclass::VTK() {
       spheresUg->GetPointData()->AddArray(bandDOmegaDR);
       spheresUg->GetPointData()->AddArray(bandOmegaNorm);
       spheresUg->GetPointData()->AddArray(bandGamma);
+      spheresUg->GetPointData()->AddArray(bandEta);
       spheresUg->GetPointData()->AddArray(bandD50);
       spheresUg->GetPointData()->AddArray(bandRadAVG);
       #ifdef ALGLIB
