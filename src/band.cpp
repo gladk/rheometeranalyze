@@ -245,7 +245,30 @@ void band::calculateValues (int numSnapshots) {
      * 
      */
     _tauavg = sqrt(_stressTensorAVG(2)*_stressTensorAVG(2) + _stressTensorAVG(5)*_stressTensorAVG(5));
+
+
+    /*
+     * Kumar 2014, Acta Mechanica, added after discussion with
+     * Prof. Luding 2015/08/11
+     *
+    _tauavg = sqrt((1./3.)*(std::pow((_stressTensorAVG(0) - _stressTensorAVG(4)),2) +
+                            std::pow((_stressTensorAVG(0) - _stressTensorAVG(8)),2) +
+                            std::pow((_stressTensorAVG(4) - _stressTensorAVG(8)),2) +
+                              6*(std::pow(_stressTensorAVG(1), 2) +
+                                  std::pow(_stressTensorAVG(5), 2) +
+                                  std::pow(_stressTensorAVG(7), 2))
+                            ));
+    */
     
+    
+    /*
+     * Implementation from Sudeshna Roy and Thomas Weinhart,
+     * similar to ours, 2015/08/12
+    
+    _tauavg = sqrt(std::pow((_stressTensorAVG(2) + _stressTensorAVG(6)), 2) + std::pow((_stressTensorAVG(5) + _stressTensorAVG(7)), 2))/2;
+
+    */
+
     _radAvg = mean(acc_radTMPV);
     
     _d50M   = std::pow(mean(acc_d50MTMPV), 1.0/3.0);

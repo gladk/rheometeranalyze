@@ -1,2 +1,9 @@
 Example to start a program:
 bin/rheometeranalyze -c ../config.rheom_100k -p "../data/dumpXYZ_*.*" -f "../data/forC_*.*" -u
+
+
+Tensor:
+
+rr rz rf
+zr zz zf
+fr fz ff
