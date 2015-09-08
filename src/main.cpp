@@ -78,7 +78,9 @@ int main(int ac, char* av[])
   
   
   boost::shared_ptr< sinks::text_ostream_backend > backendScreen = boost::make_shared< sinks::text_ostream_backend >();
-#if (BOOST_VERSION > 105400)
+#if (BOOST_VERSION > 105700)
+  backendScreen->add_stream(boost::shared_ptr< std::ostream >(&std::clog, boost::null_deleter()));
+#elif (BOOST_VERSION > 105400)
   backendScreen->add_stream(boost::shared_ptr< std::ostream >(&std::clog, boost::empty_deleter()));
 #else
   backendScreen->add_stream(boost::shared_ptr< std::ostream >(&std::clog, logging::empty_deleter()));

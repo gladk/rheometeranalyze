@@ -40,7 +40,9 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#if (BOOST_VERSION > 105400)
+#if (BOOST_VERSION > 105700)
+  #include <boost/core/null_deleter.hpp>
+#elif (BOOST_VERSION > 105400)
   #include <boost/utility/empty_deleter.hpp>
 #else
   #include <boost/log/utility/empty_deleter.hpp>
