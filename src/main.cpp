@@ -118,7 +118,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   try {
     po::options_description desc("Allowed options");
     desc.add_options()
-      ("help", "produce help message")
+      ("help,h", "produce help message")
       ("config,c", po::value<string>(), "configuration file")
       ("particle,p", po::value<string>(), "particles dump file")
       ("force,f", po::value<string>(), "forces dump file")
