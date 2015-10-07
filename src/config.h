@@ -87,6 +87,7 @@ class configopt {
     bool  _contact;            // True, if contact-analyze should be performed
     bool  _followContact;      // True, if contact-follow-analyze should be performed
     bool  _noShearBand=false;  // True, if we do not need shear bands
+    bool  _increment=false;    // True, if incremental calculation is needed
     
     double _omega0;            // Rotating velocity
     
@@ -177,6 +178,10 @@ class configopt {
     void setNoShearBand() {_noShearBand=true;}
     void unSetNoShearBand() {_noShearBand=false;}
     bool noShearBand() const {return _noShearBand;}
+    
+    void setIncrement() {_increment=true;}
+    void unSetIncrement() {_increment=false;}
+    bool increment() const {return _increment;}
     
     // vector, containing local deformations, gamma
     std::vector<double> _gamma;

@@ -109,6 +109,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   bool setContact = false;
   bool setFollowContact = false;
   bool setNoShearBand = false;
+  bool setIncrement = false;
   unsigned short discreteAnalyze = 0;
   double setOmega0 = 0;
   int setWetParticle;
@@ -134,6 +135,8 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("discrete,d", po::value<unsigned short>(&discreteAnalyze)->default_value(-1),  "use discrete analyze, each snapshot will be analyzed separately")
       ("omega0", po::value<double>(&setOmega0)->default_value(0), "rotational velocity of the rheometer. If not set, will be calculated during analyze.")
       ("noshearband", "do not perform shear band analyze, OFF by default")
+      ("increment,i", po::value<bool>(&setIncrement)->default_value(false), "use incremental analysis to reduce memory consumption.")
+      
     ;
     
     po::positional_options_description p;
@@ -225,6 +228,10 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     
     if (setOmega0 != 0) {
       BOOST_LOG_SEV(lg, info) << "Set omega0 "<< setOmega0;
+    }
+    
+    if (setIncrement) {
+      BOOST_LOG_SEV(lg, info) << "Set incremental analysis ";
     }
     
   }
@@ -395,6 +402,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setWetParticle>0) configParams->setWetParticle(setWetParticle);
   if (setOmega0!=0) configParams->setOmega0(setOmega0);
   if (setNoShearBand) configParams->setNoShearBand();
+  if (setIncrement) configParams->setIncrement();
   
   std::vector<std::shared_ptr<bandRowBase> > bandRows;
   
