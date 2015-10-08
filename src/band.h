@@ -30,6 +30,7 @@
 
 class bandBase {
   protected:
+    bool _cleared = false;
     int _id, _idZ, _idR, _idF;                            // Band ids
     double _dZmin, _dZmax, _dRmin, _dRmax, _dFmin, _dFmax;// Band minimal and maximal sizes
     long long _partNumb;                                  // Number of particles
@@ -114,6 +115,7 @@ class bandBase {
     void gamma(const double gamma) {_gamma = gamma;}
     double gamma() const {return _gamma;}
     double d50M() const {return _d50M;}
+    const bool cleared() const { return _cleared;}
 };
   
 class band : public bandBase {

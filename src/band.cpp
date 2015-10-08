@@ -347,4 +347,5 @@ std::shared_ptr<particle> band::getPart (unsigned long long id) {
 
 void band::clear() {
   _allPart.clear(); _allPart.shrink_to_fit();
+  _cleared = true;
 }
