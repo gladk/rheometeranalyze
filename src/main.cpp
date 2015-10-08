@@ -110,7 +110,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   bool setFollowContact = false;
   bool setNoShearBand = false;
   bool setIncrement = false;
-  unsigned short discreteAnalyze = 0;
+  short discreteAnalyze = 0;
   double setOmega0 = 0;
   int setWetParticle;
   int setSnapshotsNumb;
@@ -132,10 +132,10 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("snapshots,s",po::value<int>(&setSnapshotsNumb)->default_value(-1), "number of snapshots to analyze, ALL by default (-1)")
       ("begin,b",po::value<int>(&setBeginSnapshot)->default_value(-1), "snapshot number from which will be done an analyze, by default (-1) last snapshots will be analyzed")
       ("output,o", po::value<string>()->default_value("output"), "output folder")
-      ("discrete,d", po::value<unsigned short>(&discreteAnalyze)->default_value(-1),  "use discrete analyze, each snapshot will be analyzed separately")
+      ("discrete,d", po::value<short>(&discreteAnalyze)->default_value(0),  "use discrete analyze, each snapshot will be analyzed separately")
       ("omega0", po::value<double>(&setOmega0)->default_value(0), "rotational velocity of the rheometer. If not set, will be calculated during analyze.")
       ("noshearband", "do not perform shear band analyze, OFF by default")
-      ("increment,i", po::value<bool>(&setIncrement)->default_value(false), "use incremental analysis to reduce memory consumption.")
+      ("increment,i", "use incremental analysis to reduce memory consumption.")
       
     ;
     
@@ -230,8 +230,9 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       BOOST_LOG_SEV(lg, info) << "Set omega0 "<< setOmega0;
     }
     
-    if (setIncrement) {
+    if (vm.count("increment")) {
       BOOST_LOG_SEV(lg, info) << "Set incremental analysis ";
+      setIncrement=true;
     }
     
   }
