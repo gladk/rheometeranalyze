@@ -232,7 +232,7 @@ double particle::stressSigma3() {
 };
 
 bool particle::wetContact(std::shared_ptr <particle> p) {
-  BOOST_FOREACH(std::weak_ptr <particle> j,  _contactParticlesWet) {
+  for(auto j :  _contactParticlesWet) {
     if (p==(j.lock())) return true;
   }
   return false;
@@ -240,14 +240,14 @@ bool particle::wetContact(std::shared_ptr <particle> p) {
 
 int particle::highStressedContacts() {
   int highStressedContactsTMP = 0;
-  BOOST_FOREACH(std::weak_ptr <particle> p,  _contactParticles) {
+  for(auto p : _contactParticles) {
     if (this->highStressedContact((p.lock())) and not((p.lock())->disabled()) and not(this->disabled())) highStressedContactsTMP++;
   }
   return highStressedContactsTMP;
 };
 
 bool particle::highStressedContact(std::shared_ptr <particle> p) {
-  BOOST_FOREACH(std::weak_ptr <particle> j,  _contactParticles) {
+  for(auto j : _contactParticles) {
     if ((p==(j.lock())) and (p->highStress()>0) and 
         not(this->wetContact(p))) return true;
   }

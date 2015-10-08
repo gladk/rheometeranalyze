@@ -279,7 +279,7 @@ void exportclass::VTK() {
     
     unsigned long long partId = 0;
     
-    BOOST_FOREACH(std::shared_ptr <forceRow> fR,  _forceAll) {
+    for(auto fR : _forceAll) {
       for(unsigned long long b=0; b<fR->arraySize(); b++) {
         const std::shared_ptr<particle> p1 = fR->getF(b)->part1();
         const std::shared_ptr<particle> p2 = fR->getF(b)->part2();
@@ -708,7 +708,7 @@ void exportclass::gnuplotContactAnalyze(int bins) {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
     std::vector <std::shared_ptr<force> > forces = snapshotCur->forces();
     
-    BOOST_FOREACH(std::shared_ptr<force> f, forces) {
+    for(auto f : forces) {
       long long pid1T = f->pid1();
       long long pid2T = f->pid2();
       
@@ -807,7 +807,7 @@ void exportclass::gnuplotContactAnalyze(int bins) {
   
   long long int allContactsTotal = 0;
   double DDelta = (maxDelta - minDelta)/bins;
-  BOOST_FOREACH(std::shared_ptr<force> d, deltas) {
+  for(auto d : deltas) {
     const int binTmp = int(floor((d->deltaN()-minDelta)/DDelta));
     deltasBin[binTmp] += 1;
     forcesBin[binTmp] += d->val().norm();
@@ -904,7 +904,7 @@ void exportclass::gnuplotContactWet() {
     unsigned long long int numWetContacts = 0;
     double liqVol = 0;
     
-    BOOST_FOREACH(std::shared_ptr<force> f, forces) {
+    for(auto f : forces) {
       long long pid1T = f->pid1();
       long long pid2T = f->pid2();
       
@@ -966,7 +966,7 @@ void exportclass::gnuplotContactFollow() {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
     std::vector <std::shared_ptr<force> > forces = snapshotCur->forces();
     
-    BOOST_FOREACH(std::shared_ptr<force> f, forces) {
+    for(auto f : forces) {
       std::shared_ptr<contactFollow> tmpCntFolw = std::make_shared<contactFollow>(f, snapshotCur);
       cntFolw.push_back(tmpCntFolw);
     }
@@ -974,7 +974,7 @@ void exportclass::gnuplotContactFollow() {
   
   std::sort (cntFolw.begin(), cntFolw.end(), sortContactFollow);
   
-  BOOST_FOREACH(std::shared_ptr<contactFollow> tmpCntFolw, cntFolw) {
+  for(auto tmpCntFolw : cntFolw) {
      myfileG << tmpCntFolw->P1_id() << " " << tmpCntFolw->P2_id() << " " 
              << tmpCntFolw->timeStep()*_cfg->dT() << " " 
              << tmpCntFolw->deltaN() << " " 
@@ -1015,7 +1015,7 @@ void exportclass::Utwente()  {
         << _cfg->Dout()/2.0 << " " << _cfg->Dout()/2.0 << " " << _cfg->H()
         << std::endl;
     
-    BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
+    for(auto p : particles) {
       C3d << p->c()(0) << " " << p->c()(1) << " "<< p->c()(2) << " " 
           << p->v()(0) << " " << p->v()(1) << " "<< p->v()(2) << " "
           << p->rad() << " 0 " << std::endl;
@@ -1037,7 +1037,7 @@ void exportclass::Utwente()  {
     Fstat<<"#  " << std::endl;
     
     
-    BOOST_FOREACH(std::shared_ptr<force> f, forces) {
+    for(auto f : forces) {
       long long pid1T = f->pid1();
       long long pid2T = f->pid2();
       
@@ -1291,7 +1291,7 @@ void exportclass::gnuplotWetParticles(int bins) {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
     std::vector <std::shared_ptr<particle> > particles = snapshotCur->particles();
     
-    BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
+    for(auto p : particles) {
       if (p->disabled() or p->volwater()<=0) {continue;}
       
       if  (minWat == maxWat and minWat == 0 ) {
@@ -1309,7 +1309,7 @@ void exportclass::gnuplotWetParticles(int bins) {
     std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
     std::vector <std::shared_ptr<particle> > particles = snapshotCur->particles();
     
-    BOOST_FOREACH(std::shared_ptr<particle> p, particles) {
+    for(auto p : particles) {
       if (p->disabled() or p->volwater()<=0) {continue;}
       
       deltasBin[int(floor((p->relativeWaterVol()-minWat)/DDelta))] += 1;

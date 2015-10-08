@@ -76,7 +76,7 @@ double snapshotRow::timeAvg() const {
 };
 
 void snapshotRow::showTimes() const {
-  BOOST_FOREACH(auto i, _snapshotRow) {
+  for(const auto i : _snapshotRow) {
     std::cout<<i->time()<<std::endl;
   }
 };

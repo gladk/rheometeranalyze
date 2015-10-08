@@ -73,7 +73,7 @@ void snapshot::addForce(std::shared_ptr<force> forceTmp) {
 
 void snapshot::id(unsigned short id) {
   _id = id;
-  BOOST_FOREACH(std::shared_ptr<particle> p, _particles) {
+  for(auto p : _particles) {
     p->snapshot(id);
   }
 };
@@ -94,7 +94,7 @@ double snapshot::torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint,
   double torqueRet = 0.0;
   rotationAxis.normalize();
   
-  BOOST_FOREACH(std::shared_ptr<force> f, _forces) {
+  for(auto f : _forces) {
     if (((f->part1()->type() == typeAnalyze) or (f->part2()->type() == typeAnalyze)) 
       and (f->part1()->type() != f->part2()->type())) {
       const Eigen::Vector3d radiusVector = rotationAxis.cross(rotationAxis.cross(zeroPoint - f->cP()));
@@ -107,7 +107,7 @@ double snapshot::torque(Eigen::Vector3d rotationAxis, Eigen::Vector3d zeroPoint,
 double snapshot::kinEnergy(int typeAnalyze) {
   double totEnergy = 0.0;
   
-  BOOST_FOREACH(std::shared_ptr<particle> p, _particles) {
+  for(auto p : _particles) {
     if ((p->type() == typeAnalyze or typeAnalyze<0) and (not(p->disabled()))) {
       totEnergy+=p->kinEnergieDouble();
     }
@@ -118,7 +118,7 @@ double snapshot::kinEnergy(int typeAnalyze) {
 double snapshot::potEnergy(int typeAnalyze) {
   double totEnergy = 0.0;
   
-   BOOST_FOREACH(std::shared_ptr<force> f, _forces) {
+   for(auto f : _forces) {
     if ((f->part1()->type() == typeAnalyze) or (f->part1()->type() != f->part2()->type()) or typeAnalyze<0) {
       totEnergy+=f->potEnergyNorm();
     }

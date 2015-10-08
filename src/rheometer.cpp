@@ -214,7 +214,7 @@ void rheometer::loadParticles(unsigned long long numLoad) {
     _particleAll.push_back(particleTMP);
     unsigned int partNumbTMP  = _particleAll.size()-1;
     
-    BOOST_FOREACH( std::shared_ptr<particle> p, tmpPartVector) {
+    for(auto p : tmpPartVector) {
        _particleAll[partNumbTMP]->addP(p);
     }
     BOOST_LOG_SEV(lg, info)<<_particleAll[partNumbTMP]->elementsNum()<<" particles added.";

@@ -169,7 +169,7 @@ void bandRow::calculateValues () {
     }
     
     accumulator_set<double, stats<tag::mean > > acc_omega0AVG;
-    BOOST_FOREACH(double o,  _omega0) {
+    for(const auto o : _omega0) {
       acc_omega0AVG(o);
     }
     _omega0AVG = mean(acc_omega0AVG);
@@ -269,7 +269,7 @@ void bandRow::calculateValues () {
 
 double bandRowBase::totalVolume() {
   double vol = 0.0;
-  BOOST_FOREACH(std::shared_ptr <band> b,  _bandAll) {
+  for(const auto b :  _bandAll) {
     vol+=b->vol();
   }
   return vol;
@@ -277,7 +277,7 @@ double bandRowBase::totalVolume() {
 
 double bandRowBase::shearBandVolume() {
   double vol = 0.0;
-  BOOST_FOREACH(std::shared_ptr <band> b,  _bandAll) {
+  for(const auto b :  _bandAll) {
     if (b->shearBand()) {
       vol+=b->vol();
     }
@@ -290,7 +290,7 @@ double bandRowBase::omega0AVG() const {
 };
 
 void bandRow::clear() {
-  BOOST_FOREACH(auto i, _bandAll) {
+  for(auto i : _bandAll) {
     i->clear();
   }
   
