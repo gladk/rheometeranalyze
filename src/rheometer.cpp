@@ -41,8 +41,8 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
       calculateLocalDeformations();
       
       _bandRow->clear();
-      _particleAll.clear(); _particleAll.shrink_to_fit();
-      _forceRow.clear(); _forceRow.shrink_to_fit();
+      _particleAll.clear(); // _particleAll.shrink_to_fit();
+      _forceRow.clear(); //_forceRow.shrink_to_fit();
       _snapshots->clear();
     }
   } else {
@@ -197,7 +197,9 @@ void rheometer::loadParticles(unsigned long long numLoad) {
     
         } else if (curLine == _cfg->nAt()) {
           linestream >> expectedParticles;
-          BOOST_LOG_SEV(lg, info)<<"File "<<partNumbCounter<<"/"<<_snapshots->size()<< " (" << snapshotCur->getParticleFile() << "); " <<"Expected particles "<<expectedParticles;
+          unsigned int FileNumber = partNumbCounter;
+          if (_cfg->increment()) {FileNumber = numLoad+1;}
+          BOOST_LOG_SEV(lg, info)<<"File "<<FileNumber<<"/"<<_snapshots->size()<< " (" << snapshotCur->getParticleFile() << "); " <<"Expected particles "<<expectedParticles;
         } else if (curLine == _cfg->nPSt()) {
           linestream >> valInt;
           snapshotCur->setTimeStep(valInt, _cfg->dT());
