@@ -180,7 +180,8 @@ void bandRow::calculateValues () {
   
   // Common values
   for(unsigned int i=0; i<_bandAll.size(); i++) {
-    _bandAll[i]->calculateValues(_cfg->numSnapshot());
+    const auto numSnapshotsCorrected = (_cfg->increment()?1:_cfg->numSnapshot());
+    _bandAll[i]->calculateValues(numSnapshotsCorrected);
     _bandAll[i]->omega0(_omega0AVG);
   }
   if (_bandAll.size() > _cfg->SecRadial()) {
@@ -286,4 +287,13 @@ double bandRowBase::shearBandVolume() {
 
 double bandRowBase::omega0AVG() const {
   return _omega0AVG;
+};
+
+void bandRow::clear() {
+  BOOST_FOREACH(auto i, _bandAll) {
+    i->clear();
+  }
+  
+  _pRow.clear(); _pRow.shrink_to_fit(); 
+  _fRow.clear(); _fRow.shrink_to_fit();
 };

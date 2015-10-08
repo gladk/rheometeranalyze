@@ -31,15 +31,27 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   _particleNum = 0;
   _forceNum = 0;
   _snapshots = _cfg->snapshot();
-  
-  loadParticles();
+  std::shared_ptr <exportclass> exp;
   
   //Create bands
-  _bandRow = std::make_shared<bandRow>(_cfg, _particleAll,  _forceRow);
-  
-  calculateLocalDeformations();
-  
-  std::shared_ptr <exportclass> exp = std::make_shared<exportclass>(_cfg, _bandRow, _forceRow);
+  if (_cfg->increment()) {
+    for(unsigned long long i=0; i<_snapshots->size(); i++) {
+      loadParticles(i);
+      _bandRow = std::make_shared<bandRow>(_cfg, _particleAll,  _forceRow);
+      calculateLocalDeformations();
+      
+      _bandRow->clear();
+      _particleAll.clear(); _particleAll.shrink_to_fit();
+      _forceRow.clear(); _forceRow.shrink_to_fit();
+      _snapshots->clear();
+    }
+  } else {
+    loadParticles();
+    _bandRow = std::make_shared<bandRow>(_cfg, _particleAll,  _forceRow);
+     calculateLocalDeformations();
+    
+    exp = std::make_shared<exportclass>(_cfg, _bandRow, _forceRow);
+  }
   
   // ==========================ForceChain
   
@@ -73,16 +85,22 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   
 };
 
-void rheometer::loadParticles() {
+void rheometer::loadParticles(unsigned long long numLoad) {
   namespace src = boost::log::sources;
   namespace logging = boost::log;
   using namespace logging::trivial;
   src::severity_logger< severity_level > lg;
-  
-  
+    
   unsigned int partNumbCounter  = 1;
   
-  for(unsigned int i=0; i<_snapshots->size(); i++) {
+  unsigned long long loadSnapshotsNum = _snapshots->size();
+  
+  if (_cfg->increment()) {
+    std::cerr<<"numLoad: "<<numLoad<<std::endl;
+    loadSnapshotsNum=numLoad+1;
+  }
+  
+  for(unsigned int i=numLoad; i<loadSnapshotsNum; i++) {
     
     std::shared_ptr<snapshot> snapshotCur = _snapshots->getSnapshot(i);
     
@@ -103,6 +121,8 @@ void rheometer::loadParticles() {
     unsigned long long expectedParticles = 0;
     std::vector <std::shared_ptr<particle> > tmpPartVector;
     
+    //======================================================================
+    //======================================================================
     while(std::getline(in, line)) {
       boost::algorithm::trim(line);
       if (not(line.empty())) {
@@ -185,6 +205,9 @@ void rheometer::loadParticles() {
       }
       curLine++;
     };
+    //======================================================================
+    //======================================================================
+    
     std::shared_ptr<particleRow> particleTMP = std::make_shared<particleRow>(maxId+1);
     _particleAll.push_back(particleTMP);
     unsigned int partNumbTMP  = _particleAll.size()-1;
@@ -197,9 +220,11 @@ void rheometer::loadParticles() {
     partNumbCounter++;
     
     this->loadForces(snapshotCur);
-  
   }
-  _snapshots->sortRow();
+  
+  if (!_cfg->increment()) {
+    _snapshots->sortRow();
+  }
   BOOST_LOG_SEV(lg, info)<<"The total number of added particles is "<<_particleNum;
   BOOST_LOG_SEV(lg, info)<<"The total number of added forces is "<<_forceNum;
 };

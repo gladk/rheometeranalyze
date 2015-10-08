@@ -53,4 +53,5 @@ class bandRow : public bandRowBase{
     bandRow     (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<particleRow>> pRow, std::vector<std::shared_ptr<forceRow>> fRow);
     void fillBands();
     void calculateValues();
+    void clear();
 };

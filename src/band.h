@@ -125,9 +125,10 @@ class band : public bandBase {
       bandBase(id, idZ, idR, idF, dRmin, dRmax, dZmin, dZmax, dFmin, dFmax, cfg ) {};
     
     void addParticle(std::shared_ptr<particle>);
-    std::shared_ptr<particle> getPart (long long id) { return _allPart[id];}
+    std::shared_ptr<particle> getPart (unsigned long long);
     void calculateValues(int numSnapshots);
     void shearBandOn() { setShearBand(true);}
     void shearBandOff() { setShearBand(false);}
     void setShearBand(const bool shearb);
+    void clear();
 };

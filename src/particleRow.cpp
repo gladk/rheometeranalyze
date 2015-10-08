@@ -64,3 +64,8 @@ std::shared_ptr<particle> particleRow::getP(long long id) {
   return _allPart[id];
 }
 
+void particleRow::clear() {
+  _allPart.clear();
+  _realPartNum = 0;
+}
+

@@ -36,4 +36,6 @@ class snapshotRow {
     double timeMin() const;
     double timeMax() const;
     double timeAvg() const;
+    void showTimes() const;
+    void clear();
 };

@@ -38,4 +38,5 @@ class particleRow {
     std::shared_ptr<particle> getP(long long);
     void disable(long long);
     void enable(long long);
+    void clear();
 };

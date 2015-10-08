@@ -336,3 +336,15 @@ double bandBase::omegaNorm() const {
     return 0;
   }
 }
+
+std::shared_ptr<particle> band::getPart (unsigned long long id) {
+  if (id < _allPart.size()) {
+    return _allPart[id];
+  } else {
+    return nullptr;
+  }
+}
+
+void band::clear() {
+  _allPart.clear(); _allPart.shrink_to_fit();
+}

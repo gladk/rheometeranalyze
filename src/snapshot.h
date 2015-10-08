@@ -47,6 +47,7 @@ class snapshot {
     void setForcesFileName(fs::path forcesFileName);
     void setTimeStep(const unsigned long long timeStep, const double dT);
     unsigned long long timeStep() const;
+    unsigned long long size() const;
     double time() const;
     fs::path getParticleFile();
     fs::path getForceFile();
@@ -60,4 +61,6 @@ class snapshot {
     unsigned short id() const;
     void id(unsigned short id);
     std::shared_ptr<forceChain> forceChainRet();
+    ~snapshot();
+    void clear();
 };

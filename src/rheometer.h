@@ -39,7 +39,7 @@ class rheometer {
     std::shared_ptr <snapshotRow> _snapshots;
   public:
     rheometer(std::shared_ptr<configopt>);
-    void loadParticles();
+    void loadParticles(unsigned long long numLoad=0);
     void loadForces(std::shared_ptr<snapshot> loadSnap);
     void calculateLocalDeformations();
 };

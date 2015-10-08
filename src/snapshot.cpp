@@ -47,6 +47,10 @@ unsigned long long snapshot::timeStep() const {
   return _timeStep;
 };
 
+unsigned long long snapshot::size() const {
+  return _particles.size();
+};
+
 double snapshot::time() const {
   return _time;
 };
@@ -125,4 +129,13 @@ double snapshot::potEnergy(int typeAnalyze) {
 std::shared_ptr<forceChain> snapshot::forceChainRet() {
   _forceChain = std::make_shared<forceChain>(_particles, _forces);
   return _forceChain;
+};
+
+void snapshot::clear() {
+  _particles.clear(); _particles.shrink_to_fit();
+  _forces.clear(); _forces.shrink_to_fit();
+};
+
+snapshot::~snapshot() {
+  this->clear();
 };

@@ -21,6 +21,7 @@
 
 #include "snapshotRow.h"
 #include <iostream>
+#include <boost/foreach.hpp>
 
 std::shared_ptr<snapshot> snapshotRow::getSnapshot(unsigned int i) {
   if (i<_snapshotRow.size()) { 
@@ -72,5 +73,18 @@ double snapshotRow::timeAvg() const {
   } else {
     return (timeMin() + timeMax())/2.0;
   }
+};
+
+void snapshotRow::showTimes() const {
+  BOOST_FOREACH(auto i, _snapshotRow) {
+    std::cout<<i->time()<<std::endl;
+  }
+};
+
+void snapshotRow::clear() {
+  for( auto i : _snapshotRow) {
+    i->clear();
+  }
+  _snapshotRow.shrink_to_fit();
 };
 
