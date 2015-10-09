@@ -31,6 +31,7 @@ class bandRowBase {
     std::shared_ptr<configopt> _cfg;
     std::vector<double> _omega0;
     double _omega0AVG=0.0;
+    bool _calculated = false;
   public:
     int getBandR(double);
     int getBandZ(double);
@@ -43,6 +44,7 @@ class bandRowBase {
     double totalVolume();
     double shearBandVolume();
     double omega0AVG() const;
+    void calculateShearBand();
 };
 
 class bandRow : public bandRowBase{
@@ -53,5 +55,6 @@ class bandRow : public bandRowBase{
     bandRow     (std::shared_ptr<configopt> cfg, std::vector<std::shared_ptr<particleRow>> pRow, std::vector<std::shared_ptr<forceRow>> fRow);
     void fillBands();
     void calculateValues();
+    bool calculated() const {return _calculated;}
     void clear();
 };

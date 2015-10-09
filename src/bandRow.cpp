@@ -148,6 +148,7 @@ int bandRowBase::getBandF(double angle) {
 };
 
 void bandRow::calculateValues () {
+  _calculated = true;
   //==============================================
   //Find and set omega0
   if (_cfg->omega0() == 0) {
@@ -227,9 +228,44 @@ void bandRow::calculateValues () {
     }
   }
   //Create vector of ShearBands
+  calculateShearBand();
+};
+
+double bandRowBase::totalVolume() {
+  double vol = 0.0;
+  for(const auto b :  _bandAll) {
+    vol+=b->vol();
+  }
+  return vol;
+};
+
+double bandRowBase::shearBandVolume() {
+  double vol = 0.0;
+  for(const auto b :  _bandAll) {
+    if (b->shearBand()) {
+      vol+=b->vol();
+    }
+  }
+  return vol;
+};
+
+double bandRowBase::omega0AVG() const {
+  return _omega0AVG;
+};
+
+void bandRow::clear() {
+  for(auto i : _bandAll) {
+    i->clear();
+  }
+  
+  _pRow.clear(); _pRow.shrink_to_fit(); 
+  _fRow.clear(); _fRow.shrink_to_fit();
+};
+
+void bandRowBase::calculateShearBand() {
   
   #ifdef ALGLIB
-  if (not(_cfg->noShearBand())) {
+  if (not(_cfg->noShearBand()) or not(_cfg->increment())) {
     for(unsigned int h=0; h<_cfg->SecZ(); h++) {
       alglib::real_2d_array x;
       alglib::real_1d_array y;
@@ -265,35 +301,4 @@ void bandRow::calculateValues () {
     }
   }
   #endif
-};
-
-double bandRowBase::totalVolume() {
-  double vol = 0.0;
-  for(const auto b :  _bandAll) {
-    vol+=b->vol();
-  }
-  return vol;
-};
-
-double bandRowBase::shearBandVolume() {
-  double vol = 0.0;
-  for(const auto b :  _bandAll) {
-    if (b->shearBand()) {
-      vol+=b->vol();
-    }
-  }
-  return vol;
-};
-
-double bandRowBase::omega0AVG() const {
-  return _omega0AVG;
-};
-
-void bandRow::clear() {
-  for(auto i : _bandAll) {
-    i->clear();
-  }
-  
-  _pRow.clear(); _pRow.shrink_to_fit(); 
-  _fRow.clear(); _fRow.shrink_to_fit();
-};
+}
