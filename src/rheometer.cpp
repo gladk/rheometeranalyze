@@ -63,11 +63,11 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   
   // ==========================ForceChain
   
-  
   if (_cfg->Vtk()) exp->VTK();
   if (_cfg->Utwente()) exp->Utwente();
   
   exp->gnuplotSchearRate();
+  
   exp->torque();
   
   if (_cfg->contact()) {

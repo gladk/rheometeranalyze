@@ -31,6 +31,7 @@
 class bandBase {
   protected:
     bool _cleared = false;
+    bool _calculated = false;
     int _id = 0, _idZ = 0, _idR = 0, _idF = 0;            // Band ids
     double _dZmin = 0.,                                   // Band minimal and maximal sizes
            _dZmax = 0.,

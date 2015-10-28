@@ -357,11 +357,12 @@ void exportclass::VTK() {
       std::shared_ptr<band> bandTMP = _bandRow->getBand(b);
       
       for (int z = 0; z<bandTMP->partNumb(); z++) {
-        std::shared_ptr<particle> partTemp = bandTMP->getPart(z);
-        if (not(partTemp->disabled())) {
-          
+        std::shared_ptr<particle> partTemp = nullptr;
+        if (bandTMP->partNumb() > 0) partTemp = bandTMP->getPart(z);
+        
+          Eigen::Matrix3d tensorM = bandTMP->TensorAVG();
           vtkIdType pid[1];
-          if (_cfg->Vtk()==1) {       // Large VTK-file with all particles, snapshots
+          if ((partTemp and not(partTemp->disabled())) and _cfg->Vtk()==1) {       // Large VTK-file with all particles, snapshots
             pid[0] = spheresPos->InsertNextPoint(partTemp->c()[0], partTemp->c()[1], partTemp->c()[2]);
             radii->InsertNextValue(partTemp->rad());
             mass->InsertNextValue(partTemp->mass());
@@ -397,6 +398,29 @@ void exportclass::VTK() {
             double posZ[3] = {partTemp->posZyl()(0), partTemp->posZyl()(1), partTemp->posZyl()(2)};
             posZyl->InsertNextTupleValue(posZ);
             
+            tensorM = partTemp->stressTensorAVG();
+          
+            double  tensor2[9] = {tensorM(0), tensorM(1), tensorM(2), 
+                              tensorM(3), tensorM(4), tensorM(5), 
+                              tensorM(6), tensorM(7), tensorM(8)};
+          
+            partTensor->InsertNextTupleValue(tensor2);
+            
+            tensorM = partTemp->stressTensorCapAVG();
+          
+            double  tensor4[9] = {tensorM(0), tensorM(1), tensorM(2), 
+                                tensorM(3), tensorM(4), tensorM(5), 
+                                tensorM(6), tensorM(7), tensorM(8)};
+            
+            partTensorCap->InsertNextTupleValue(tensor4);
+            #ifdef ALGLIB
+            if (partTemp->shearBand()) {
+              bandShearBand->InsertNextValue(1);
+            } else {
+              bandShearBand->InsertNextValue(0);
+            }
+            #endif
+            
           } else if (_cfg->Vtk()==2 and (bandTMP->partNumb() > 0)) {    // Small VTK-file only with bands, averaged
             const Eigen::Vector3d posP = Eigen::Vector3d (bandTMP->midLinedR() * cos(bandTMP->midLinedF()), bandTMP->midLinedR() * sin(bandTMP->midLinedF()), bandTMP->midLinedZ());
             pid[0] = spheresPos->InsertNextPoint(posP[0], posP[1], posP[2]);
@@ -405,21 +429,11 @@ void exportclass::VTK() {
             spheresType->InsertNextValue(bandTMP->type());
           }
           
-          Eigen::Matrix3d tensorM = bandTMP->TensorAVG();
-          
           double tensor[9] = {tensorM(0), tensorM(1), tensorM(2), 
                               tensorM(3), tensorM(4), tensorM(5), 
                               tensorM(6), tensorM(7), tensorM(8)};
           
           bandTensor->InsertNextTupleValue(tensor);
-          
-          tensorM = partTemp->stressTensorAVG();
-          
-          double  tensor2[9] = {tensorM(0), tensorM(1), tensorM(2), 
-                              tensorM(3), tensorM(4), tensorM(5), 
-                              tensorM(6), tensorM(7), tensorM(8)};
-          
-          partTensor->InsertNextTupleValue(tensor2);
           
           tensorM = bandTMP->TensorCapAVG();
           
@@ -430,14 +444,6 @@ void exportclass::VTK() {
                               tensorM(6), tensorM(7), tensorM(8)};
           
           bandTensorCap->InsertNextTupleValue(tensor3);
-          
-          tensorM = partTemp->stressTensorCapAVG();
-          
-          double  tensor4[9] = {tensorM(0), tensorM(1), tensorM(2), 
-                              tensorM(3), tensorM(4), tensorM(5), 
-                              tensorM(6), tensorM(7), tensorM(8)};
-          
-          partTensorCap->InsertNextTupleValue(tensor4);
           
           bandR->InsertNextValue(bandTMP->idR());
           bandZ->InsertNextValue(bandTMP->idZ());
@@ -467,17 +473,17 @@ void exportclass::VTK() {
           
           double VelLin[3] = {bandTMP->vZyl()[0], bandTMP->vZyl()[1], bandTMP->vZyl()[2]};
           bandVelLin->InsertNextTupleValue(VelLin);
-          #ifdef ALGLIB
-            if (partTemp->shearBand()) {
-              bandShearBand->InsertNextValue(1);
-            } else {
-              bandShearBand->InsertNextValue(0);
-            }
-          #endif
           
+          #ifdef ALGLIB
+          if (bandTMP->shearBand()) {
+            bandShearBand->InsertNextValue(1);
+          } else {
+            bandShearBand->InsertNextValue(0);
+          }
+          #endif
+            
           spheresCells->InsertNextCell(1,pid);
           if (_cfg->Vtk()==2) break;
-        }
       }
       
       
@@ -504,6 +510,8 @@ void exportclass::VTK() {
         spheresUg->GetPointData()->AddArray(contactNum);
         spheresUg->GetPointData()->AddArray(wetContactNum);
         spheresUg->GetPointData()->AddArray(volWater);
+        spheresUg->GetPointData()->AddArray(partTensor);
+        spheresUg->GetPointData()->AddArray(partTensorCap);
       }
       
       spheresUg->GetPointData()->AddArray(spheresType);
@@ -524,9 +532,7 @@ void exportclass::VTK() {
       spheresUg->GetPointData()->AddArray(bandMu);
       spheresUg->GetPointData()->AddArray(bandVelLin);
       spheresUg->GetPointData()->AddArray(bandTensor);
-      spheresUg->GetPointData()->AddArray(partTensor);
       spheresUg->GetPointData()->AddArray(bandTensorCap);
-      spheresUg->GetPointData()->AddArray(partTensorCap);
       spheresUg->GetPointData()->AddArray(bandWetContactsAVG);
       spheresUg->GetPointData()->AddArray(bandWetContactDistanceAVG);
       spheresUg->GetPointData()->AddArray(bandVolWaterAVG);

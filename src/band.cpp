@@ -104,7 +104,8 @@ void bandBase::set_scherRate(double scherRate) {
   }
 };
 
-void band::calculateValues (int numSnapshots) {
+void band::calculateValues(int numSnapshots) {
+  if (_calculated) return;
   _volPart = 0.0;
   _volFraction  = 0.0;
   _contactNumAVG = 0.0;
@@ -299,6 +300,7 @@ void band::calculateValues (int numSnapshots) {
       _muAVG = 0.0;
     }
   }
+  _calculated = true;
 };
 
 void band::setShearBand(const bool shearb) {
@@ -306,13 +308,12 @@ void band::setShearBand(const bool shearb) {
     if (not(_allPart[p]->disabled())) {
       if (shearb) {
         _allPart[p]->shearBandOn();
-        _shearBand = true;
       } else {
         _allPart[p]->shearBandOff();
-        _shearBand = false;
       }
     }
   }
+  _shearBand = shearb;
 }
 
 double bandBase::omegaCoefVar() {
@@ -398,9 +399,12 @@ band::band(const std::vector<std::shared_ptr<band>> & bV) {
   // Total number of particles
   long long TotalNumbParticles = 0;
   for (auto b : bV) { TotalNumbParticles+=b->_partNumb;};
-  for (auto b : bV) { _vZylavg += b->_vZylavg*(b->_partNumb/TotalNumbParticles);};
-  for (auto b : bV) { _stressTensorAVG += b->_stressTensorAVG*(b->_partNumb/TotalNumbParticles);};
-  for (auto b : bV) { _stressTensorCapAVG += b->_stressTensorCapAVG*(b->_partNumb/TotalNumbParticles);};
-  for (auto b : bV) { _normContOri += b->_normContOri*(b->_partNumb/TotalNumbParticles);};
-  for (auto b : bV) { _capiContOri += b->_capiContOri*(b->_partNumb/TotalNumbParticles);};
+  for (auto b : bV) { _vZylavg += b->_vZylavg*(b->_partNumb/(double)TotalNumbParticles);};
+  for (auto b : bV) { _stressTensorAVG += b->_stressTensorAVG*(b->_partNumb/(double)TotalNumbParticles);};
+  for (auto b : bV) { _stressTensorCapAVG += b->_stressTensorCapAVG*(b->_partNumb/(double)TotalNumbParticles);};
+  for (auto b : bV) { _normContOri += b->_normContOri*(b->_partNumb/(double)TotalNumbParticles);};
+  for (auto b : bV) { _capiContOri += b->_capiContOri*(b->_partNumb/(double)TotalNumbParticles);};
+  _partNumb = TotalNumbParticles;
+  
+  _calculated = true;
 }
