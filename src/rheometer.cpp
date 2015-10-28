@@ -35,6 +35,7 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   
   //Create bands
   if (_cfg->increment()) {
+    std::vector<std::shared_ptr<bandRow>> allBandRows;
     for(unsigned long long i=0; i<_snapshots->size(); i++) {
       loadParticles(i);
       _bandRow = std::make_shared<bandRow>(_cfg, _particleAll,  _forceRow);
@@ -44,7 +45,10 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
       _particleAll.clear(); // _particleAll.shrink_to_fit();
       _forceRow.clear(); //_forceRow.shrink_to_fit();
       _snapshots->clear();
+      allBandRows.push_back(_bandRow);
     }
+    _bandRow = std::make_shared<bandRow>(_cfg, allBandRows);
+    exp = std::make_shared<exportclass>(_cfg, _bandRow);
   } else {
     loadParticles();
     _bandRow = std::make_shared<bandRow>(_cfg, _particleAll,  _forceRow);
@@ -65,6 +69,7 @@ rheometer::rheometer(std::shared_ptr<configopt> cfg) {
   
   exp->gnuplotSchearRate();
   exp->torque();
+  
   if (_cfg->contact()) {
     exp->gnuplotContactAnalyze(100);
     exp->gnuplotContactNumberAnalyze();

@@ -66,9 +66,11 @@ class exportclass {
     std::shared_ptr <configopt> _cfg;
     std::shared_ptr <bandRow> _bandRow;
     std::vector<std::shared_ptr <forceRow>> _forceAll;
+    bool _noForces = true;
     
   public:
     exportclass(const std::shared_ptr<configopt>, const std::shared_ptr <bandRow>, const std::vector<std::shared_ptr <forceRow>>);
+    exportclass(const std::shared_ptr<configopt>, const std::shared_ptr <bandRow>);
     void VTK();
     void gnuplotSchearRate();
     void gnuplotContactAnalyze(int bins);

@@ -27,6 +27,8 @@
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
+#include <boost/accumulators/statistics/moment.hpp>
+#include <boost/accumulators/statistics/weighted_mean.hpp>
 
 bandBase::bandBase(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ) {
   _id = id;
@@ -348,4 +350,57 @@ std::shared_ptr<particle> band::getPart (unsigned long long id) {
 void band::clear() {
   _allPart.clear(); _allPart.shrink_to_fit();
   _cleared = true;
+}
+
+band::band(const std::vector<std::shared_ptr<band>> & bV) {
+  _id     = bV[0]->_id;
+  _idZ    = bV[0]->_idZ;
+  _idR    = bV[0]->_idR;
+  _idF    = bV[0]->_idF;
+  _dZmin  = bV[0]->_dZmin;
+  _dZmax  = bV[0]->_dZmax;
+  _dRmin  = bV[0]->_dRmin;
+  _dRmax  = bV[0]->_dRmax;
+  _dFmin  = bV[0]->_dFmin;
+  _dFmax  = bV[0]->_dFmax;
+  _cfg    = bV[0]->_cfg;
+  
+  using namespace boost::accumulators;
+  typedef accumulator_set< double, features< tag::sum, tag::mean  >, double > ac_d;
+  
+  ac_d  acc_d; 
+  
+  for (auto b : bV) { acc_d (b->_tau, weight = b->_partNumb); }; _tau = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_tauavg, weight = b->_partNumb); }; _tauavg = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_vol, weight = b->_partNumb); }; _vol = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_volPart, weight = b->_partNumb); }; _volPart = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_wetContactsAVG, weight = b->_partNumb); }; _wetContactsAVG = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_p, weight = b->_partNumb); }; _p = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_pavg, weight = b->_partNumb); }; _pavg = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_muAVG, weight = b->_partNumb); }; _muAVG = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_vavg, weight = b->_partNumb); }; _vavg = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_vavgStDev, weight = b->_partNumb); }; _vavgStDev = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_scherRate, weight = b->_partNumb); }; _scherRate = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_volFraction, weight = b->_partNumb); }; _volFraction = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_contactNumAVG, weight = b->_partNumb); }; _contactNumAVG = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_radAvg, weight = b->_partNumb); }; _radAvg = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_I, weight = b->_partNumb); }; _I = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_densAVG, weight = b->_partNumb); }; _densAVG = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_eta, weight = b->_partNumb); }; _eta = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_typeAVG, weight = b->_partNumb); }; _typeAVG = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_volWaterAVG, weight = b->_partNumb); }; _volWaterAVG = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_volWaterSUM, weight = b->_partNumb); }; _volWaterSUM = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_dOmegadR, weight = b->_partNumb); }; _dOmegadR = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_omega0, weight = b->_partNumb); }; _omega0 = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_gamma, weight = b->_partNumb); }; _gamma = mean(acc_d); acc_d = ac_d();
+  for (auto b : bV) { acc_d (b->_d50M, weight = b->_partNumb); }; _d50M = mean(acc_d); acc_d = ac_d();
+  
+  // Total number of particles
+  long long TotalNumbParticles = 0;
+  for (auto b : bV) { TotalNumbParticles+=b->_partNumb;};
+  for (auto b : bV) { _vZylavg += b->_vZylavg*(b->_partNumb/TotalNumbParticles);};
+  for (auto b : bV) { _stressTensorAVG += b->_stressTensorAVG*(b->_partNumb/TotalNumbParticles);};
+  for (auto b : bV) { _stressTensorCapAVG += b->_stressTensorCapAVG*(b->_partNumb/TotalNumbParticles);};
+  for (auto b : bV) { _normContOri += b->_normContOri*(b->_partNumb/TotalNumbParticles);};
+  for (auto b : bV) { _capiContOri += b->_capiContOri*(b->_partNumb/TotalNumbParticles);};
 }

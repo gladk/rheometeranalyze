@@ -277,6 +277,7 @@ void bandRowBase::calculateShearBand() {
         x(r,0) = (this->getBand(r,0))->midLinedR();
         y(r) = this->getBand(r,h)->omegaNorm();
       }
+      
       double epsf = 0;
       double epsx = 0.0000001;
       alglib::ae_int_t maxits = 0;
@@ -292,6 +293,7 @@ void bandRowBase::calculateShearBand() {
       const double Rz = c(0);
       const double W = c(1);
       _shearBands.push_back(Eigen::Vector3d(Rz, W, this->getBand(0,h)->midLinedZ()));
+      
       for(unsigned int r=0; r<_cfg->SecRadial(); r++) {
         double const Rt = this->getBand(r,h)->midLinedR();
         if ((Rt>=(Rz-W)) and (Rt<=(Rz+W))) {
@@ -301,4 +303,17 @@ void bandRowBase::calculateShearBand() {
     }
   }
   #endif
+}
+
+bandRow::bandRow (std::shared_ptr<configopt> cfg, const std::vector<std::shared_ptr<bandRow>> & bR) {
+  _cfg =  cfg;
+  for (size_t i=0; i < bR[0]->_bandAll.size(); i++) {
+    std::vector<std::shared_ptr<band>> bV;
+    for (auto b : bR) {
+      bV.push_back(b->_bandAll[i]);
+    }
+    auto B = std::make_shared<band>(bV);
+    _bandAll.push_back(B);
+  }
+  calculateShearBand();
 }

@@ -31,33 +31,39 @@
 class bandBase {
   protected:
     bool _cleared = false;
-    int _id, _idZ, _idR, _idF;                            // Band ids
-    double _dZmin, _dZmax, _dRmin, _dRmax, _dFmin, _dFmax;// Band minimal and maximal sizes
-    long long _partNumb;                                  // Number of particles
+    int _id = 0, _idZ = 0, _idR = 0, _idF = 0;            // Band ids
+    double _dZmin = 0.,                                   // Band minimal and maximal sizes
+           _dZmax = 0.,
+           _dRmin = 0.,
+           _dRmax = 0.,
+           _dFmin = 0.,
+           _dFmax = 0.; 
+    long long _partNumb = 0;                              // Number of particles
     
-    Eigen::Matrix3d _stressTensorAVG, _stressTensorCapAVG;
+    Eigen::Matrix3d _stressTensorAVG = Eigen::Matrix3d::Zero(),             //TODO: Shoud be fixed in accumulator!!!
+                    _stressTensorCapAVG = Eigen::Matrix3d::Zero();
     
-    double _tau, _tauavg, _vol, _volPart;                 // Results, Tau, Vol, Vol of particles
-    double _wetContactsAVG, _wetContactDistanceAVG;       // Average number of wet contacts and average distance
-    double _p, _pavg;                                     // Results, Press (trace), hydrostatic stress
-    double  _muAVG;                                       // Results, mu calculated
-    double _vavg, _vavgStDev;                             // Results, angular velocity of particles, standard deviation
-    Eigen::Vector3d _vZylavg;                             // Results, average velocity of particles in zylindrical coordinates (dR, dZ, dF)
-    double _scherRate;                                    // Results, scherrate
-    double _volFraction;                                  // Volume fraction
-    double _contactNumAVG;                                // Contact number per particle, AVG
-    double _radAvg;                                       // Average particle radius
-    double _I;                                            // Schear intensity, dimensionless
-    double _densAVG;                                      // Average particle denisty
-    double _eta;                                          // Viscosity
-    double _typeAVG;                                      // Average "type" of particles
-    double _volWaterAVG;                                  // Average water volume of particles
-    double _volWaterSUM;                                  // Total water volume of particles
-    bool _shearBand;                                      // True, if the band is in shearband
+    double _tau = 0., _tauavg = 0., _vol = 0., _volPart = 0.;  // Results, Tau, Vol, Vol of particles
+    double _wetContactsAVG = 0., _wetContactDistanceAVG = 0.;  // Average number of wet contacts and average distance
+    double _p = 0., _pavg = 0.;                           // Results, Press (trace), hydrostatic stress
+    double  _muAVG = 0.;                                  // Results, mu calculated
+    double _vavg = 0., _vavgStDev = 0.;                   // Results, angular velocity of particles, standard deviation
+    Eigen::Vector3d _vZylavg = Eigen::Vector3d::Zero();   // Results, average velocity of particles in zylindrical coordinates (dR, dZ, dF)
+    double _scherRate = 0.;                               // Results, scherrate
+    double _volFraction = 0.;                             // Volume fraction
+    double _contactNumAVG = 0.;                           // Contact number per particle, AVG
+    double _radAvg = 0.;                                  // Average particle radius
+    double _I = 0.;                                       // Schear intensity, dimensionless
+    double _densAVG = 0.;                                 // Average particle denisty
+    double _eta = 0.;                                     // Viscosity
+    double _typeAVG = 0.;                                 // Average "type" of particles
+    double _volWaterAVG = 0.;                             // Average water volume of particles
+    double _volWaterSUM = 0.;                             // Total water volume of particles
+    bool _shearBand=false;                                // True, if the band is in shearband
     std::shared_ptr<configopt> _cfg; 
     
-    double _dOmegadR=0.0;                                 // dOmega/dr
-    double _omega0=0.0;                                   // omega0, value is needed to get a normalized velocity profile (see Fenistein)
+    double _dOmegadR = 0.;                                // dOmega/dr
+    double _omega0 = 0.;                                  // omega0, value is needed to get a normalized velocity profile (see Fenistein)
     
     double _gamma=0.0;                                    // local strain, deformations according to Sakaie(5)
     
@@ -66,7 +72,8 @@ class bandBase {
     double _d50M=0.0;                                     // Average diameter in respect to mass (volume)
 
   public:
-    bandBase(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ); 
+    bandBase(int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg );
+    bandBase() {};
     double TauAVG() {return _tauavg;};
     double PressAVG() {return _pavg;};
     Eigen::Matrix3d TensorAVG() {return _stressTensorAVG;};
@@ -123,8 +130,10 @@ class band : public bandBase {
     std::vector <std::shared_ptr<particle> > _allPart;    // Vector of particles;
   
   public:
-      band    (int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ) :
+    band (int id, int idZ, int idR, int idF, double dRmin, double dRmax, double dZmin, double dZmax, double dFmin, double dFmax, std::shared_ptr<configopt> cfg ) :
       bandBase(id, idZ, idR, idF, dRmin, dRmax, dZmin, dZmax, dFmin, dFmax, cfg ) {};
+    
+    band (const std::vector<std::shared_ptr<band>> &);
     
     void addParticle(std::shared_ptr<particle>);
     std::shared_ptr<particle> getPart (unsigned long long);

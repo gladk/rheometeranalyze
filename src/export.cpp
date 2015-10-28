@@ -28,6 +28,12 @@ exportclass::exportclass(const std::shared_ptr<configopt> cfg, const std::shared
   _cfg = cfg;
   _bandRow = bandAll;
   _forceAll = forceAll;
+  _noForces = false;
+};
+
+exportclass::exportclass(const std::shared_ptr<configopt> cfg, const std::shared_ptr <bandRow> bandAll) {
+  _cfg = cfg;
+  _bandRow = bandAll;
 };
 
 void exportclass::VTK() {
@@ -1259,10 +1265,12 @@ void exportclass::torque() {
 }
 
 void exportclass::forceChain() {
-  std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
-  for(unsigned int i=0; i<snapshots->size(); i++) {
-    std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
-    snapshotCur->forceChainRet();
+  if (not(_noForces)) {
+    std::shared_ptr<snapshotRow> snapshots = _cfg->snapshot();
+    for(unsigned int i=0; i<snapshots->size(); i++) {
+      std::shared_ptr<snapshot> snapshotCur = snapshots->getSnapshot(i);
+      snapshotCur->forceChainRet();
+    }
   }
 }
 
