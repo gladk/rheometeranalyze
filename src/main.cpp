@@ -233,6 +233,22 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     if (vm.count("increment")) {
       BOOST_LOG_SEV(lg, info) << "Set incremental analysis ";
       setIncrement=true;
+      if (setVtk==1 or setVtk==3) {
+        BOOST_LOG_SEV(lg, fatal) << "error: the incremental analyze is requested, but vtk-export can only be done only with type 2 (averaged band-data)" ;
+        exit (EXIT_FAILURE);
+      }
+      if (setFollowContact) {
+        BOOST_LOG_SEV(lg, fatal) << "error: the incremental analyze is requested, but follow-contact in this case cannot be done" ;
+        exit (EXIT_FAILURE);
+      }
+      if (setUtwente) {
+        BOOST_LOG_SEV(lg, fatal) << "error: the incremental analyze is requested, but UTwente-files in this case cannot be created" ;
+        exit (EXIT_FAILURE);
+      }
+      if (setContact) {
+        BOOST_LOG_SEV(lg, fatal) << "error: the incremental analyze is requested, but contact analyze in this case cannot be done" ;
+        exit (EXIT_FAILURE);
+      }
     }
     
   }
