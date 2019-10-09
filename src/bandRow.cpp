@@ -286,7 +286,6 @@ void bandRowBase::calculateShearBand() {
         y(r) = this->getBand(r,h)->omegaNorm();
       }
       
-      double epsf = 0;
       double epsx = 0.0000001;
       alglib::ae_int_t maxits = 0;
       alglib::ae_int_t info;
@@ -294,7 +293,7 @@ void bandRowBase::calculateShearBand() {
       alglib::lsfitreport rep;
       double diffstep = 0.000001;
       lsfitcreatef(x, y, c, diffstep, state);
-      lsfitsetcond(state, epsf, epsx, maxits);
+      lsfitsetcond(state, epsx, maxits);
       alglib::lsfitfit(state, function_cx_1_func);
       lsfitresults(state, info, c, rep);
       
