@@ -8,6 +8,7 @@ IF(NOT(CMAKE_CXX_FLAGS))
   #If flags are not set, add all usefull flags
   SET(CMAKE_BUILD_TYPE Release)
   SET(CMAKE_CXX_FLAGS  "-Wall -fPIC -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security")
+  set (CMAKE_SHARED_LINKER_FLAGS "-Wl,--as-needed")
 ENDIF (NOT(CMAKE_CXX_FLAGS))
 
 IF(OPENMP_FOUND)
@@ -31,7 +32,7 @@ ADD_DEFINITIONS( "-DBOOST_LOG_DYN_LINK" )
 FIND_PACKAGE(Eigen3 REQUIRED)
 INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
 
-FIND_PACKAGE(VTK REQUIRED)
+FIND_PACKAGE(VTK COMPONENTS CommonCore IOImage IOXML REQUIRED)
 FIND_PACKAGE(ALGLIB)
 #===========================================================
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
