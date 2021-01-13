@@ -42,7 +42,7 @@ void createOutputDir(const string & outputFolder, src::severity_logger< logging:
     if (fs::create_directories(outputFolder)) {
       BOOST_LOG_SEV(lg, logging::trivial::info)<<"The directory " << outputFolder<< " created.";
     }
-  }  
+  }
 }
 
 using namespace std;
@@ -53,30 +53,33 @@ int main(int ac, char* av[])
   string particlesFileName;
   string forcesFileName;
   string outputFolder;
-  
-  
+
+
   // File log
   boost::shared_ptr< logging::core > core = logging::core::get();
-  boost::shared_ptr< sinks::text_file_backend > backend =
-    boost::make_shared< sinks::text_file_backend >(
-      keywords::file_name = "rheometer.log"
-    );
-    
-  typedef sinks::synchronous_sink< sinks::text_file_backend > sink_t;
-  boost::shared_ptr< sink_t > sink(new sink_t(backend));
-  
+
+  typedef sinks::synchronous_sink< sinks::text_ostream_backend > text_sink;
+  boost::shared_ptr< text_sink > sink = boost::make_shared< text_sink >();
+
+  // Add a stream to write log to
+  sink->locked_backend()->add_stream(
+        boost::make_shared< std::ofstream >("rheometer.log"));
+
+  // Register the sink in the logging core
+  core->add_sink(sink);
+
   core->add_global_attribute("TimeStamp", attrs::local_clock());
-  
+
   sink->set_formatter (
     expr::format("[%1%] %2%")
       % expr::attr< boost::posix_time::ptime >("TimeStamp")
       % expr::xml_decor[ expr::stream << expr::smessage ]
   );
   core->add_sink(sink);
-  
+
   // Screen log
-  
-  
+
+
   boost::shared_ptr< sinks::text_ostream_backend > backendScreen = boost::make_shared< sinks::text_ostream_backend >();
 #if (BOOST_VERSION > 105700)
   backendScreen->add_stream(boost::shared_ptr< std::ostream >(&std::clog, boost::null_deleter()));
@@ -93,17 +96,17 @@ int main(int ac, char* av[])
   typedef sinks::synchronous_sink< sinks::text_ostream_backend > sink_tScreen;
   boost::shared_ptr< sink_tScreen > sinkScreen(new sink_tScreen(backendScreen));
   core->add_sink(sinkScreen);
-  
+
   using namespace logging::trivial;
   src::severity_logger< severity_level > lg;
 
-  
+
   std::cout<<"\n\
 Rheometeranalyze\n\
 Copyright (C) 2013, 2014, 2015 TU Bergakademie Freiberg\nInstitute for Mechanics and Fluid Dynamics\n\
 This program comes with ABSOLUTELY NO WARRANTY.\n\
 ";
-  
+
   unsigned short setVtk = 0;
   bool setUtwente = false;
   bool setContact = false;
@@ -136,21 +139,21 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       ("omega0", po::value<double>(&setOmega0)->default_value(0), "rotational velocity of the rheometer. If not set, will be calculated during analyze.")
       ("noshearband", "do not perform shear band analyze, OFF by default")
       ("increment,i", "use incremental analysis to reduce memory consumption.")
-      
+
     ;
-    
+
     po::positional_options_description p;
     p.add("config", -1);
-    po::variables_map vm;        
+    po::variables_map vm;
     po::store(po::command_line_parser(ac, av).
     options(desc).positional(p).run(), vm);
-    po::notify(vm);  
-    
+    po::notify(vm);
+
     if (vm.count("help")) {
       cout << desc ;
       return 0;
     }
-    
+
     if (setVtk==1) {
       BOOST_LOG_SEV(lg, info) << "VTK-file will be created, all data to export" ;
     } else if (setVtk==2) {
@@ -160,10 +163,10 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     } else if (setVtk==0) {
       BOOST_LOG_SEV(lg, info) << "VTK-file will NOT be created" ;
     } else {
-      BOOST_LOG_SEV(lg, fatal) << "-v parameter can only except values 0<v<=2.\n"; 
+      BOOST_LOG_SEV(lg, fatal) << "-v parameter can only except values 0<v<=2.\n";
       exit (EXIT_FAILURE);
     }
-    
+
     if (vm.count("utwente")) {
       BOOST_LOG_SEV(lg, info) << "UTwente-files will be created" ;
       setUtwente = true;
@@ -191,15 +194,15 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     } else {
       BOOST_LOG_SEV(lg, info) << "Follow-contact-analyze will NOT be performed" ;
     }
-    
+
     if (vm.count("config")) {
       BOOST_LOG_SEV(lg, info) << "config file is: " << vm["config"].as<string>() ;
     } else {
-      BOOST_LOG_SEV(lg, fatal) << "config file is required, use `-c` option for that or `--help`.\n"; 
+      BOOST_LOG_SEV(lg, fatal) << "config file is required, use `-c` option for that or `--help`.\n";
       exit (EXIT_FAILURE);
     }
     configFileName = vm["config"].as<string>();
-    
+
     if (vm.count("output")) {
       BOOST_LOG_SEV(lg, info) << "output base folder: " << vm["output"].as<string>() ;
     }
@@ -208,28 +211,28 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     if (vm.count("particle")) {
       BOOST_LOG_SEV(lg, info) << "particles dump-file is: " << vm["particle"].as<string>() ;
     } else {
-      BOOST_LOG_SEV(lg, fatal) << "particles dump-file is required, use `-p` option for that or `--help` for help.\n"; 
+      BOOST_LOG_SEV(lg, fatal) << "particles dump-file is required, use `-p` option for that or `--help` for help.\n";
       exit (EXIT_FAILURE);
     }
-    
+
     particlesFileName = vm["particle"].as<string>();
-    
+
     if (vm.count("force")){
       BOOST_LOG_SEV(lg, info) << "forces dump-file is: "  << vm["force"].as<string>() ;
     } else {
-      BOOST_LOG_SEV(lg, fatal) << "force dump-file is required, use `-f` option for that or `--help` for help.\n"; 
+      BOOST_LOG_SEV(lg, fatal) << "force dump-file is required, use `-f` option for that or `--help` for help.\n";
       exit (EXIT_FAILURE);
     }
     forcesFileName = vm["force"].as<string>();
-    
+
     if (discreteAnalyze > 0) {
       BOOST_LOG_SEV(lg, info) << "Discrete analyze will be done, number of snapshots per analyze "<< discreteAnalyze;
     }
-    
+
     if (setOmega0 != 0) {
       BOOST_LOG_SEV(lg, info) << "Set omega0 "<< setOmega0;
     }
-    
+
     if (vm.count("increment")) {
       BOOST_LOG_SEV(lg, info) << "Set incremental analysis ";
       setIncrement=true;
@@ -250,7 +253,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
         exit (EXIT_FAILURE);
       }
     }
-    
+
   }
   catch(exception& e) {
       BOOST_LOG_SEV(lg, fatal) << "error: " << e.what() ;
@@ -259,26 +262,26 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   catch(...) {
       BOOST_LOG_SEV(lg, fatal) << "Exception of unknown type!\n";
   }
-  
+
   if (not(fs::is_regular_file(configFileName))) {
     fs::path p = configFileName;
     BOOST_LOG_SEV(lg, fatal)<<"The file "<<configFileName<<" does not exist. Exiting.";
     exit (EXIT_FAILURE);
   }
-  
+
   #ifdef ALGLIB
     BOOST_LOG_SEV(lg, info)<<"ALGLIB Library is found and export of shearbands will be produced \n";
   #else
     BOOST_LOG_SEV(lg, warning)<<"ALGLIB Library is NOT found and export of shearbands will NOT be produced \n";
   #endif
-  
+
   //=====================================================
   std::vector< fs::path > filesParticle;
-  
+
   fs::path particle_path( particlesFileName );
   fs::path particle_dir = particle_path.parent_path();
   fs::path particle_filesmask = particle_path.filename();
-  
+
   if (not(fs::is_directory(particle_dir))) {
     BOOST_LOG_SEV(lg, fatal)<<"The Directory "<<particle_dir.string()<<" does not exists. Exiting.";
     exit (EXIT_FAILURE);
@@ -298,22 +301,22 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       }
     }
   }
-  
+
   if (filesParticle.size()<1) {
     BOOST_LOG_SEV(lg, fatal)<<"The file "<<particlesFileName<<" does not exists. Exiting.";
     exit (EXIT_FAILURE);
   }
-  
-  sort(filesParticle.begin(), filesParticle.end(), sortFileTimeCreate); 
-  
+
+  sort(filesParticle.begin(), filesParticle.end(), sortFileTimeCreate);
+
   //=====================================================
-  
+
   std::vector< fs::path > filesForces;
-    
+
   fs::path force_path( forcesFileName );
   fs::path force_dir = force_path.parent_path();
   fs::path force_filesmask = force_path.filename();
-  
+
   if (not(fs::is_directory(force_dir))) {
     BOOST_LOG_SEV(lg, fatal)<<"The Directory "<<force_dir.string()<<" does not exists. Exiting.";
     exit (EXIT_FAILURE);
@@ -333,16 +336,16 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       }
     }
   }
-  
+
   if (filesForces.size()<1) {
     BOOST_LOG_SEV(lg, fatal)<<"The file "<<forcesFileName<<" does not exists. Exiting.";
     exit (EXIT_FAILURE);
-  } 
-  
-  sort(filesForces.begin(), filesForces.end(), sortFileTimeCreate); 
-  
+  }
+
+  sort(filesForces.begin(), filesForces.end(), sortFileTimeCreate);
+
   //=====================================================
-  
+
   if (filesParticle.size() != filesForces.size()) {
     BOOST_LOG_SEV(lg, fatal)<<"The number of force ("<<filesForces.size()<<") and particle ("<<filesParticle.size()<<") files is not the same! Exiting.";
     exit (EXIT_FAILURE);
@@ -351,13 +354,13 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
     BOOST_LOG_SEV(lg, info)<<"Number of force files is "<< filesForces.size()   ;
     int snapshotsNumbTemp = setSnapshotsNumb;
     int beginSnapshotTemp = setBeginSnapshot;
-    
+
     if (setSnapshotsNumb > 0){
       if ((unsigned) setSnapshotsNumb <= filesParticle.size()) {
         if (setBeginSnapshot>=0) {
           if ((unsigned) (setBeginSnapshot+setSnapshotsNumb-1) > filesParticle.size()) {
             BOOST_LOG_SEV(lg, fatal)<<"Requested number of analyzed snapshots is "<<setSnapshotsNumb<<", but starting from "
-                      << setBeginSnapshot <<", it is only possible to have only "<< 
+                      << setBeginSnapshot <<", it is only possible to have only "<<
                       filesForces.size()-setBeginSnapshot + 1<<
                       "! Exiting.";
             exit (EXIT_FAILURE);
@@ -383,7 +386,7 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
         beginSnapshotTemp = 1;
       }
     }
-   
+
     if (snapshotsNumbTemp<0) {
       snapshotsNumbTemp = filesParticle.size();
     } else if (snapshotsNumbTemp==0) {
@@ -391,25 +394,25 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
                <<"! Exiting.";
       exit (EXIT_FAILURE);
     }
-    
+
     if (beginSnapshotTemp<0) {
       beginSnapshotTemp = filesParticle.size() - snapshotsNumbTemp + 1;
     }
-    
+
     if (filesParticle.size() > (unsigned) snapshotsNumbTemp) {
       BOOST_LOG_SEV(lg, info)<<"Reducing the number of files from "<< filesParticle.size() <<" to " << snapshotsNumbTemp ;
     }
     BOOST_LOG_SEV(lg, info)<<"Starting analyze from snapshot "<< beginSnapshotTemp ;
     filesParticle.erase(filesParticle.begin(), filesParticle.begin() + beginSnapshotTemp - 1);
     filesParticle.erase(filesParticle.begin() + snapshotsNumbTemp, filesParticle.end());
-    
+
     filesForces.erase(filesForces.begin(), filesForces.begin() + beginSnapshotTemp - 1);
     filesForces.erase(filesForces.begin() + snapshotsNumbTemp, filesForces.end());
   }
   //=====================================================
-  
+
   std::shared_ptr<configopt> configParams = std::make_shared<configopt>(configFileName);
-  
+
   if (setVtk > 0) configParams->setVtk(setVtk);
   if (setContact) configParams->setContact();
   if (setFollowContact) configParams->setFollowContact();
@@ -420,9 +423,9 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
   if (setOmega0!=0) configParams->setOmega0(setOmega0);
   if (setNoShearBand) configParams->setNoShearBand();
   if (setIncrement) configParams->setIncrement();
-  
+
   std::vector<std::shared_ptr<bandRowBase> > bandRows;
-  
+
   if (discreteAnalyze > 0) {
     if (setVtk) {
       // Create symlinks to VTK-files in one directory
@@ -435,60 +438,60 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       BOOST_LOG_SEV(lg, info)<<"Discrete analyze " << i+1 <<"/"<<filesParticle.size()<<"====================";
       const string outputFolderNew = outputFolder + '/' + filesParticle[i].stem().string();
       createOutputDir(outputFolderNew, lg);
-      
+
       for(unsigned int z=i; (z<(i+discreteAnalyze) and z<filesParticle.size()); z++) {
         BOOST_LOG_SEV(lg, info)<<"Discrete analyze, adding fileName: " << filesParticle[z];
         std::shared_ptr<snapshot> snapshotTmp = std::make_shared<snapshot>(filesParticle[z], filesForces[z], 0);
         snapshots->addSnapshot(snapshotTmp);
       }
-      
+
       configParams->setSnapshot(snapshots);
       configParams->FOutput(outputFolderNew);
-      
+
       rheometer curRheom (configParams);
       configParams->unSetSnapshot();
-      
+
       // Join all gnuplot_daten files into a single one
       std::ifstream  infile_gnuplot(outputFolderNew+"/gnuplot_daten", std::ios::in);
       std::ofstream outfile_gnuplot(outputFolder + "/gnuplot_daten_common", std::ios_base::app);
       outfile_gnuplot << infile_gnuplot.rdbuf();
-      
+
       if (setVtk) {
         stringstream ss;
         ss << setw(7) << setfill('0') << i;
         string s = ss.str();
-        fs::create_symlink("../" + filesParticle[i].stem().string() + std::string("/output.vtu"), 
+        fs::create_symlink("../" + filesParticle[i].stem().string() + std::string("/output.vtu"),
           outputFolder + std::string("/VTK/") + filesParticle[i].stem().string() + std::string(".vtu"));
-        fs::create_symlink("../" + filesParticle[i].stem().string() + std::string("/output.vtu"), 
+        fs::create_symlink("../" + filesParticle[i].stem().string() + std::string("/output.vtu"),
           outputFolder + std::string("/VTK_NUM/v_") + s + std::string(".vtu"));
       }
       if (configParams->contact()) {
-        
+
         if (fs::is_symlink(outputFolder + std::string("/contacts"))) {
           fs::remove(outputFolder + std::string("/contacts"));
         }
         fs::create_symlink(filesParticle[i].stem().string() + std::string("/contacts"), outputFolder + std::string("/contacts"));
-        
+
         if (fs::is_symlink(outputFolder + std::string("/contactsNum"))) {
           fs::remove(outputFolder + std::string("/contactsNum"));
         }
         fs::create_symlink(filesParticle[i].stem().string() + std::string("/contactsNum"), outputFolder + std::string("/contactsNum"));
-        
+
       }
-      
-      
+
+
       if (configParams->wetParticle() > 0) {
         if (fs::is_symlink(outputFolder + std::string("/contactsWet"))) {
           fs::remove(outputFolder + std::string("/contactsWet"));
         }
         fs::create_symlink(filesParticle[i].stem().string() + std::string("/contactsWet"), outputFolder + std::string("/contactsWet"));
-        
+
         if (fs::is_symlink(outputFolder + std::string("/wetParticles"))) {
           fs::remove(outputFolder + std::string("/wetParticles"));
         }
         fs::create_symlink(filesParticle[i].stem().string() + std::string("/wetParticles"), outputFolder + std::string("/wetParticles"));
       }
-      
+
     }
   } else {
     std::shared_ptr<snapshotRow> snapshots = std::make_shared<snapshotRow>();
@@ -497,10 +500,10 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
       std::shared_ptr<snapshot> snapshotTmp = std::make_shared<snapshot>(filesParticle[i], filesForces[i], 0);
       snapshots->addSnapshot(snapshotTmp);
     }
-    
+
     configParams->setSnapshot(snapshots);
     configParams->FOutput(outputFolder);
-    
+
     rheometer curRheom (configParams);
   }
   fs::rename("rheometer.log", outputFolder + "/rheometer.log");
